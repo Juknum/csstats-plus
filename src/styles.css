@@ -1,0 +1,204 @@
+:root {
+	--profile-height: 240px;
+	--navbar-height: 112px;
+}
+
+div#player {
+	flex-direction: column;
+}
+
+.banner .banner-h,
+div#page-bg-outer,
+div#player div#player-profile {
+	display: none;
+}
+
+div#player div#player-outer-section {
+	width: 100%;
+	margin: 0 auto;
+}
+
+span.caret {
+	margin-left: 12px;
+}
+
+.content-sub-nav-outer {
+	padding: 16px 8px 8px !important;
+}
+
+/* Scrollbar Styling */
+:root {
+	/* Firefox */
+	scrollbar-width: thin; /* Make the scrollbar thinner */
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* Translucent knob and invisible track */
+}
+
+:root::-webkit-scrollbar {
+	width: 12px; /* Width of the entire scrollbar */
+	height: 12px; /* Height of the entire scrollbar */
+}
+
+:root::-webkit-scrollbar-track {
+  background: transparent; /* Make the track invisible */
+}
+
+:root::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25); /* Translucent scrollbar knob */
+  border-radius: 5px; /* Optional: rounded corners for the knob */
+}
+
+:root::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4); /* Darker knob on hover */
+}
+/* ----------------- */
+
+/* 
+.cp-container {
+	max-width: 1680px;
+	width: 100%;
+	margin: 0 auto;
+
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+	gap: 20px;
+	align-items: start;
+	padding: 20px;
+
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.cp-player-info {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	width: 100%;
+	max-width: 180px;
+	align-items: center;
+}
+
+.csstats-player-name {
+	font-size: 16px;
+	line-height: 16px;
+	text-align: center;
+}
+
+.cp-player-picture {
+	border-radius: 5px;
+}
+
+.cp-player-profile {
+	background: url('https://csstats.gg/images/header-bg-image.png') 50%;
+	background-size: cover;
+	height: var(--profile-height);
+	width: 100%;
+}
+
+.cp-player-ranks {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.cp-player-matchmaking {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+
+	padding-bottom: 10px;
+}
+
+.cp-player-rank {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: center;
+	height: fit-content;
+}
+
+.cp-small-title-center,
+.cp-title,
+.cp-small-title,
+.cp-small-text {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.cp-title {
+	font-size: 12px;
+	line-height: 12px;
+	justify-content: center;
+	text-transform: uppercase;
+}
+
+.cp-small-title-center,
+.cp-small-title,
+.cp-small-text {
+	font-size: 9px;
+	line-height: 9px;
+
+	height: 24.38px;
+	width: 100%;
+}
+
+.cp-small-title {
+	justify-content: right;
+}
+
+.cp-empty-map-icon {
+	width: 60px;
+	height: 60px;
+}
+
+.cp-ranks {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.cp-empty-rank {
+	width: 60px;
+	height: 24.38px;
+	border: 0.5px solid rgba(255, 255, 255, 0.05);
+	border-radius: 3px;
+}
+
+.cstats-premier-rank-md {
+	width: calc(70px * 1.428571428571429) !important;
+	height: calc(24px * 1.428571428571429) !important;
+	image-rendering: pixelated;
+}
+
+.cstats-premier-rank {
+	margin: 0 !important;
+}
+
+.cstats-premier-rank-md * {
+	transform: skew(-15deg) scale(1.428571428571429) !important;
+}
+
+.cp-wingman-ranks,
+.cp-premier-ranks {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	width: 100%;
+	max-width: max-content;
+}
+
+.cp-wingman,
+.cp-wingman-best,
+.cp-premier,
+.cp-premier-best {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.cp-wingman-best,
+.cp-premier-best {
+	opacity: 0.85;
+} */
