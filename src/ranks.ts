@@ -73,11 +73,13 @@ export function getRanksInfo(): RankInfo[] {
 	return ranks;
 }
 
-export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR, string] {
-	return [
-		parseInt(num.toString().slice(0, num < 10000 ? 1 : 2), 10) as keyof typeof PREMIER_RANKS_COLOR,
-		num.toString().slice(-3)
-	];
+export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR, number, typeof PREMIER_RANKS_COLOR[keyof typeof PREMIER_RANKS_COLOR]] {
+	return Number.isNaN(num) 
+		? [0, 0, PREMIER_RANKS_COLOR[0]] 
+		: (() => {
+			const [t, h] = num.toLocaleString('en-US').split(',').map((s) => parseInt(s, 10)) as [keyof typeof PREMIER_RANKS_COLOR, number];
+			return [t, h, PREMIER_RANKS_COLOR[t]];
+		})();
 }
 
 export function getRankPicture(rank: number, mode: CSGameMode = 'Competitive') {
@@ -93,6 +95,10 @@ export function getRankPicture(rank: number, mode: CSGameMode = 'Competitive') {
 
 		case 'FACEIT':
 			return BASE_URL + 'faceit/' + rank + '.svg';
+
+		case 'Premier':
+			const [,, color] = slicePremierRank(rank);
+			return `https://static.csstats.gg/images/ranks/cs2/rating.${color}.png`;
 
 		default:
 			return '';

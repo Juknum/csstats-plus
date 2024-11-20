@@ -1,5 +1,5 @@
 import { BASE_URL, CS2_MAPS, CS2Map, PREMIER_RANKS_COLOR } from "../constants";
-import { getRankPicture, getRanksInfo, RankInfo } from "../ranks";
+import { getRankPicture, getRanksInfo, RankInfo, slicePremierRank } from "../ranks";
 import { getUserInfo } from "../user";
 
 export class PlayerPage {
@@ -354,20 +354,19 @@ export class PlayerPage {
 			span.innerText = rankInfo.game === 'CS:GO' && type === 'current' ? 'last' : type;
 
 			if (rankInfo.mode === 'Premier') {
-				const [thousand, hundred] = rankInfo.rank[type].toLocaleString('en-US').split(',').map((s) => parseInt(s, 10)) as [keyof typeof PREMIER_RANKS_COLOR, number];
-				const color = PREMIER_RANKS_COLOR[thousand];
+				const [thousand, hundred, color] = slicePremierRank(rankInfo.rank[type]);
 				
 				const icon = document.createElement('div');
 				icon.className = `cs2rating ${color} md`;
 				icon.style.transform = 'scale(1.2)';
-				icon.style.backgroundImage = `url(https://static.csstats.gg/images/ranks/cs2/rating.${color}.png)`;
+				icon.style.backgroundImage = `url(${getRankPicture(rankInfo.rank[type], rankInfo.mode)})`;
 
 				const span = document.createElement('span');
-				span.innerText = thousand.toString();
+				span.innerText = thousand === 0 ? '---' : thousand.toString();
 				span.style.transform = 'skew(-15deg)';
 
 				const small = document.createElement('small');
-				small.innerText = `,${hundred}`;
+				small.innerText = thousand === 0 ? '' : `,${hundred}`;
 
 				span.append(small);
 				icon.append(span);
