@@ -146,10 +146,22 @@ export class PlayerPage {
 		div.style.flexDirection = 'row';
 		div.style.overflowX = 'hidden';
 
-		div.append(this.notCompetitiveRanks);
+		const notCompetitiveRanks = this.notCompetitiveRanks;
+		div.append(notCompetitiveRanks);
 
 		if (this.ranksInfo.some(ri => ri.mode === 'Competitive' && ri.game === 'CS2')) {
-			div.append(this.competitiveRanks);
+			const competitiveRanks = this.competitiveRanks;
+			div.append(competitiveRanks);
+
+			// Adjust div width based on modes count (none)
+			if (notCompetitiveRanks.style.display === 'none') {
+				competitiveRanks.style.width = '100%';
+			}
+
+			// Adjust div width based on modes count (one or two)
+			if (notCompetitiveRanks.style.width === (this.NOT_COMPETITIVE_WIDTH / 2) + 'px') {
+				competitiveRanks.style.width = 'calc(100% - ' + (this.NOT_COMPETITIVE_WIDTH / 2) + 'px - 20px)';
+			}
 		}
 
 		return div;
@@ -281,20 +293,39 @@ export class PlayerPage {
 		div.style.flexWrap = 'wrap';
 		div.style.gap = '20px';
 
+		let modesCount = 0;
+
 		if (this.ranksInfo.some(ri => ri.mode === 'Premier')) {
 			div.append(this.premierRank);
+			modesCount++;
 		}
 
 		if (this.ranksInfo.some(ri => ri.mode === 'FACEIT')) {
 			div.append(this.faceitRank);
+			modesCount++;
 		}
 
 		if (this.ranksInfo.some(ri => ri.mode === 'Wingman')) {
 			div.append(this.wingmanRank);
+			modesCount++;
 		}
 
 		if (this.ranksInfo.some(ri => ri.game === 'CS:GO')) {
 			div.append(this.csgoRank);
+			modesCount++;
+		}
+
+		// Hide div if no ranks
+		if (modesCount === 0) {
+			div.style.display = 'none';
+		}
+
+		// Adjust div width based on modes count
+		if (modesCount === 2 || modesCount === 1) {
+			div.style.width = (this.NOT_COMPETITIVE_WIDTH / 2) + 'px';
+			Array.from(div.children).forEach((child) => {
+				(child as HTMLDivElement).style.maxWidth = (this.NOT_COMPETITIVE_WIDTH / 2) + 'px';
+			});
 		}
 
 		return div;
