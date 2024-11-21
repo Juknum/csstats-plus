@@ -200,7 +200,12 @@ export class PlayerPage {
 		rankInfo.style.height = '100%';
 		rankInfo.style.paddingBottom = 'calc(15px + 5px)'; // scrollbar height + padding
 
-		['wins', 'played', 'current', 'best'].forEach((type) => {
+		const spans = ['wins', 'played', 'current'];
+		if (this.ranksInfo.filter(ri => ri.mode === 'Competitive' && ri.game === 'CS2').map(ri => ri.rank.best).some(r => r !== 0)) {
+			spans.push('best');
+		}
+
+		spans.forEach((type) => {
 			const span = document.createElement('span');
 			span.style.fontSize = '9px';
 			span.style.lineHeight = CELL_HEIGHT + 'px';
