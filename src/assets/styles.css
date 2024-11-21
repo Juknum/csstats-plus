@@ -21,6 +21,10 @@ span.caret {
 	padding: 16px 8px 8px !important;
 }
 
+div#player-filters {
+	padding: 5px 0;
+}
+
 /* Scrollbar Styling */
 :root {
 	/* Firefox */

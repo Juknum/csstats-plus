@@ -18,8 +18,6 @@ export class PlayerPage {
 			document.getElementById('rating')!.parentElement!.style.transform = 'translateY(-70%)';
 		}
 
-		document.getElementById('player-filters')!.style.padding = '5px 0';
-
 		// Move stuff around
 		const warnGlyph = document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0];
 		if (warnGlyph && warnGlyph.parentElement) {
