@@ -75,11 +75,11 @@ export function getRanksInfo(): RankInfo[] {
 	return ranks;
 }
 
-export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR, number, typeof PREMIER_RANKS_COLOR[keyof typeof PREMIER_RANKS_COLOR]] {
+export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR, string, typeof PREMIER_RANKS_COLOR[keyof typeof PREMIER_RANKS_COLOR]] {
 	return Number.isNaN(num) 
-		? [0, 0, PREMIER_RANKS_COLOR[0]] 
+		? [0, '000', PREMIER_RANKS_COLOR[0]] 
 		: (() => {
-			const [t, h] = num.toLocaleString('en-US').split(',').map((s) => parseInt(s, 10)) as [keyof typeof PREMIER_RANKS_COLOR, number];
+			const [t, h] = num.toLocaleString('en-US').split(',').map((l, i) => i === 0 ? parseInt(l, 10) : l) as [keyof typeof PREMIER_RANKS_COLOR, string];
 			return [t, h, PREMIER_RANKS_COLOR[t]];
 		})();
 }
