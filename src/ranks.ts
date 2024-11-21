@@ -39,15 +39,17 @@ export function getRanksInfo(): RankInfo[] {
 		const [date, wins, _unused] = Array.from(bottom.children);
 
 		// retrieve map & game mode info
-		const mapImgOrText = icon.children[0] as HTMLImageElement | undefined ?? icon.textContent!.trim();
+		const mapImgOrText = icon.children[0] as HTMLImageElement | null ?? icon.textContent!.trim();
 		const mapOrGameMode = game === 'CS:GO' ? null : typeof mapImgOrText === 'string' ? mapImgOrText : mapImgOrText.alt
 
 		// retrieve rank info
-		const currRankEl = rank.children[0] as HTMLImageElement | HTMLDivElement;
+		const currRankEl = rank.children[0] as HTMLImageElement | HTMLDivElement | null;
 
-		const currentRank = currRankEl instanceof HTMLDivElement 
-			? parseInt(currRankEl.children[0].textContent!.replace(',', ''))
-			: parseInt(currRankEl.src.replaceAll('wingman', '').replaceAll('level', '').split('/').pop()!.split('.')[0], 10);
+		const currentRank = currRankEl 
+			? currRankEl instanceof HTMLDivElement 
+				? parseInt(currRankEl.children[0].textContent!.replace(',', ''))
+				: parseInt(currRankEl.src.replaceAll('wingman', '').replaceAll('level', '').split('/').pop()!.split('.')[0], 10)
+			: -1;
 
 		// same as above but for best rank
 		const bestRankEl = best.children[0] as HTMLImageElement | HTMLDivElement | null;
