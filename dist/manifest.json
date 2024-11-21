@@ -1,15 +1,15 @@
 {
 	"manifest_version": 3,
-	"name": "CSStats +",
-	"version": "1.0",
+	"name": "CSStats Plus",
+	"version": "0.0.1",
 	"description": "Enhances the CSStats website",
 	"permissions": ["scripting"],
 	"host_permissions": ["https://csstats.gg/*"],
 	"content_scripts": [
 		{
 			"matches": ["https://csstats.gg/*"],
-			"js": ["dist/index.js"],
-			"css": ["src/styles.css"],
+			"js": ["index.js"],
+			"css": ["styles.css"],
 			"type": "module",
 			"run_at": "document_idle"
 		}
