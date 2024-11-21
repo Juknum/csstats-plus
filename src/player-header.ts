@@ -1,16 +1,21 @@
-import { BASE_URL, CS2_MAPS, CS2Map, PREMIER_RANKS_COLOR } from "../constants";
-import { getRankPicture, getRanksInfo, RankInfo, slicePremierRank } from "../ranks";
-import { getUserInfo } from "../user";
+import { CS2Map } from "./utils/constants";
+import { getRankPicture, getRanksInfo, RankInfo, slicePremierRank } from "./utils/ranks";
+import { getUserInfo } from "./utils/user";
+import { getMapIcon } from "./utils/maps";
 
-export class PlayerPage {
+export class PlayerHeader {
 	private readonly userInfo = getUserInfo();
 	private readonly ranksInfo = getRanksInfo();
 
 	private readonly NOT_COMPETITIVE_WIDTH = 600;
 	
 	public load() {
+		const output = [];
+
 		// Custom HTML injection
-		document.getElementById('player')!.prepend(this.playerHeader);
+		const playerHeader = this.playerHeader;
+		output.push(playerHeader);
+		document.getElementById('player')!.prepend(playerHeader);
 
 		// CSS fixes
 		if (document.getElementById('kpd')) {
@@ -22,8 +27,12 @@ export class PlayerPage {
 		const warnGlyph = document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0];
 		if (warnGlyph && warnGlyph.parentElement) {
 			warnGlyph.parentElement.remove();
-			document.getElementById('player')!.prepend(this.warnBanner);
+			const warnBanner = this.warnBanner;
+			document.getElementById('player')!.prepend(warnBanner);
+			output.push(warnBanner);
 		}
+
+		return output;
 	}
 
 	private get warnBanner() {
@@ -237,7 +246,7 @@ export class PlayerPage {
 			rank.style.width = CELL_WIDTH + 'px';
 
 			const icon = document.createElement('img');
-			icon.src = BASE_URL + 'maps-icons/' + (CS2_MAPS.includes(rankInfo.map as CS2Map) ? '' : 'community/') + rankInfo.map + '.svg';
+			icon.src = getMapIcon(rankInfo.map as CS2Map);
 			icon.width = CELL_WIDTH;
 			icon.height = CELL_WIDTH;
 
