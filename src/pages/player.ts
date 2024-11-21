@@ -12,8 +12,7 @@ export class PlayerPage {
 		// Custom HTML injection
 		document.getElementById('player')!.prepend(this.playerHeader);
 
-		// CSS fixes here and in the CSS file
-		// TODO: move everything to the CSS file
+		// CSS fixes
 		if (document.getElementById('kpd')) {
 			document.getElementById('kpd')!.parentElement!.style.transform = 'translateY(-70%)';
 			document.getElementById('rating')!.parentElement!.style.transform = 'translateY(-70%)';

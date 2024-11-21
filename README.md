@@ -1,7 +1,7 @@
 
-# CSStats Plus - A Chrome Extension to enhance the CSStats website
+# CSStats Plus
 
-CSStats Plus is a Chrome Extension that enhances the CS:GO Stats page by modifying the layout and adding new features to it.
+CSStats Plus is a Chrome Extension that enhances the CSStats website by modifying the layout and adding new features to it.
 
 
 ## Features
