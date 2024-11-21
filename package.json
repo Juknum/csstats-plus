@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build"
@@ -8,6 +9,7 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.0.283",
-    "vite": "^5.4.11"
+    "vite": "^5.4.11",
+    "vite-plugin-static-copy": "^2.1.0"
   }
 }
