@@ -32,7 +32,7 @@ function main(location: typeof window.location) {
 	new Navbar();
 
 	switch (true) {
-		case location.pathname.startsWith('/player/'):
+		case location.pathname.includes('/player/'):
 			new PlayerHeader();
 			new PlayerMatches();
 
