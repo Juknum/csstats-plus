@@ -25,6 +25,21 @@ div#player-filters {
 	padding: 5px 0;
 }
 
+span#match-list-show-all,
+span#match-list-show-vac {
+	padding: 0 10px !important;
+	line-height: 30px;
+	height: 30px;
+	width: auto;
+
+	position: absolute;
+	right: 10px;
+	top: -40px;
+	z-index: 20;
+	text-align: center;
+	margin-left: 0px !important;
+}
+
 /* Scrollbar Styling */
 :root {
 	/* Firefox */

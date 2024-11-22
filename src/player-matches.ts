@@ -8,6 +8,9 @@ export class PlayerMatches {
 		const container = document.getElementById('match-list-outer');
 		if (!container) return;
 
+		const vacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
+		if (vacBtn) vacBtn.innerText = `Show ${vacBtn.innerText.split(' ').shift()!} VAC matches`;
+
 		const table = container.querySelector('table')!;
 		const tbody = table.querySelector('tbody')!;
 
