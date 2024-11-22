@@ -2,17 +2,14 @@ import { CS2Map } from "./utils/constants";
 import { getMapIcon } from "./utils/maps";
 import { getRankPicture } from "./utils/ranks";
 
+var playedWithVacBtnShown = true;
+var matchesWithVacBtnShown = true;
+
 export class PlayerMatches {
 
 	constructor() {
 		const container = document.getElementById('match-list-outer');
 		if (!container) return;
-
-		const vacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
-		if (vacBtn) {
-			const count = vacBtn.innerText.split(' ').find((text) => !isNaN(parseInt(text, 10)))!;
-			vacBtn.innerText = `Show ${count} VAC matches`;
-		}
 
 		const table = container.querySelector('table')!;
 		const tbody = table.querySelector('tbody')!;
@@ -26,6 +23,72 @@ export class PlayerMatches {
 			
 			this.updateMapCell(tr.children[2] as HTMLTableCellElement);
 			this.updateRankCell(tr.children[4] as HTMLTableCellElement);
+		}
+	}
+
+	static checkVacBtns(hash: typeof window.location.hash) {
+		
+		const matchesVacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
+		const	matchesAllBtn = document.getElementById('match-list-show-all') as HTMLSpanElement | undefined;
+
+		const playedWithVacBtn = document.getElementById('played-with-show-vac') as HTMLSpanElement | undefined;
+		const playedWithAllBtn = document.getElementById('played-with-show-all') as HTMLSpanElement | undefined;
+
+		const allBtns = [matchesVacBtn, matchesAllBtn, playedWithVacBtn, playedWithAllBtn];
+	
+		const func = (vacBtn: HTMLSpanElement, allBtn: HTMLSpanElement, vacDisplayed: boolean, kind: 'matches' | 'players') => {
+			allBtns.forEach((btn) => { if (btn) btn.style.display= 'none' });
+
+			const tableNav = document.getElementById('tab-h-nav') as HTMLDivElement;
+			const div = tableNav.querySelector('div')!;
+			const ul = div.querySelector('ul')!;
+
+			if (kind === 'matches') {
+				const count = vacBtn.innerText.split(' ').find((text) => !isNaN(parseInt(text, 10)))!;
+				vacBtn.innerText = `Show ${count} VAC matches`;
+				allBtn.innerText = 'Show all matches';
+			}
+			else {
+				vacBtn.innerText = 'Show VAC banned players';
+				allBtn.innerText = 'Show all players';
+			}
+
+			vacBtn.onclick = () => {
+				allBtn.style.display = 'inline-block';
+				vacBtn.style.display = 'none';
+
+				if (kind === 'matches') matchesWithVacBtnShown = false;
+				if (kind === 'players') playedWithVacBtnShown = false;
+			}
+
+			allBtn.onclick = () => {
+				vacBtn.style.display = 'inline-block';
+				allBtn.style.display = 'none';
+
+				if (kind === 'matches') matchesWithVacBtnShown = true;
+				if (kind === 'players') playedWithVacBtnShown = true;
+			}
+
+			// default display
+			vacBtn.style.display = vacDisplayed ? 'inline-block' : 'none';
+			allBtn.style.display = vacDisplayed ? 'none' : 'inline-block';
+
+			ul.append(vacBtn);
+			ul.append(allBtn);
+		};
+
+		switch (hash) {
+			case '#/matches':
+				if (!matchesVacBtn || !matchesAllBtn) return;
+				func(matchesVacBtn, matchesAllBtn, matchesWithVacBtnShown, 'matches');
+
+				break;
+
+			case '#/players':
+				if (!playedWithVacBtn || !playedWithAllBtn) return;
+				func(playedWithVacBtn, playedWithAllBtn, playedWithVacBtnShown, 'players');
+
+				break;
 		}
 	}
 

@@ -4,15 +4,19 @@ import { PlayerMatches } from './player-matches';
 
 let previousPathname = window.location.pathname;
 
+const notifyPathnameChange = () => {
+	// notify on every change
+	PlayerMatches.checkVacBtns(window.location.hash);
+
+	// notify only if pathname has changed
+	if (previousPathname === window.location.pathname) return;
+	main(window.location);
+};
+
 // add location change listener
 (function () {
 	const ogPushState = history.pushState;
 	const ogReplaceState = history.replaceState;
-
-	const notifyPathnameChange = () => {
-		if (previousPathname === window.location.pathname) return;
-		main(window.location);
-	};
 
 	history.pushState = function (...args) {
 		ogPushState.apply(this, args);
@@ -42,3 +46,4 @@ function main(location: typeof window.location) {
 
 // initial load
 main(window.location);
+notifyPathnameChange();
