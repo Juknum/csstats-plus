@@ -137,7 +137,7 @@ export class PlayerMatches {
 		icon.height = 30;
 
 		const mapNameSpan = document.createElement('span');
-		mapNameSpan.innerText = mapName.replace('de_', '').replace('dust2', 'dust II');
+		mapNameSpan.innerText = mapName.replace('de_', '').replace('cs_', '').replace('dust2', 'dust II');
 		mapNameSpan.style.width = '50px';
 		mapNameSpan.style.textAlign = 'left';
 		mapNameSpan.style.display = 'inline-block';
