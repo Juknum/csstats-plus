@@ -30,6 +30,11 @@ span.caret {
 	bottom: -14px !important;
 }
 
+.collapse.navbar-collapse > .nav.navbar-nav > li:after {
+	bottom: 0px !important;
+	height: 2px !important;
+}
+
 #player-filters #filters-trigger,
 #player-filters-actions .btn,
 #player-filters .dropdown.bootstrap-select {
