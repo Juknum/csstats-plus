@@ -1,3 +1,4 @@
+import { Navbar } from './navbar';
 import { PlayerHeader } from './player-header';
 import { PlayerMatches } from './player-matches';
 
@@ -28,6 +29,8 @@ let previousPathname = window.location.pathname;
 
 // apply injections based on location
 function main(location: typeof window.location) {
+	new Navbar();
+
 	switch (true) {
 		case location.pathname.startsWith('/player/'):
 			new PlayerHeader();

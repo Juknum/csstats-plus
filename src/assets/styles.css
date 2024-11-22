@@ -40,6 +40,39 @@ span#match-list-show-vac {
 	margin-left: 0px !important;
 }
 
+#discord-icon .notification  {
+	width: 8px !important;
+	height: 8px !important;
+}
+
+#user-locale button {
+	display: none;
+}
+
+.user-nav-split {
+	height: 38px !important;
+}
+
+#header-nav {
+	box-shadow: none !important;
+	background: transparent !important;
+}
+
+#header-nav #main-nav {
+	padding-left: 0 !important;
+}
+
+#header-nav .ripple {
+	height: 64px;
+	line-height: 40px !important;
+}
+
+#weapons-navbar,
+#leaderboard-nav-maps,
+#tab-h-nav {
+	top: 64px !important;
+}
+
 /* Scrollbar Styling */
 :root {
 	/* Firefox */

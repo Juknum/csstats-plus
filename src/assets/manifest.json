@@ -7,7 +7,7 @@
 	"host_permissions": ["https://csstats.gg/*"],
 	"content_scripts": [
 		{
-			"matches": ["https://csstats.gg/*"],
+			"matches": ["https://csstats.gg/*", "https://csgostats.gg/cs2"],
 			"js": ["index.js"],
 			"css": ["styles.css"],
 			"type": "module",
