@@ -45,32 +45,41 @@ export class PlayerMatches {
 					const wingmanRank = parseInt(img.src.split('/').pop()?.split('.').shift()?.replace('wingman', '') ?? '0', 10);
 					cell.innerHTML = '';
 	
-					const wingmanSpan = document.createElement('img');
-					wingmanSpan.height = 18;
-					wingmanSpan.src = getRankPicture(wingmanRank, 'Wingman');
+					const wingmanImg = document.createElement('img');
+					wingmanImg.height = 18;
+					wingmanImg.src = getRankPicture(wingmanRank, 'Wingman');
 	
-					cell.append(wingmanSpan);
+					cell.append(wingmanImg);
 				}
 
 				// expired/unknown rank
 				else {
 					cell.innerHTML = '';
 					
-					const expiredOrUnknownSpan = document.createElement('img');
-					expiredOrUnknownSpan.height = 18;
-					expiredOrUnknownSpan.src = getRankPicture(0);
+					const expiredOrUnknownImg = document.createElement('img');
+					expiredOrUnknownImg.height = 18;
+					expiredOrUnknownImg.src = getRankPicture(0);
 
-					cell.append(expiredOrUnknownSpan);
+					cell.append(expiredOrUnknownImg);
 				}
 
 				break;
 
-			// neither rank up nor rank down chevron
+			// no chevron
+			// => CASE 1 : can be either a premier rank game (from expired to current) or a bugged premier game (from current to expired)
+			// => CASE 2 : can be a competitive game (with no rank change)
 			case 1:
+				const fallback = cell.innerHTML; // keep the original span for CASE 1
+				cell.innerHTML = '';
+
 				const rank = parseInt(backgroundImage.split('/').pop()?.split('.').shift() ?? '0', 10);
 
-				rankSpan.style.backgroundImage = `url(${getRankPicture(rank)})`;
-				cell.style.paddingTop = '15px';
+				const rankIcon = document.createElement('img');
+				rankIcon.height = 18;
+				rankIcon.src = getRankPicture(rank);
+				rankIcon.onerror = () => cell.innerHTML = fallback; // rank img url fails to load => is a premier rank game (CASE 1)
+
+				cell.append(rankIcon);
 			break;
 
 			// rank up or rank down (chevron span is present)
@@ -91,21 +100,21 @@ export class PlayerMatches {
 				div.style.alignItems = 'flex-start';
 				div.style.gap = '.75rem';
 
-				const oldRankSpan = document.createElement('img');
-				oldRankSpan.height = 18;
-				oldRankSpan.src = getRankPicture(oldRank);
+				const oldRankImg = document.createElement('img');
+				oldRankImg.height = 18;
+				oldRankImg.src = getRankPicture(oldRank);
 
 				const arrowSpan = document.createElement('span');
 				arrowSpan.classList.add('glyphicon', 'glyphicon-arrow-right');
 				arrowSpan.style.fontSize = '12px';
 
-				const newRankSpan = document.createElement('img');
-				newRankSpan.height = 18;
-				newRankSpan.src = getRankPicture(newRank);
+				const newRankImg = document.createElement('img');
+				newRankImg.height = 18;
+				newRankImg.src = getRankPicture(newRank);
 
-				div.append(oldRankSpan);
+				div.append(oldRankImg);
 				div.append(arrowSpan);
-				div.append(newRankSpan);
+				div.append(newRankImg);
 
 				cell.innerHTML = '';
 				cell.append(div);
