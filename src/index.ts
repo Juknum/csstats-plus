@@ -1,12 +1,12 @@
 import { Navbar } from './navbar';
 import { PlayerHeader } from './player-header';
-import { PlayerMatches } from './player-matches';
+import { Player } from './player';
 
 let previousPathname = window.location.pathname;
 
 const notifyPathnameChange = () => {
 	// notify on every change
-	PlayerMatches.checkVacBtns(window.location.hash);
+	Player.checkVacBtns(window.location.hash);
 
 	// notify only if pathname has changed
 	if (previousPathname === window.location.pathname) return;
@@ -38,7 +38,7 @@ function main(location: typeof window.location) {
 	switch (true) {
 		case location.pathname.includes('/player/'):
 			new PlayerHeader();
-			new PlayerMatches();
+			new Player();
 
 			break;
 	}

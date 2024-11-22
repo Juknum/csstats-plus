@@ -5,7 +5,7 @@ import { getRankPicture } from "./utils/ranks";
 var playedWithVacBtnShown = true;
 var matchesWithVacBtnShown = true;
 
-export class PlayerMatches {
+export class Player {
 
 	constructor() {
 		const container = document.getElementById('match-list-outer');
@@ -13,6 +13,8 @@ export class PlayerMatches {
 
 		const table = container.querySelector('table')!;
 		const tbody = table.querySelector('tbody')!;
+
+		this.fixTableNavbar();
 
 		for (const tr of Array.from(tbody.children as unknown as HTMLTableRowElement[])) {
 			// tr.children[0] is the date
@@ -24,6 +26,37 @@ export class PlayerMatches {
 			this.updateMapCell(tr.children[2] as HTMLTableCellElement);
 			this.updateRankCell(tr.children[4] as HTMLTableCellElement);
 		}
+	}
+
+
+	private fixTableNavbar() {
+		const filters = document.getElementById('player-filters')!;
+		const tableNav = document.getElementById('tab-h-nav') as HTMLDivElement;
+
+		tableNav.style.width = '100%';
+		tableNav.style.maxWidth = '1680px';
+		tableNav.style.display = 'flex';
+		tableNav.style.padding = '0 8px';
+		tableNav.style.justifyContent = 'space-between';
+		tableNav.style.background = 'rgba(0, 0, 0, 0.38)';
+
+		tableNav.append(filters);
+		tableNav.id = 'new-tab-h-nav';
+
+		document.getElementById('player-profile')?.replaceWith(tableNav);
+
+		// move filters form to the left
+		filters.prepend(document.getElementById('player-filters-form')!);
+
+		const linksContainer = tableNav.querySelectorAll('div')[0];
+		linksContainer.style.margin = '0';
+
+		const links = linksContainer.querySelector('ul')!;
+		links.style.display = 'flex';
+		links.style.gap = '1rem';
+		links.style.flexDirection = 'row';
+		links.style.height = '100%';
+		links.style.alignItems = 'center';
 	}
 
 	static checkVacBtns(hash: typeof window.location.hash) {
@@ -39,9 +72,7 @@ export class PlayerMatches {
 		const func = (vacBtn: HTMLSpanElement, allBtn: HTMLSpanElement, vacDisplayed: boolean, kind: 'matches' | 'players') => {
 			allBtns.forEach((btn) => { if (btn) btn.style.display= 'none' });
 
-			const tableNav = document.getElementById('tab-h-nav') as HTMLDivElement;
-			const div = tableNav.querySelector('div')!;
-			const ul = div.querySelector('ul')!;
+			const tableNav = document.getElementById('player-filters') as HTMLDivElement;
 
 			if (kind === 'matches') {
 				const count = vacBtn.innerText.split(' ').find((text) => !isNaN(parseInt(text, 10)))!;
@@ -73,8 +104,8 @@ export class PlayerMatches {
 			vacBtn.style.display = vacDisplayed ? 'inline-block' : 'none';
 			allBtn.style.display = vacDisplayed ? 'none' : 'inline-block';
 
-			ul.append(vacBtn);
-			ul.append(allBtn);
+			tableNav.append(vacBtn);
+			tableNav.append(allBtn);
 		};
 
 		switch (hash) {

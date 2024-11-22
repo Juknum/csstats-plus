@@ -1,5 +1,6 @@
 div#player {
 	flex-direction: column;
+	align-items: center !important;
 }
 
 .banner .banner-h,
@@ -21,8 +22,24 @@ span.caret {
 	padding: 16px 8px 8px !important;
 }
 
+.navbar .nav > li:not(.nav-button) {
+	cursor: pointer;
+}
+
+.navbar .nav > li:not(.nav-button):after {
+	bottom: -14px !important;
+}
+
+#player-filters #filters-trigger,
+#player-filters-actions .btn,
+#player-filters .dropdown.bootstrap-select {
+	height: 30px !important;
+	border-radius: 4px !important;
+}
+
 div#player-filters {
 	padding: 5px 0;
+	justify-content: flex-end;
 }
 
 span#played-with-show-vac,
@@ -31,13 +48,11 @@ span#match-list-show-all,
 span#match-list-show-vac {
 	padding: 0 10px !important;
 	line-height: 30px;
-	height: 30px;
+	height: 28px;
 	width: auto;
 
-	z-index: 20;
 	text-align: center;
-	margin-left: auto !important;
-	margin-right: 8px;
+	margin-left: 8px !important;
 }
 
 #discord-icon .notification  {
