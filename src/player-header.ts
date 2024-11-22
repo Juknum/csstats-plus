@@ -10,12 +10,8 @@ export class PlayerHeader {
 	private readonly NOT_COMPETITIVE_WIDTH = 600;
 	
 	public load() {
-		const output = [];
-
 		// Custom HTML injection
-		const playerHeader = this.playerHeader;
-		output.push(playerHeader);
-		document.getElementById('player')!.prepend(playerHeader);
+		document.getElementById('player')!.prepend(this.playerHeader);
 
 		// CSS fixes
 		if (document.getElementById('kpd')) {
@@ -27,15 +23,18 @@ export class PlayerHeader {
 		const warnGlyph = document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0];
 		if (warnGlyph && warnGlyph.parentElement) {
 			warnGlyph.parentElement.remove();
-			const warnBanner = this.warnBanner;
+			const warnBanner = this.warnBanner('This player does not have match tracking enabled. Some data may be missing.');
+			warnBanner.style.backgroundColor = 'rgba(208, 65, 67, .15)';
 			document.getElementById('player')!.prepend(warnBanner);
-			output.push(warnBanner);
 		}
 
-		return output;
+		// Banned banner
+		if (this.userInfo.banned) {
+			document.getElementById('player')!.prepend(this.warnBanner(this.userInfo.banned));
+		}
 	}
 
-	private get warnBanner() {
+	private warnBanner(text: string) {
 		const div = document.createElement('div');
 		div.style.background = 'rgb(208, 65, 67)';
 		div.style.color = '#fff';
@@ -46,7 +45,7 @@ export class PlayerHeader {
 		const span = document.createElement('span');
 		span.style.display = 'inline-block';
 		span.style.marginRight = '10px';
-		span.innerText = 'This player does not have match tracking enabled. Some data may be missing.';
+		span.innerText = text;
 
 		div.append(span);
 
