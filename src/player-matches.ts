@@ -1,4 +1,4 @@
-import { BASE_URL, CS2_MAPS, CS2Map } from "./utils/constants";
+import { CS2Map } from "./utils/constants";
 import { getMapIcon } from "./utils/maps";
 import { getRankPicture } from "./utils/ranks";
 
@@ -31,70 +31,87 @@ export class PlayerMatches {
 
 		cell.attributeStyleMap.clear();
 
-		// neither rank up nor rank down chevron
-		if (rankSpans.length === 1 || rankSpans.length === 0) {
-			const rankSpan = rankSpans[0] ?? document.createElement('span');
-			
-			const backgroundImage = window.getComputedStyle(rankSpan).getPropertyValue('background-image');
-			if (!backgroundImage.includes('static.csstats.gg/images/ranks')) return;
-			const rank = parseInt(backgroundImage.split('/').pop()?.split('.').shift() ?? '0', 10);
+		const rankSpan = rankSpans[0];
+		const backgroundImage = rankSpan ? window.getComputedStyle(rankSpan).getPropertyValue('background-image') : '';
 
-			rankSpan.style.backgroundSize = 'cover';
-			rankSpan.style.width = '46px';
-			rankSpan.style.height = '18px';
-			rankSpan.style.display = 'inline-block';
-			rankSpan.style.backgroundImage = `url(${getRankPicture(rank)})`;
+		switch (rankSpans.length) {
+			// expired/unknown rank OR wingman (img)
+			case 0:
 
-			cell.style.paddingTop = '15px';
-		}
-		// rank up or rank down
-		else {
-			const rankSpan = rankSpans[0];
-			const chevronSpan = rankSpans[1];
+				// wingman rank
+				const img = cell.querySelector('img');
+				if (img) {
+					
+					const wingmanRank = parseInt(img.src.split('/').pop()?.split('.').shift()?.replace('wingman', '') ?? '0', 10);
+					cell.innerHTML = '';
+	
+					const wingmanSpan = document.createElement('img');
+					wingmanSpan.height = 18;
+					wingmanSpan.src = getRankPicture(wingmanRank, 'Wingman');
+	
+					cell.append(wingmanSpan);
+				}
 
-			const isRankUp = chevronSpan.classList.contains('glyphicon-chevron-up');
+				// expired/unknown rank
+				else {
+					cell.innerHTML = '';
+					
+					const expiredOrUnknownSpan = document.createElement('img');
+					expiredOrUnknownSpan.height = 18;
+					expiredOrUnknownSpan.src = getRankPicture(0);
 
-			// new rank is the one shown in the background image
-			const backgroundImage = window.getComputedStyle(rankSpan).getPropertyValue('background-image');
-			const newRank = parseInt(backgroundImage.split('/').pop()?.split('.').shift() ?? '0', 10);
+					cell.append(expiredOrUnknownSpan);
+				}
 
-			// old rank
-			const oldRank = isRankUp ? newRank - 1 : newRank + 1;
+				break;
 
-			const div = document.createElement('div');
-			div.style.display = 'flex';
-			div.style.flexFlow = 'row';
-			div.style.justifyContent = 'center';
-			div.style.alignItems = 'flex-start';
-			div.style.gap = '.75rem';
+			// neither rank up nor rank down chevron
+			case 1:
+				const rank = parseInt(backgroundImage.split('/').pop()?.split('.').shift() ?? '0', 10);
 
-			const oldRankSpan = document.createElement('span');
-			oldRankSpan.style.backgroundSize = 'cover';
-			oldRankSpan.style.width = '46px';
-			oldRankSpan.style.height = '18px';
-			oldRankSpan.style.display = 'inline-block';
-			oldRankSpan.style.backgroundImage = `url(${getRankPicture(oldRank)})`;
+				rankSpan.style.backgroundImage = `url(${getRankPicture(rank)})`;
+				cell.style.paddingTop = '15px';
+			break;
 
-			const arrowSpan = document.createElement('span');
-			arrowSpan.classList.add('glyphicon', 'glyphicon-arrow-right');
-			arrowSpan.style.fontSize = '12px';
+			// rank up or rank down (chevron span is present)
+			case 2:
+				const chevronSpan = rankSpans[1];
+				const isRankUp = chevronSpan.classList.contains('glyphicon-chevron-up');
 
-			const newRankSpan = document.createElement('span');
-			newRankSpan.style.backgroundSize = 'cover';
-			newRankSpan.style.width = '46px';
-			newRankSpan.style.height = '18px';
-			newRankSpan.style.display = 'inline-block';
+				// new rank is the one shown in the background image
+				const newRank = parseInt(backgroundImage.split('/').pop()?.split('.').shift() ?? '0', 10);
 
-			newRankSpan.style.backgroundImage = `url(${getRankPicture(newRank)})`;
+				// old rank
+				const oldRank = isRankUp ? newRank - 1 : newRank + 1;
 
-			div.append(oldRankSpan);
-			div.append(arrowSpan);
-			div.append(newRankSpan);
+				const div = document.createElement('div');
+				div.style.display = 'flex';
+				div.style.flexFlow = 'row';
+				div.style.justifyContent = 'center';
+				div.style.alignItems = 'flex-start';
+				div.style.gap = '.75rem';
 
-			cell.innerHTML = '';
-			cell.append(div);
-			cell.style.padding = '0';
-			cell.style.height = '50px';
+				const oldRankSpan = document.createElement('img');
+				oldRankSpan.height = 18;
+				oldRankSpan.src = getRankPicture(oldRank);
+
+				const arrowSpan = document.createElement('span');
+				arrowSpan.classList.add('glyphicon', 'glyphicon-arrow-right');
+				arrowSpan.style.fontSize = '12px';
+
+				const newRankSpan = document.createElement('img');
+				newRankSpan.height = 18;
+				newRankSpan.src = getRankPicture(newRank);
+
+				div.append(oldRankSpan);
+				div.append(arrowSpan);
+				div.append(newRankSpan);
+
+				cell.innerHTML = '';
+				cell.append(div);
+				cell.style.padding = '0';
+				cell.style.height = '50px';
+				break;
 		}
 	}
 
