@@ -38,19 +38,19 @@ export class PlayerMatches {
 		const backgroundImage = rankSpan ? window.getComputedStyle(rankSpan).getPropertyValue('background-image') : '';
 
 		switch (rankSpans.length) {
-			// expired/unknown rank OR wingman (img)
+			// expired/unknown rank OR wingman/faceit (img)
 			case 0:
 
 				// wingman rank
 				const img = cell.querySelector('img');
 				if (img) {
 					
-					const wingmanRank = parseInt(img.src.split('/').pop()?.split('.').shift()?.replace('wingman', '') ?? '0', 10);
+					const wingmanOrFaceitRank = parseInt(img.src.split('/').pop()?.split('.').shift()?.replace('level', '').replace('wingman', '') ?? '0', 10);
 					cell.innerHTML = '';
 	
 					const wingmanImg = document.createElement('img');
-					wingmanImg.height = 18;
-					wingmanImg.src = getRankPicture(wingmanRank, 'Wingman');
+					wingmanImg.height =img.src.includes('faceit') ? 24 : 18;
+					wingmanImg.src = getRankPicture(wingmanOrFaceitRank, img.src.includes('faceit') ? 'FACEIT' : 'Wingman');
 	
 					cell.append(wingmanImg);
 				}
