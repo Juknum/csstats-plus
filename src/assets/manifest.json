@@ -3,7 +3,7 @@
 	"name": "CSStats Plus",
 	"version": "0.0.1",
 	"description": "Enhances the CSStats website",
-	"permissions": ["scripting"],
+	"permissions": [],
 	"host_permissions": ["https://csstats.gg/*"],
 	"content_scripts": [
 		{
