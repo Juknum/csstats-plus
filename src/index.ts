@@ -30,11 +30,8 @@ let previousPathname = window.location.pathname;
 function main(location: typeof window.location) {
 	switch (true) {
 		case location.pathname.startsWith('/player/'):
-			const pp = new PlayerHeader();
-			pp.load();
-
-			const pm = new PlayerMatches();
-			pm.load();
+			new PlayerHeader();
+			new PlayerMatches();
 
 			break;
 	}

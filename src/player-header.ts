@@ -9,7 +9,7 @@ export class PlayerHeader {
 
 	private readonly NOT_COMPETITIVE_WIDTH = 600;
 	
-	public load() {
+	constructor() {
 		// Custom HTML injection
 		document.getElementById('player')!.prepend(this.playerHeader);
 

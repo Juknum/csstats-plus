@@ -4,7 +4,7 @@ import { getRankPicture } from "./utils/ranks";
 
 export class PlayerMatches {
 
-	public load() {
+	constructor() {
 		const container = document.getElementById('match-list-outer');
 		if (!container) return;
 
