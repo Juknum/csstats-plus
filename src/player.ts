@@ -15,6 +15,7 @@ export class Player {
 		const tbody = table.querySelector('tbody')!;
 
 		this.fixTableNavbar();
+		this.centerPlayedWithText();
 
 		for (const tr of Array.from(tbody.children as unknown as HTMLTableRowElement[])) {
 			// tr.children[0] is the date
@@ -28,6 +29,9 @@ export class Player {
 		}
 	}
 
+	private centerPlayedWithText() {
+		document.getElementById('played-with-outer')!.querySelector('div')!.style.textAlign = 'center';
+	}
 
 	private fixTableNavbar() {
 		const filters = document.getElementById('player-filters')!;
