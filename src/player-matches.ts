@@ -9,7 +9,10 @@ export class PlayerMatches {
 		if (!container) return;
 
 		const vacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
-		if (vacBtn) vacBtn.innerText = `Show ${vacBtn.innerText.split(' ').shift()!} VAC matches`;
+		if (vacBtn) {
+			const count = vacBtn.innerText.split(' ').find((text) => !isNaN(parseInt(text, 10)))!;
+			vacBtn.innerText = `Show ${count} VAC matches`;
+		}
 
 		const table = container.querySelector('table')!;
 		const tbody = table.querySelector('tbody')!;
