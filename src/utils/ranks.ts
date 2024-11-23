@@ -89,10 +89,12 @@ export function getRankPicture(rank: number, mode: CSGameMode = 'Competitive') {
 	switch (mode) {
 		case 'Competitive':
 			if (rank === -1) return BASE_URL + 'matchmaking/expired.svg';
+			if (rank === 0) return BASE_URL + 'matchmaking/none.svg';
 			return BASE_URL + 'matchmaking/' + rank + '.svg';
 	
 		case 'Wingman':
 			if (rank === -1) return BASE_URL + 'wingman/expired.svg';
+			if (rank === 0) return BASE_URL + 'wingman/none.svg';
 			return BASE_URL + 'wingman/' + rank + '.svg';
 
 		case 'FACEIT':
