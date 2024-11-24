@@ -1,6 +1,7 @@
 import { Navbar } from './navbar';
-import { PlayerHeader } from './player-header';
-import { Player } from './player';
+import { Player } from './player/index';
+import { PlayerMatches } from './player/matches';
+import { PlayerPlayers } from './player/players';
 
 let previousPathname = window.location.pathname;
 
@@ -37,8 +38,10 @@ function main(location: typeof window.location) {
 
 	switch (true) {
 		case location.pathname.includes('/player/'):
-			new PlayerHeader();
 			new Player();
+
+			new PlayerPlayers();
+			new PlayerMatches();
 
 			break;
 	}

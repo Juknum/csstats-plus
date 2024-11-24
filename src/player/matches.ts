@@ -1,11 +1,9 @@
-import { CS2Map } from "./utils/constants";
-import { getMapIcon } from "./utils/maps";
-import { getRankPicture } from "./utils/ranks";
+import { CS2Map } from "../utils/constants";
+import { getMapIcon } from "../utils/maps";
+import { getRankPicture } from "../utils/ranks";
 
-var playedWithVacBtnShown = true;
-var matchesWithVacBtnShown = true;
 
-export class Player {
+export class PlayerMatches {
 
 	constructor() {
 		const container = document.getElementById('match-list-outer');
@@ -14,8 +12,6 @@ export class Player {
 		const table = container.querySelector('table')!;
 		const tbody = table.querySelector('tbody')!;
 
-		this.fixTableNavbar();
-		this.centerPlayedWithText();
 
 		for (const tr of Array.from(tbody.children as unknown as HTMLTableRowElement[])) {
 			// tr.children[0] is the date
@@ -26,104 +22,6 @@ export class Player {
 			
 			this.updateMapCell(tr.children[2] as HTMLTableCellElement);
 			this.updateRankCell(tr.children[4] as HTMLTableCellElement);
-		}
-	}
-
-	private centerPlayedWithText() {
-		document.getElementById('played-with-outer')!.querySelector('div')!.style.textAlign = 'center';
-	}
-
-	private fixTableNavbar() {
-		const filters = document.getElementById('player-filters')!;
-		const tableNav = document.getElementById('tab-h-nav') as HTMLDivElement;
-
-		tableNav.style.width = '100%';
-		tableNav.style.maxWidth = '1680px';
-		tableNav.style.display = 'flex';
-		tableNav.style.padding = '0 8px';
-		tableNav.style.justifyContent = 'space-between';
-		tableNav.style.background = 'rgba(0, 0, 0, 0.38)';
-
-		tableNav.append(filters);
-		tableNav.id = 'new-tab-h-nav';
-
-		document.getElementById('player-profile')?.replaceWith(tableNav);
-
-		// move filters form to the left
-		filters.prepend(document.getElementById('player-filters-form')!);
-
-		const linksContainer = tableNav.querySelectorAll('div')[0];
-		linksContainer.style.margin = '0';
-
-		const links = linksContainer.querySelector('ul')!;
-		links.style.display = 'flex';
-		links.style.gap = '1rem';
-		links.style.flexDirection = 'row';
-		links.style.height = '100%';
-		links.style.alignItems = 'center';
-	}
-
-	static checkVacBtns(hash: typeof window.location.hash) {
-		
-		const matchesVacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
-		const	matchesAllBtn = document.getElementById('match-list-show-all') as HTMLSpanElement | undefined;
-
-		const playedWithVacBtn = document.getElementById('played-with-show-vac') as HTMLSpanElement | undefined;
-		const playedWithAllBtn = document.getElementById('played-with-show-all') as HTMLSpanElement | undefined;
-
-		const allBtns = [matchesVacBtn, matchesAllBtn, playedWithVacBtn, playedWithAllBtn];
-	
-		const func = (vacBtn: HTMLSpanElement, allBtn: HTMLSpanElement, vacDisplayed: boolean, kind: 'matches' | 'players') => {
-			allBtns.forEach((btn) => { if (btn) btn.style.display= 'none' });
-
-			const tableNav = document.getElementById('player-filters') as HTMLDivElement;
-
-			if (kind === 'matches') {
-				const count = vacBtn.innerText.split(' ').find((text) => !isNaN(parseInt(text, 10)))!;
-				vacBtn.innerText = `Show ${count} VAC matches`;
-				allBtn.innerText = 'Show all matches';
-			}
-			else {
-				vacBtn.innerText = 'Show VAC banned players';
-				allBtn.innerText = 'Show all players';
-			}
-
-			vacBtn.onclick = () => {
-				allBtn.style.display = 'inline-block';
-				vacBtn.style.display = 'none';
-
-				if (kind === 'matches') matchesWithVacBtnShown = false;
-				if (kind === 'players') playedWithVacBtnShown = false;
-			}
-
-			allBtn.onclick = () => {
-				vacBtn.style.display = 'inline-block';
-				allBtn.style.display = 'none';
-
-				if (kind === 'matches') matchesWithVacBtnShown = true;
-				if (kind === 'players') playedWithVacBtnShown = true;
-			}
-
-			// default display
-			vacBtn.style.display = vacDisplayed ? 'inline-block' : 'none';
-			allBtn.style.display = vacDisplayed ? 'none' : 'inline-block';
-
-			tableNav.append(vacBtn);
-			tableNav.append(allBtn);
-		};
-
-		switch (hash) {
-			case '#/matches':
-				if (!matchesVacBtn || !matchesAllBtn) return;
-				func(matchesVacBtn, matchesAllBtn, matchesWithVacBtnShown, 'matches');
-
-				break;
-
-			case '#/players':
-				if (!playedWithVacBtn || !playedWithAllBtn) return;
-				func(playedWithVacBtn, playedWithAllBtn, playedWithVacBtnShown, 'players');
-
-				break;
 		}
 	}
 
