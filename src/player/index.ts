@@ -131,21 +131,14 @@ export class Player {
 
 				break;
 
-			// default:
-			// 	matchesWithVacBtnShown = false;
-			// 	playedWithVacBtnShown = false;
+			default:
+				matchesVacBtn!.style.display = 'none'
+				matchesAllBtn!.style.display = 'none'
 
-			// 	if (matchesVacBtn && matchesAllBtn) {
-			// 		matchesVacBtn.style.display = 'none'
-			// 		matchesAllBtn.style.display = 'none'
-			// 	}
+				playedWithVacBtn!.style.display = 'none'
+				playedWithAllBtn!.style.display = 'none'
 
-			// 	if (playedWithVacBtn && playedWithAllBtn) {
-			// 		playedWithVacBtn.style.display = 'none'
-			// 		playedWithAllBtn.style.display = 'none'
-			// 	}
-
-			//  break;
+			 break;
 		}
 	}
 
