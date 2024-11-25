@@ -82,9 +82,18 @@ span#match-list-show-vac {
 	padding-left: 0 !important;
 }
 
-#header-nav .ripple {
+#header-nav .nav.navbar-nav > .ripple {
 	height: 64px;
 	line-height: 40px !important;
+}
+
+#main-nav > li,
+#main-nav > li > .ripple {
+	height: 64px !important;
+}
+
+#main-nav > li > a {
+	padding-top: 22px !important;
 }
 
 #weapons-navbar,
