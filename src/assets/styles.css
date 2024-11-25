@@ -19,7 +19,7 @@ span.caret {
 }
 
 .content-sub-nav-outer {
-	padding: 16px 8px 8px !important;
+	padding: .5rem 0 !important;
 }
 
 .navbar .nav > li:not(.nav-button) {
@@ -91,6 +91,19 @@ span#match-list-show-vac {
 #leaderboard-nav-maps,
 #tab-h-nav {
 	top: 64px !important;
+}
+
+.match-dot.match-win {
+	background: #7dcd4e !important;
+}
+
+.match-dot.match-lose {
+	background: #ca5151 !important;
+}
+
+#player-stats-container ~ div.col-sm-4,
+#player-stats-container ~ div.col-sm-8 {
+	display: none;
 }
 
 /* Scrollbar Styling */

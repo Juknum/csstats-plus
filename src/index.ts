@@ -2,6 +2,7 @@ import { Navbar } from './navbar';
 import { Player } from './player/index';
 import { PlayerMatches } from './player/matches';
 import { PlayerPlayers } from './player/players';
+import { PlayerStats } from './player/stats';
 
 let previousPathname = window.location.pathname;
 
@@ -40,8 +41,9 @@ function main(location: typeof window.location) {
 		case location.pathname.includes('/player/'):
 			new Player();
 
-			new PlayerPlayers();
+			new PlayerStats();
 			new PlayerMatches();
+			new PlayerPlayers();
 
 			break;
 	}

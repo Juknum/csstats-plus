@@ -38,7 +38,6 @@ export class Player {
 			document.getElementById('player')!.prepend(this.warnBanner(this.userInfo.banned));
 		}
 	}
-
 	
 	private fixTableNavbar() {
 		const filters = document.getElementById('player-filters')!;
@@ -50,6 +49,7 @@ export class Player {
 		tableNav.style.padding = '0 8px';
 		tableNav.style.justifyContent = 'space-between';
 		tableNav.style.background = 'rgba(0, 0, 0, 0.38)';
+		tableNav.style.borderRadius = '0 0 3px 3px';
 
 		tableNav.append(filters);
 		tableNav.id = 'new-tab-h-nav';
@@ -71,7 +71,6 @@ export class Player {
 	}
 
 	static checkVacBtns(hash: typeof window.location.hash) {
-		
 		const matchesVacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
 		const	matchesAllBtn = document.getElementById('match-list-show-all') as HTMLSpanElement | undefined;
 
@@ -131,6 +130,22 @@ export class Player {
 				func(playedWithVacBtn, playedWithAllBtn, playedWithVacBtnShown, 'players');
 
 				break;
+
+			// default:
+			// 	matchesWithVacBtnShown = false;
+			// 	playedWithVacBtnShown = false;
+
+			// 	if (matchesVacBtn && matchesAllBtn) {
+			// 		matchesVacBtn.style.display = 'none'
+			// 		matchesAllBtn.style.display = 'none'
+			// 	}
+
+			// 	if (playedWithVacBtn && playedWithAllBtn) {
+			// 		playedWithVacBtn.style.display = 'none'
+			// 		playedWithAllBtn.style.display = 'none'
+			// 	}
+
+			//  break;
 		}
 	}
 
