@@ -649,8 +649,12 @@ export class PlayerStats {
 
 		const matches = getLast10Matches().reverse();
 
-		matchesDiv.forEach((div, index) => {
+		(matchesDiv as NodeListOf<HTMLDivElement>).forEach((div, index) => {
 			const img = div.querySelector('img');
+
+			// @ts-expect-error
+			div.onclick = () => window.location = matches[index].url!;
+			div.style.cursor = 'pointer';
 
 			if (img) {
 				img.style.height = '25px';

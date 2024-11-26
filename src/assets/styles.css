@@ -18,6 +18,27 @@ span.caret {
 	margin-left: 12px;
 }
 
+.match-dot-outer {
+	position: relative;
+}
+
+.match-dot-outer::after {
+	content: " ";
+	display: none;
+	z-index: -1;
+	position: absolute;
+	top: -5px;
+	left: 0;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 4px;
+	width: 100%;
+	height: calc(100% + 5px);
+}
+
+.match-dot-outer:hover::after {
+	display: inline-block;
+}
+
 .content-sub-nav-outer {
 	padding: .5rem 0 !important;
 }
