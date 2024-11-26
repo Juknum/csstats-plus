@@ -678,8 +678,11 @@ export class PlayerStats {
 
 		Array.from(data.children).forEach((div) => {
 			const row = div.querySelector('div')!.querySelector('div')!;
-			const greenBar = Array.from(div.querySelectorAll('div'))[5]!;
-			const redBar = Array.from(div.querySelectorAll('div'))[6];
+
+			const mapIconMissing = Array.from(row.querySelectorAll('div')).length === 0;
+
+			const greenBar = Array.from(div.querySelectorAll('div'))[mapIconMissing ? 4 : 5]!;
+			const redBar = Array.from(div.querySelectorAll('div'))[mapIconMissing ? 5 : 6];
 
 			greenBar.style.borderRadius = '3px 0 0 3px';
 			greenBar.style.height = '5px';
@@ -707,10 +710,26 @@ export class PlayerStats {
 
 			(div.querySelector('div')!.querySelector('div')!.nextElementSibling as HTMLDivElement).style.marginTop = '9px';
 
-			const img = row.querySelector('div')!.querySelector('img')!;
+			const img = row.querySelector('div')?.querySelector('img');
 			const span = row.querySelector('span')!;
 
-			img.src = getMapIcon(span.innerText as CS2Map);
+			if (img) img.src = getMapIcon(span.innerText as CS2Map);
+			else {
+				const parent = span.parentElement! as HTMLDivElement;
+				const container = document.createElement('div');
+				container.style.float = 'left';
+				container.style.width = '18px';
+				container.style.marginRight = '4px';
+				container.style.textAlign = 'center';
+
+				const img = document.createElement('img');
+				img.src = getMapIcon(span.innerText as CS2Map);
+				img.height = 17;
+
+				container.append(img);
+				parent.prepend(container);
+			}
+
 			span.innerText = span.innerText.replace('cs_', '').replace('de_', '').replace('dust2', 'dust II');
 			span.style.textTransform = 'capitalize';
 		})
