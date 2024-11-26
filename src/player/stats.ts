@@ -1,5 +1,6 @@
 import { CS2Map } from "../utils/constants";
 import { getMapIcon } from "../utils/maps";
+import { getLast10Matches } from "../utils/matches";
 
 export class PlayerStats {
 
@@ -646,12 +647,23 @@ export class PlayerStats {
 		matchesContainer.style.display = 'flex';
 		matchesContainer.style.flexDirection = 'row';
 
+		const matches = getLast10Matches().reverse();
+
 		matchesDiv.forEach((div, index) => {
-			const img = div.querySelector('img')!;
-			img.style.height = '25px';
-			
-			const mapName = img.src.split('/').pop()!.replace('.png', '').split('_').filter((_, i) => i < 2).join('_');
-			img.src = getMapIcon(mapName as CS2Map);
+			const img = div.querySelector('img');
+
+			if (img) {
+				img.style.height = '25px';
+				const mapName = img.src.split('/').pop()!.replace('.png', '').split('_').filter((_, i) => i < 2).join('_');
+				img.src = getMapIcon(mapName as CS2Map);
+			}
+			else {
+				const newImg = document.createElement('img');
+				newImg.style.height = '25px';
+				newImg.src = getMapIcon(matches[index].map as CS2Map);
+
+				div.prepend(newImg);
+			}
 
 			const last = index === matchesDiv.length - 1;
 			if (last) {
