@@ -1,5 +1,6 @@
 import { Navbar } from './navbar';
 import { Player } from './player/index';
+import { PlayerMaps } from './player/maps';
 import { PlayerMatches } from './player/matches';
 import { PlayerPlayers } from './player/players';
 import { PlayerStats } from './player/stats';
@@ -42,6 +43,7 @@ function main(location: typeof window.location) {
 			new Player();
 
 			new PlayerStats();
+			new PlayerMaps();
 			new PlayerMatches();
 			new PlayerPlayers();
 
