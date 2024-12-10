@@ -40,12 +40,12 @@ function main(location: typeof window.location) {
 
 	switch (true) {
 		case location.pathname.includes('/player/'):
-			new Player();
+			try { new Player(); } catch (e) { console.error(e); }
 
-			new PlayerStats();
-			new PlayerMaps();
-			new PlayerMatches();
-			new PlayerPlayers();
+			try { new PlayerStats(); } catch (e) { console.error(e); }
+			try { new PlayerMaps(); } catch (e) { console.error(e); }
+			try { new PlayerMatches(); } catch (e) { console.error(e); }
+			try { new PlayerPlayers(); } catch (e) { console.error(e); }
 
 			break;
 	}
