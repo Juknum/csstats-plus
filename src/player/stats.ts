@@ -278,11 +278,14 @@ export class PlayerStats {
 	private commonPanel(div: HTMLDivElement, index: number, percentage = true) {
 		div.style.height = '255px';
 
-		const value = document
-			.getElementById('player-overview')!
-			.querySelector('.col-sm-8')!
-			.querySelector('.col-sm-7')!
-			.children[index]
+		const value = Array.from(
+			document
+				.getElementById('player-overview')!
+				.querySelector('.col-sm-8')!
+				.querySelector('.col-sm-7')!
+				.children
+			)
+			.filter((el) => !el.classList.contains('darkreader'))[index]
 			.querySelector('div')!
 			.children[1]
 			.children[1]
@@ -336,11 +339,14 @@ export class PlayerStats {
 		column.style.flexDirection = 'column';
 		column.style.gap = '10px';
 
-		const dataDiv = document
-			.getElementById('player-overview')!
-			.querySelector('.col-sm-8')!
-			.querySelector('.col-sm-7')!
-			.children[index]
+		const dataDiv = Array.from(
+			document
+				.getElementById('player-overview')!
+				.querySelector('.col-sm-8')!
+				.querySelector('.col-sm-7')!
+				.children
+			)
+			.filter((el) => !el.classList.contains('darkreader'))[index]
 			.querySelector('div')!
 			.children[1]
 			.children[3]
