@@ -1,3 +1,4 @@
+import { Match } from './match/index';
 import { Navbar } from './navbar';
 import { Player } from './player/index';
 import { PlayerMaps } from './player/maps';
@@ -48,6 +49,9 @@ function main(location: typeof window.location) {
 			try { new PlayerPlayers(); } catch (e) { console.error(e); }
 
 			break;
+
+		case location.pathname.includes('/match/'):
+			try { new Match(); } catch (e) { console.error(e); }
 	}
 }
 

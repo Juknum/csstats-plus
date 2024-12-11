@@ -136,6 +136,18 @@ span#match-list-show-vac {
 	display: none;
 }
 
+.rank-holder {
+	display: none;
+}
+
+#match-info-inner .info {
+	gap: 0.5rem !important;
+}
+
+#match-details .team-score.tied-team .team-score-number {
+	color: #3A74FA !important;
+}
+
 /* Scrollbar Styling */
 :root {
 	/* Firefox */

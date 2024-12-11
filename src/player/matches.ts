@@ -1,5 +1,5 @@
 import { CS2Map } from "../utils/constants";
-import { getMapIcon } from "../utils/maps";
+import { getMapIcon, getMapName } from "../utils/maps";
 import { getRankPicture } from "../utils/ranks";
 
 
@@ -136,7 +136,7 @@ export class PlayerMatches {
 		icon.height = 30;
 
 		const mapNameSpan = document.createElement('span');
-		mapNameSpan.innerText = mapName.replace('de_', '').replace('cs_', '').replace('dust2', 'dust II');
+		mapNameSpan.innerText = getMapName(mapName);
 		mapNameSpan.style.width = '50px';
 		mapNameSpan.style.textAlign = 'left';
 		mapNameSpan.style.display = 'inline-block';
