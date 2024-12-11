@@ -727,6 +727,7 @@ export class PlayerStats {
 			}
 
 			if (greenBar.style.width === '100%') greenBar.style.borderRadius = '3px';
+			if (redBar && redBar.style.width === '100%') redBar.style.borderRadius = '3px';
 			
 			row.style.marginTop = '5px';
 
