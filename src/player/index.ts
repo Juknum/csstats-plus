@@ -520,7 +520,6 @@ export class Player {
 				span.append(small);
 				icon.append(span);
 				div.append(icon);
-
 			}
 			else {
 				const icon = document.createElement('img');

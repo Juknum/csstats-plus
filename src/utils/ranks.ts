@@ -62,7 +62,7 @@ export function getRanksInfo(): RankInfo[] {
 			map: !mapOrGameMode || GAME_MODES.includes(mapOrGameMode as CSGameMode) ? null : mapOrGameMode,
 			mode: GAME_MODES.includes(mapOrGameMode as CSGameMode) ? mapOrGameMode as CSGameMode : 'Competitive',
 			rank: {
-				best: bestRank,
+				best: bestRank === currentRank ? 0 : bestRank,
 				current: currentRank === 0 && bestRank !== 0 ? -1 : currentRank, // -1 means expired rank
 			},
 			wins: parseInt(wins.textContent!.replaceAll('\n', '').replace('Wins:', '').trim(), 10),
