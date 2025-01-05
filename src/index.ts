@@ -41,13 +41,18 @@ function main(location: typeof window.location) {
 
 	switch (true) {
 		case location.pathname.includes('/player/'):
-			try { new Player(); } catch (e) { console.error(e); }
+			const observer = new MutationObserver((mutationsRecords) => {
+				if (mutationsRecords.find((mutationsRecord) => mutationsRecord.removedNodes.length > 0 && (mutationsRecord.removedNodes[0] as HTMLElement).id === 'loader-outer')) {
+					try { new Player(); } catch (e) { console.error(e); }
+	
+					try { new PlayerStats(); } catch (e) { console.error(e); }
+					try { new PlayerMaps(); } catch (e) { console.error(e); }
+					try { new PlayerMatches(); } catch (e) { console.error(e); }
+					try { new PlayerPlayers(); } catch (e) { console.error(e); }
+				}
+			});
 
-			try { new PlayerStats(); } catch (e) { console.error(e); }
-			try { new PlayerMaps(); } catch (e) { console.error(e); }
-			try { new PlayerMatches(); } catch (e) { console.error(e); }
-			try { new PlayerPlayers(); } catch (e) { console.error(e); }
-
+			observer.observe(document.getElementById('player-outer-section')!, { childList: true });
 			break;
 
 		case location.pathname.includes('/match/'):

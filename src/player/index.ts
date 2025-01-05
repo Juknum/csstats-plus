@@ -71,6 +71,8 @@ export class Player {
 	}
 
 	static checkVacBtns(hash: typeof window.location.hash) {
+		if (!['#/matches', '#/players'].includes(hash)) return;
+
 		const matchesVacBtn = document.getElementById('match-list-show-vac') as HTMLSpanElement | undefined;
 		const	matchesAllBtn = document.getElementById('match-list-show-all') as HTMLSpanElement | undefined;
 
