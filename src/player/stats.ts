@@ -1,6 +1,9 @@
-import { CS2Map } from "../utils/constants";
-import { getMapIcon } from "../utils/maps";
-import { getLast10Matches } from "../utils/matches";
+import { CS2Map } from "../utils/constants.js";
+import { getMapIcon } from "../utils/maps.js";
+import { getLast10Matches } from "../utils/matches.js";
+
+import Chart from 'chart.js/auto';
+import { options, percentageToRadians } from "../utils/chart.js";
 
 export class PlayerStats {
 
@@ -92,7 +95,26 @@ export class PlayerStats {
 
 		div.append(title);
 
-		const canvas = document.getElementById('kpd-chart-canvas')! as HTMLCanvasElement;
+		const canvas = document.createElement('canvas');
+		new Chart(canvas, {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [90],
+					backgroundColor: [
+						'rgb(58, 116, 250)',
+					],
+					borderWidth: 0,
+					animation: false,
+					weight: 1
+				}]
+			},
+			options: {
+				...options,
+				cutout: '96%',
+			}
+		});
+
 		div.append(canvas);
 
 		const kd = document.getElementById('kpd')!.querySelector('span')!;
@@ -128,9 +150,6 @@ export class PlayerStats {
 
 		div.append(title);
 
-		const canvas = document.getElementById('rating-chart-canvas')! as HTMLCanvasElement;
-		div.append(canvas);
-		
 		const rating = document.getElementById('rating')!.querySelector('span')!;
 		rating.style.position = 'absolute';
 		rating.style.fontSize = '45px';
@@ -138,6 +157,27 @@ export class PlayerStats {
 		rating.style.textAlign = 'center';
 		rating.style.top = '110px';
 
+		const canvas = document.createElement('canvas');
+		new Chart(canvas, {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [90],
+					backgroundColor: [
+						'rgb(58, 116, 250)',
+					],
+					borderWidth: 0,
+					animation: false,
+					weight: 1
+				}]
+			},
+			options: {
+				...options,
+				cutout: '96%',
+			}
+		});
+
+		div.append(canvas);
 		div.append(rating);
 		
 		const ratingDelta = document.getElementById('rating-delta')!.querySelector('span')!.querySelector('span')!;
@@ -262,7 +302,23 @@ export class PlayerStats {
 			canvasContainer.style.width = '75px';
 			canvasContainer.style.height = '75px';
 
-			const canvas = document.getElementById(clutch + '-chart-canvas')! as HTMLCanvasElement;
+			const canvas = document.createElement('canvas');
+			new Chart(canvas, {
+				type: 'pie',
+				data: {
+					datasets: [{
+						data: [percentageToRadians(parseFloat(percentage)), percentageToRadians(100 - parseFloat(percentage))],
+						backgroundColor: [
+							'rgb(58, 116, 250)',
+							'rgb(58, 116, 250, .1)',
+						],
+						borderWidth: 0,
+						animation: false,
+						weight: 1
+					}]
+				},
+				options,
+			});
 			canvasContainer.append(canvas);
 
 			column.append(canvasContainer);
@@ -556,13 +612,32 @@ export class PlayerStats {
 				canvasContainer.style.height = '60px';
 				canvasContainer.style.marginTop = '-10px';
 
-				const canvas = document.getElementById(ids[title][side]) as HTMLCanvasElement;
-				const parentElement = title === 'Attempts' && side !== 'Both' ?  canvas.parentElement! : canvas.parentElement!.parentElement!;
+				const oldCanvas = document.getElementById(ids[title][side]) as HTMLCanvasElement;
+				const parentElement = title === 'Attempts' && side !== 'Both' ?  oldCanvas.parentElement! : oldCanvas.parentElement!.parentElement!;
+				const percentage = parentElement.innerText;
+
+				const colorBoth = 'rgb(58, 116, 250';
+				const colorT = 'rgb(250, 173, 58';
+				const colorCT = 'rgb(58, 169, 250';
+
+				const canvas = document.createElement('canvas');
+				new Chart(canvas, {
+					type: 'pie',
+					data: {
+						datasets: [{
+							data: [percentageToRadians(parseFloat(percentage)), percentageToRadians(100 - parseFloat(percentage))],
+							backgroundColor: [
+								(side === 'Both' ? colorBoth : side === 'T' ? colorT : colorCT) + ')',
+								(side === 'Both' ? colorBoth : side === 'T' ? colorT : colorCT) + ', .1)',
+							],
+							borderWidth: 0,
+						}]
+					},
+					options,
+				})
 
 				canvasContainer.append(canvas);
 				column.append(canvas.parentElement!);
-
-				const percentage = parentElement.innerText;
 				column.append(percentage);
 
 				if (title === 'Success') column.prepend(side);

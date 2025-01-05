@@ -1,5 +1,8 @@
-import { CS2Map } from "../utils/constants";
-import { getMapIcon, getMapName } from "../utils/maps";
+import { CS2Map } from "../utils/constants.js";
+import { getMapIcon, getMapName } from "../utils/maps.js";
+
+import Chart from 'chart.js/auto';
+import { options, percentageToRadians } from "../utils/chart.js";
 
 export class PlayerMaps {
 
@@ -42,7 +45,48 @@ export class PlayerMaps {
 			mapCell.style.textTransform = 'capitalize';
 			mapCell.style.display = 'flex';
 			mapCell.style.alignItems = 'center';
-			mapCell.style.height = '69.97px';
+			mapCell.style.height = '70px';
+
+			const pieCell = row.children[1] as HTMLDivElement;
+
+			const oldCanvas = pieCell.querySelector('canvas') as HTMLCanvasElement;
+			const percentageSpan = pieCell.querySelector('span') as HTMLSpanElement;
+			const percentage = parseFloat(percentageSpan.textContent!.replace('%', ''));
+
+			const canvas = document.createElement('canvas');
+			new Chart(canvas, {
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: [percentage, 100 - percentage].map(percentageToRadians),
+						backgroundColor: ['rgb(125, 205, 78)', 'rgb(202, 81, 81)'],
+						borderWidth: 0,
+					}],
+				},
+				options: {
+					...options,
+					cutout: '80%',
+				},
+			});
+
+			oldCanvas.remove();
+			pieCell.children[0].remove();
+
+			pieCell.style.maxHeight = '70px';
+			pieCell.style.display = 'flex';
+			pieCell.style.alignItems = 'center';
+			pieCell.style.justifyContent = 'center';
+			pieCell.style.position = 'relative';
+			pieCell.style.margin = '0';
+			pieCell.append(canvas);
+
+			const percentageText = document.createElement('span');
+			percentageText.innerText = percentage + '%';
+			percentageText.style.position = 'absolute';
+			percentageText.style.fontSize = '1.125em';
+			percentageText.style.fontWeight = 'bold';
+			percentageText.style.color = 'white';
+			pieCell.append(percentageText);
 		})
 		
 	}

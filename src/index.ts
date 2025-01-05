@@ -1,10 +1,10 @@
-import { Match } from './match/index';
-import { Navbar } from './navbar';
-import { Player } from './player/index';
-import { PlayerMaps } from './player/maps';
-import { PlayerMatches } from './player/matches';
-import { PlayerPlayers } from './player/players';
-import { PlayerStats } from './player/stats';
+import { Match } from './match/index.js';
+import { Navbar } from './navbar.js';
+import { Player } from './player/index.js';
+import { PlayerMaps } from './player/maps.js';
+import { PlayerMatches } from './player/matches.js';
+import { PlayerPlayers } from './player/players.js';
+import { PlayerStats } from './player/stats.js';
 
 let previousPathname = window.location.pathname;
 

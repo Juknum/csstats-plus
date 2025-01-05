@@ -1,6 +1,6 @@
-import { CS2Map } from "../utils/constants";
-import { getMapIcon, getMapName } from "../utils/maps";
-import { getRankPicture } from "../utils/ranks";
+import { CS2Map } from "../utils/constants.js";
+import { getMapIcon, getMapName } from "../utils/maps.js";
+import { getRankPicture } from "../utils/ranks.js";
 
 export class Match {
 	

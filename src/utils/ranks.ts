@@ -1,4 +1,4 @@
-import { BASE_URL, GAME_MODES, PREMIER_RANKS_COLOR } from "./constants";
+import { BASE_URL, GAME_MODES, PREMIER_RANKS_COLOR } from "./constants.js";
 
 export interface RankInfo {
 	game: CSGame;

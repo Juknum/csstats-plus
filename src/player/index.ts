@@ -1,7 +1,7 @@
-import { CS2Map } from "../utils/constants";
-import { getRankPicture, getRanksInfo, RankInfo, slicePremierRank } from "../utils/ranks";
-import { getUserInfo } from "../utils/user";
-import { getMapIcon } from "../utils/maps";
+import { CS2Map } from "../utils/constants.js";
+import { getRankPicture, getRanksInfo, RankInfo, slicePremierRank } from "../utils/ranks.js";
+import { getUserInfo } from "../utils/user.js";
+import { getMapIcon } from "../utils/maps.js";
 
 var playedWithVacBtnShown = true;
 var matchesWithVacBtnShown = true;
