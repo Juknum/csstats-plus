@@ -1,10 +1,43 @@
-import { CS2Map } from "../utils/constants.js";
 import { getRankPicture, getRanksInfo, RankInfo, slicePremierRank } from "../utils/ranks.js";
 import { getUserInfo } from "../utils/user.js";
 import { getMapIcon } from "../utils/maps.js";
+import { PlayerStats } from "./stats.js";
+import { PlayerMaps } from "./maps.js";
+import { PlayerMatches } from "./matches.js";
+import { PlayerPlayers } from "./players.js";
+import { CS2Map } from "../utils/constants.js";
 
-var playedWithVacBtnShown = true;
-var matchesWithVacBtnShown = true;
+export class PlayerInit {
+	constructor() {
+		const div = document.getElementById('content-wrapper')!;
+			const loader = document.createElement('div');
+
+			loader.style.height = 'calc(100vh - 64px)';
+			loader.style.width = '100%';
+			loader.innerHTML = `
+				<svg class="circular" viewBox="25 25 50 50" style="height: 100px; width: 100px;">
+					<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+				</svg>
+			`;
+
+			div.appendChild(loader);
+
+			const observer = new MutationObserver((mutationsRecords) => {
+				if (mutationsRecords.find((mutationsRecord) => mutationsRecord.removedNodes.length > 0 && (mutationsRecord.removedNodes[0] as HTMLElement).id === 'loader-outer')) {
+					div.removeChild(loader);
+
+					try { new Player(); } catch (e) { console.error(e); }
+	
+					try { new PlayerStats(); } catch (e) { console.error(e); }
+					try { new PlayerMaps(); } catch (e) { console.error(e); }
+					try { new PlayerMatches(); } catch (e) { console.error(e); }
+					try { new PlayerPlayers(); } catch (e) { console.error(e); }
+				}
+			});
+
+			observer.observe(document.getElementById('player-outer-section')!, { childList: true });
+	}
+}
 
 export class Player {
 	private readonly userInfo = getUserInfo();
