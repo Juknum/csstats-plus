@@ -10,7 +10,12 @@ export function getLast10Matches() {
 
 		const mapCol = tr.querySelector('td:nth-child(3)')!;
 		const map = mapCol.querySelector('img')?.getAttribute('alt') || mapCol.textContent!.trim();
-		const url = tr.getAttribute('onclick')?.replace('if (!window.__cfRLUnblockHandlers) return false; window.location=', '').replace(/'/g, '');
+		const url = tr
+			.getAttribute('onclick')!
+			.replace('window.location=', '')
+			.replace('if (!window.__cfRLUnblockHandlers) return false;', '')
+			.replace(/'/g, '')
+		;
 
 		return {
 			map,

@@ -733,8 +733,11 @@ export class PlayerStats {
 		(matchesDiv as NodeListOf<HTMLDivElement>).forEach((div, index) => {
 			const img = div.querySelector('img');
 
-			// @ts-expect-error
-			div.onclick = () => window.location = matches[index].url!;
+			div.onclick = () => {
+				const a = document.createElement('a')
+				a.href = matches[index].url!;
+				a.click();
+			};
 			div.style.cursor = 'pointer';
 
 			if (img) {
