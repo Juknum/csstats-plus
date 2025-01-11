@@ -99,12 +99,26 @@ export class PlayerStats {
 		const stats = getUserStats();
 		if (!stats) return console.error('Stats not found');
 
+		let maxKpd = 3.0;
 		let kpd1 = stats['overall'].kpd;
-		if (kpd1 > 1.5) kpd1 = 1.5;
-		kpd1 = (kpd1 / 1.5) * 100;
+		if (kpd1 > maxKpd) kpd1 = maxKpd;
+
+		kpd1 = (kpd1 / (maxKpd / 2)) * 100; // normalize
 		
 		let kpd2 = 100 - kpd1;
 		if (kpd2 < 0) kpd2 = 0;
+
+		let maxed = false;
+		if (stats['overall'].kpd > (maxKpd / 2)) {
+			maxed = true;
+			kpd1 = kpd1 - 100;
+			kpd2 = 100 - kpd1;
+		}
+
+		let overmaxed = false;
+		if (stats['overall'].kpd > maxKpd) {
+			overmaxed = true;
+		}
 
 		const canvas = document.createElement('canvas');
 		new Chart(canvas, {
@@ -112,10 +126,19 @@ export class PlayerStats {
 			data: {
 				datasets: [{
 					data: [kpd1, kpd2],
-					backgroundColor: [
-						'rgb(125, 205, 78)',
-						'rgb(202, 81,  81)',
-					],
+					backgroundColor: overmaxed
+					? [
+						'rgb(250, 173, 58)',
+					] 
+					: maxed 
+						? [						
+							'rgb(125, 205, 78)',
+							'rgba(125, 205, 78, .2)',
+						] 
+						: [
+							'rgb(125, 205, 78)',
+							'rgba(202, 81,  81, .2)',
+						],
 					borderWidth: 0,
 					animation: false,
 					weight: 1
@@ -172,12 +195,25 @@ export class PlayerStats {
 		const stats = getUserStats();
 		if (!stats) return console.error('Stats not found');
 
-		let rating1 = stats['overall'].rating - 0.4;
-		if (rating1 > 0.9) rating1 = 0.9;
-		rating1 = (rating1 / 0.9) * 100;
-		
+		const offset = 0.4;
+		const maxRating = 1.8;
+		let rating1 = stats['overall'].rating - offset;
+		if (rating1 > maxRating) rating1 = maxRating;
+
+		rating1 = (rating1 / (maxRating / 2)) * 100; // normalize
 		let rating2 = 100 - rating1;
-		if (rating2 < 0) rating2 = 0;
+
+		let maxed = false;
+		if (stats['overall'].rating > ((maxRating / 2) + offset)) {
+			maxed = true;
+			rating1 = rating1 - 100;
+			rating2 = 100 - rating1;
+		}
+
+		let overmaxed = false;
+		if (stats['overall'].rating > maxRating) {
+			overmaxed = true;
+		}
 
 		const canvas = document.createElement('canvas');
 		new Chart(canvas, {
@@ -185,10 +221,19 @@ export class PlayerStats {
 			data: {
 				datasets: [{
 					data: [rating1, rating2],
-					backgroundColor: [
-						'rgb(125, 205, 78)',
-						'rgb(202, 81,  81)',
-					],
+					backgroundColor: overmaxed 
+					? [
+						'rgb(250, 173, 58)',
+					] 
+					: maxed 
+						? [						
+							'rgb(125, 205, 78)',
+							'rgba(125, 205, 78, .2)',
+						] 
+						: [
+							'rgb(125, 205, 78)',
+							'rgba(202, 81,  81, .2)',
+						],
 					borderWidth: 0,
 					animation: false,
 					weight: 1
