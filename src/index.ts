@@ -9,9 +9,6 @@ import { PlayerStats } from './player/stats.js';
 let previousPathname = window.location.pathname;
 
 const notifyPathnameChange = () => {
-	// notify on every change
-	Player.checkVacBtns(window.location.hash);
-
 	// notify only if pathname has changed
 	if (previousPathname === window.location.pathname) return;
 	main(window.location);
