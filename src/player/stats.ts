@@ -4,6 +4,7 @@ import { getLast10Matches } from "../utils/matches.js";
 
 import Chart from 'chart.js/auto';
 import { options, percentageToRadians } from "../utils/chart.js";
+import { getUserStats } from "../utils/user.js";
 
 export class PlayerStats {
 
@@ -95,14 +96,25 @@ export class PlayerStats {
 
 		div.append(title);
 
+		const stats = getUserStats();
+		if (!stats) return console.error('Stats not found');
+
+		let kpd1 = stats['overall'].kpd;
+		if (kpd1 > 1.5) kpd1 = 1.5;
+		kpd1 = (kpd1 / 1.5) * 100;
+		
+		let kpd2 = 100 - kpd1;
+		if (kpd2 < 0) kpd2 = 0;
+
 		const canvas = document.createElement('canvas');
 		new Chart(canvas, {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: [90],
+					data: [kpd1, kpd2],
 					backgroundColor: [
-						'rgb(58, 116, 250)',
+						'rgb(125, 205, 78)',
+						'rgb(202, 81,  81)',
 					],
 					borderWidth: 0,
 					animation: false,
@@ -156,15 +168,26 @@ export class PlayerStats {
 		rating.style.width = `calc(100% - (2 * ${div.style.padding}))`;
 		rating.style.textAlign = 'center';
 		rating.style.top = '110px';
+		
+		const stats = getUserStats();
+		if (!stats) return console.error('Stats not found');
+
+		let rating1 = stats['overall'].rating - 0.4;
+		if (rating1 > 0.9) rating1 = 0.9;
+		rating1 = (rating1 / 0.9) * 100;
+		
+		let rating2 = 100 - rating1;
+		if (rating2 < 0) rating2 = 0;
 
 		const canvas = document.createElement('canvas');
 		new Chart(canvas, {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: [90],
+					data: [rating1, rating2],
 					backgroundColor: [
-						'rgb(58, 116, 250)',
+						'rgb(125, 205, 78)',
+						'rgb(202, 81,  81)',
 					],
 					borderWidth: 0,
 					animation: false,

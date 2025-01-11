@@ -17,3 +17,24 @@ export function getUserInfo() {
 		}
 	}
 }
+
+interface Stats { 
+	[key: string]: unknown;
+	overall: {
+		[key: string]: unknown;
+		kpd: number;
+		rating: number;
+	}
+}
+
+export function getUserStats(): Stats | undefined {
+	let stats: Stats | undefined;
+
+	for (const script of Array.from(document.scripts)) {
+		if (script.textContent?.includes('var stats = ')) {
+			stats = JSON.parse(script.textContent.split('var stats = ')[1].split(';')[0]);
+		}
+	}
+
+	return stats;
+}
