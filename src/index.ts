@@ -41,8 +41,24 @@ function main(location: typeof window.location) {
 
 	switch (true) {
 		case location.pathname.includes('/player/'):
+
+			const div = document.getElementById('content-wrapper')!;
+			const loader = document.createElement('div');
+
+			loader.style.height = 'calc(100vh - 64px)';
+			loader.style.width = '100%';
+			loader.innerHTML = `
+				<svg class="circular" viewBox="25 25 50 50" style="height: 100px; width: 100px;">
+					<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+				</svg>
+			`;
+
+			div.appendChild(loader);
+
 			const observer = new MutationObserver((mutationsRecords) => {
 				if (mutationsRecords.find((mutationsRecord) => mutationsRecord.removedNodes.length > 0 && (mutationsRecord.removedNodes[0] as HTMLElement).id === 'loader-outer')) {
+					div.removeChild(loader);
+
 					try { new Player(); } catch (e) { console.error(e); }
 	
 					try { new PlayerStats(); } catch (e) { console.error(e); }
