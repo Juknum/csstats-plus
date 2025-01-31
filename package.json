@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.0.283",
-    "vite": "^5.4.11",
+    "vite": "^5.4.14",
     "vite-plugin-static-copy": "^2.1.0"
   }
 }
