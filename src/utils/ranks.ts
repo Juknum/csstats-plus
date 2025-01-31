@@ -3,7 +3,10 @@ import { BASE_URL, GAME_MODES, PREMIER_RANKS_COLOR } from "./constants.js";
 export interface RankInfo {
 	game: CSGame;
 	map: string | null;
-	mode: CSGameMode;
+	gamemode: {
+		season: number | null;
+		type: CSGameMode;
+	};
 	rank: {
 		best: number;
 		current: number;
@@ -40,7 +43,22 @@ export function getRanksInfo(): RankInfo[] {
 
 		// retrieve map & game mode info
 		const mapImgOrText = icon.children[0] as HTMLImageElement | null ?? icon.textContent!.trim();
-		const mapOrGameMode = game === 'CS:GO' ? null : typeof mapImgOrText === 'string' ? mapImgOrText : mapImgOrText.alt
+
+		const mapOrGameMode = game === 'CS:GO' 
+			? null
+			: typeof mapImgOrText === 'string' 
+				? mapImgOrText
+				: mapImgOrText.alt;
+
+		const map = mapOrGameMode?.includes('_') ? mapOrGameMode : null;
+		const gamemode = {
+			season: mapOrGameMode?.includes('Premier') 
+				? isNaN(parseInt(mapOrGameMode.replace('Premier - Season ', ''), 10)) ? 1 : parseInt(mapOrGameMode.replace('Premier - Season ', ''), 10)
+				: null,
+			type: mapOrGameMode?.includes('Premier') 
+				? 'Premier'
+				: mapOrGameMode && GAME_MODES.includes(mapOrGameMode as CSGameMode) ? mapOrGameMode as CSGameMode : 'Competitive',
+		};
 
 		// retrieve rank info
 		const currRankEl = rank.children[0] as HTMLImageElement | HTMLDivElement | null;
@@ -59,8 +77,8 @@ export function getRanksInfo(): RankInfo[] {
 
 		const rankToAdd: RankInfo = {
 			game,
-			map: !mapOrGameMode || GAME_MODES.includes(mapOrGameMode as CSGameMode) ? null : mapOrGameMode,
-			mode: GAME_MODES.includes(mapOrGameMode as CSGameMode) ? mapOrGameMode as CSGameMode : 'Competitive',
+			map, 
+			gamemode,
 			rank: {
 				best: bestRank === currentRank ? 0 : bestRank,
 				current: currentRank === 0 && bestRank !== 0 ? -1 : currentRank, // -1 means expired rank

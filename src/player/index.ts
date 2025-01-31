@@ -44,6 +44,8 @@ export class Player {
 	private readonly ranksInfo = getRanksInfo();
 
 	private readonly NOT_COMPETITIVE_WIDTH = 600;
+
+	private premierSeasonDisplayed: number = 0;
 	
 	constructor() {
 		// Custom HTML injection
@@ -226,7 +228,7 @@ export class Player {
 		const notCompetitiveRanks = this.notCompetitiveRanks;
 		div.append(notCompetitiveRanks);
 
-		if (this.ranksInfo.some(ri => ri.mode === 'Competitive' && ri.game === 'CS2')) {
+		if (this.ranksInfo.some(ri => ri.gamemode.type === 'Competitive' && ri.game === 'CS2')) {
 			const competitiveRanks = this.competitiveRanks;
 			div.append(competitiveRanks);
 
@@ -278,7 +280,7 @@ export class Player {
 		rankInfo.style.paddingBottom = 'calc(15px + 5px)'; // scrollbar height + padding
 
 		const spans = ['wins', 'played', 'current'];
-		if (this.ranksInfo.filter(ri => ri.mode === 'Competitive' && ri.game === 'CS2').map(ri => ri.rank.best).some(r => r !== 0)) {
+		if (this.ranksInfo.filter(ri => ri.gamemode.type === 'Competitive' && ri.game === 'CS2').map(ri => ri.rank.best).some(r => r !== 0)) {
 			spans.push('best');
 		}
 
@@ -305,7 +307,7 @@ export class Player {
 		ranks.style.paddingBottom = '5px';
 		ranks.style.width = '100%';
 
-		for (const rankInfo of this.ranksInfo.filter(ri => ri.game === 'CS2' && ri.mode === 'Competitive' && ri.map !== null)) {
+		for (const rankInfo of this.ranksInfo.filter(ri => ri.game === 'CS2' && ri.gamemode.type === 'Competitive' && ri.map !== null)) {
 			const rank = document.createElement('div');
 			rank.style.display = 'flex';
 			rank.style.gap = '5px';
@@ -343,7 +345,7 @@ export class Player {
 				;
 
 			const current = document.createElement('img');
-			current.src = getRankPicture(rankInfo.rank.current, rankInfo.mode);
+			current.src = getRankPicture(rankInfo.rank.current, rankInfo.gamemode.type);
 			current.width = CELL_WIDTH;
 
 			rank.append(icon);
@@ -353,7 +355,7 @@ export class Player {
 
 			if (rankInfo.rank.best !== 0) {
 				const best = document.createElement('img');
-				best.src = getRankPicture(rankInfo.rank.best, rankInfo.mode);
+				best.src = getRankPicture(rankInfo.rank.best, rankInfo.gamemode.type);
 				best.width = CELL_WIDTH;
 				rank.append(best);
 			}
@@ -377,17 +379,17 @@ export class Player {
 
 		let modesCount = 0;
 
-		if (this.ranksInfo.some(ri => ri.mode === 'Premier')) {
+		if (this.ranksInfo.some(ri => ri.gamemode.type === 'Premier')) {
 			div.append(this.premierRank);
 			modesCount++;
 		}
 
-		if (this.ranksInfo.some(ri => ri.mode === 'FACEIT')) {
+		if (this.ranksInfo.some(ri => ri.gamemode.type === 'FACEIT')) {
 			div.append(this.faceitRank);
 			modesCount++;
 		}
 
-		if (this.ranksInfo.some(ri => ri.mode === 'Wingman')) {
+		if (this.ranksInfo.some(ri => ri.gamemode.type === 'Wingman')) {
 			div.append(this.wingmanRank);
 			modesCount++;
 		}
@@ -461,15 +463,24 @@ export class Player {
 			span.style.height = '9px';
 			span.style.textTransform = 'uppercase';
 			span.style.textAlign = 'center';
-			span.innerText = rankInfo.game === 'CS:GO' && type === 'current' ? 'last' : type;
+			span.innerText = 
+				type === 'current' &&
+				(
+					rankInfo.game === 'CS:GO'
+					|| this.ranksInfo
+						.filter(ri => ri.gamemode.type === rankInfo.gamemode.type)
+						.sort((a, b) => b.gamemode.season! - a.gamemode.season!)[0].gamemode.season !== rankInfo.gamemode.season
+				)
+				? 'last' 
+				: type;
 
-			if (rankInfo.mode === 'Premier') {
+			if (rankInfo.gamemode.type === 'Premier') {
 				const [thousand, hundred, color] = slicePremierRank(rankInfo.rank[type]);
 				
 				const icon = document.createElement('div');
 				icon.className = `cs2rating ${color} md`;
 				icon.style.transform = 'scale(1.2)';
-				icon.style.backgroundImage = `url(${getRankPicture(rankInfo.rank[type], rankInfo.mode)})`;
+				icon.style.backgroundImage = `url(${getRankPicture(rankInfo.rank[type], rankInfo.gamemode.type)})`;
 
 				const span = document.createElement('span');
 				span.innerText = thousand === 0 ? '---' : thousand.toString();
@@ -484,9 +495,9 @@ export class Player {
 			}
 			else {
 				const icon = document.createElement('img');
-				icon.src = getRankPicture(rankInfo.rank[type], rankInfo.mode);
+				icon.src = getRankPicture(rankInfo.rank[type], rankInfo.gamemode.type);
 	
-				if (rankInfo.mode === 'FACEIT') {
+				if (rankInfo.gamemode.type === 'FACEIT') {
 					icon.width = 40;
 					icon.height = 40;
 				}
@@ -513,7 +524,7 @@ export class Player {
 	private get faceitRank() {
 		const div = this.rankDiv;
 
-		const rankInfo = this.ranksInfo.find(ri => ri.mode === 'FACEIT')!;
+		const rankInfo = this.ranksInfo.find(ri => ri.gamemode.type === 'FACEIT')!;
 		const titles = this.rankTitles(rankInfo);
 		div.append(titles);
 
@@ -538,13 +549,82 @@ export class Player {
 
 	private get premierRank() {
 		const div = this.rankDiv;
+		div.style.gap = '10px';
+		div.style.position = 'relative';
 
-		const rankInfo = this.ranksInfo.find(ri => ri.mode === 'Premier')!;
-		const titles = this.rankTitles(rankInfo);
+		const ranksInfo = this.ranksInfo
+			.filter(ri => ri.gamemode.type === 'Premier')
+			.sort((a, b) => b.gamemode.season! - a.gamemode.season!);
+
+		this.premierSeasonDisplayed = 0;
+
+		const titles = this.rankTitles(ranksInfo[this.premierSeasonDisplayed]);
+		titles.id = 'premier-rank-titles';
 		div.append(titles);
 
-		const container = this.rankIcons(rankInfo);
+		const container = this.rankIcons(ranksInfo[this.premierSeasonDisplayed]);
+		container.id = 'premier-rank-icons';
 		div.append(container);
+
+		const leftBtn = document.createElement('button');
+		leftBtn.style.left = '10px';
+		leftBtn.style.transform = 'rotate(90deg)';
+		leftBtn.classList.add('premier-season-btn');
+
+		leftBtn.onclick = () => {
+			document.getElementById('premier-rank-titles')!.remove();
+			document.getElementById('premier-rank-icons')!.remove();
+
+			this.premierSeasonDisplayed++;
+			if (this.premierSeasonDisplayed >= ranksInfo.length - 1) {
+				this.premierSeasonDisplayed = ranksInfo.length - 1;
+				leftBtn.style.display = 'none';
+			}
+			if (this.premierSeasonDisplayed > 0) {
+				rightBtn.style.display = '';
+			}
+
+			const titles = this.rankTitles(ranksInfo[this.premierSeasonDisplayed!]);
+			titles.id = 'premier-rank-titles';
+
+			const container = this.rankIcons(ranksInfo[this.premierSeasonDisplayed!]);
+			container.id = 'premier-rank-icons';
+
+			div.append(titles);
+			div.append(container);
+		};
+
+		const rightBtn = document.createElement('button');
+		rightBtn.style.right = '10px';
+		rightBtn.style.display = 'none';
+		rightBtn.style.transform = 'rotate(-90deg)';
+		rightBtn.classList.add('premier-season-btn');
+
+		rightBtn.onclick = () => {
+			document.getElementById('premier-rank-titles')!.remove();
+			document.getElementById('premier-rank-icons')!.remove();
+			
+			this.premierSeasonDisplayed--;
+			if (this.premierSeasonDisplayed <= 0) {
+				this.premierSeasonDisplayed = 0;
+				rightBtn.style.display = 'none';
+			}
+			if (this.premierSeasonDisplayed < ranksInfo.length) {
+				leftBtn.style.display = '';
+			}
+
+			const titles = this.rankTitles(ranksInfo[this.premierSeasonDisplayed!]);
+			titles.id = 'premier-rank-titles';
+
+			const container = this.rankIcons(ranksInfo[this.premierSeasonDisplayed!]);
+			container.id = 'premier-rank-icons';
+
+			div.append(titles);
+			div.append(container);
+		};
+
+		div.append(leftBtn);
+		div.append(rightBtn);
 
 		return div;
 	}
@@ -556,7 +636,7 @@ export class Player {
 		div.style.justifyContent = 'space-between';
 
 		const title = this.rankTitle;
-		title.innerText = rankInfo.game === 'CS:GO' ? 'CS:GO' : rankInfo.mode;
+		title.innerText = rankInfo.game === 'CS:GO' ? 'CS:GO' : rankInfo.gamemode.type + `${rankInfo.gamemode.season ? '  -  S' + rankInfo.gamemode.season : ''}`;
 
 		const date = this.rankTitle;
 		date.innerText = rankInfo.date;
@@ -586,7 +666,7 @@ export class Player {
 	private get wingmanRank() {
 		const div = this.rankDiv;
 
-		const rankInfo = this.ranksInfo.find(ri => ri.mode === 'Wingman')!;
+		const rankInfo = this.ranksInfo.find(ri => ri.gamemode.type === 'Wingman')!;
 		const titles = this.rankTitles(rankInfo);
 		const container = this.rankIcons(rankInfo);
 		

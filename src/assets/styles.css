@@ -148,6 +148,24 @@ span#match-list-show-vac {
 	color: #3A74FA !important;
 }
 
+.premier-season-btn {
+	position: absolute;
+	border: none;
+	top: 49px;
+	height: 30px;
+	width: 30px;
+	border-radius: 50%;
+	background: url(data:image/gif;base64,R0lGODlhEwAMAIABAMXDwgAAACH5BAEAAAEALAAAAAATAAwAAAIUjI+py+0PEZh0wmpjjSfzD4aiUQAAOw==) transparent;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.premier-season-btn:hover {
+	background: url(data:image/gif;base64,R0lGODlhEwAMAIABAMXDwgAAACH5BAEAAAEALAAAAAATAAwAAAIUjI+py+0PEZh0wmpjjSfzD4aiUQAAOw==) rgba(255, 255, 255, .1);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
 /* Scrollbar Styling */
 :root {
 	/* Firefox */
