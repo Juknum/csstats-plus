@@ -844,9 +844,25 @@ export class PlayerStats {
 		div.style.backdropFilter = 'blur(2px)';
 		div.style.backgroundColor = 'rgba(0, 0, 0, .75)';
 
-		Array.from(data.children).forEach((div) => {
-			const row = div.querySelector('div')!.querySelector('div')!;
+		const sorted = (Array.from(data.children) as HTMLDivElement[]).sort((a, b) => {
+			const rowA = a.querySelector('div')!.querySelector('div')!;
+			const mapIconMissingA = Array.from(rowA.querySelectorAll('div')).length === 0;
+			const greenBarA = Array.from(a.querySelectorAll('div'))[mapIconMissingA ? 4 : 5]!;
+			const widthA = parseInt(greenBarA.style.width.replace('%', ''));
 
+			const rowB = b.querySelector('div')!.querySelector('div')!;
+			const mapIconMissingB = Array.from(rowB.querySelectorAll('div')).length === 0;
+			const greenBarB = Array.from(b.querySelectorAll('div'))[mapIconMissingB ? 4 : 5]!;
+			const widthB = parseInt(greenBarB.style.width.replace('%', ''));
+
+			return widthB - widthA;
+		});
+
+		data.innerHTML = '';
+		data.append(...sorted);
+
+		sorted.forEach((div, i, arr) => {
+			const row = div.querySelector('div')!.querySelector('div')!;
 			const mapIconMissing = Array.from(row.querySelectorAll('div')).length === 0;
 
 			const greenBar = Array.from(div.querySelectorAll('div'))[mapIconMissing ? 4 : 5]!;
