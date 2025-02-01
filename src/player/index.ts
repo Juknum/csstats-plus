@@ -570,6 +570,7 @@ export class Player {
 
 		const leftBtn = document.createElement('button');
 		leftBtn.style.left = '10px';
+		if (ranksInfo.length === 1) leftBtn.style.display = 'none';
 		leftBtn.style.transform = 'rotate(90deg)';
 		leftBtn.classList.add('premier-season-btn');
 
