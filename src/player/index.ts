@@ -175,10 +175,23 @@ export class Player {
 
 		const socials = document.createElement('div');
 		socials.style.display = 'flex';
-		socials.style.gap = '9px';
+		socials.style.gap = '10px';
 		socials.style.justifyContent = 'center';
 		socials.style.alignItems = 'center';
 		socials.style.width = '100%';
+
+		if (this.userInfo.profiles.discordBooster) {
+			const discordIcon = document.createElement('img');
+			discordIcon.src = this.userInfo.profiles.discordBooster;
+			discordIcon.width = 18;
+			discordIcon.height = 14;
+			discordIcon.dataset.toggle = 'tooltip';
+			discordIcon.dataset.originalTitle = 'Discord Server Booster';
+			discordIcon.alt = 'Discord Server Booster';
+			discordIcon.title = '';
+
+			socials.append(discordIcon);
+		}
 
 		if (this.userInfo.profiles.steam) {
 			const steamIcon = document.createElement('img');

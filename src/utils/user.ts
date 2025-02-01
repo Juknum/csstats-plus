@@ -1,11 +1,12 @@
 export function getUserInfo() {
 	const otherProfilesDiv = document.getElementById('other-profiles') as HTMLDivElement;
-	const [steam, faceit] = Array.from(otherProfilesDiv.children).filter((c) => c.classList.contains('icon')) as (HTMLDivElement | undefined)[];
+	const icons = Array.from(otherProfilesDiv.children).filter((c) => c.classList.contains('icon')).filter(Boolean) as HTMLDivElement[];
 
 	const bannedBanner = (Array.from(otherProfilesDiv.children) as HTMLDivElement[]).find((c) => c.innerText.includes('VAC') || c.innerText.includes('Overwatch'));
 
-	const steamAnchor = steam?.children[0] as HTMLAnchorElement | undefined;
-	const faceitAnchor = faceit?.children[0] as HTMLAnchorElement | undefined;
+	const steamAnchor = icons.find((i) => (i.children[0] as HTMLAnchorElement)?.href?.includes('steamcommunity.com'))?.children[0] as HTMLAnchorElement | undefined;
+	const faceitAnchor = icons.find((i) => (i.children[0] as HTMLAnchorElement)?.href?.includes('faceit.com'))?.children[0] as HTMLAnchorElement | undefined;
+	const discordBooster = icons.find((i) => (i.children[0] as HTMLImageElement)?.src?.includes('discord-booster-1.png'))?.children[0] as HTMLImageElement | undefined;
 
 	return {
 		img: (document.getElementById('player-avatar')?.children[0] as HTMLImageElement).src,
@@ -14,6 +15,7 @@ export function getUserInfo() {
 		profiles: {
 			steam: steamAnchor?.href,
 			faceit: faceitAnchor?.href,
+			discordBooster: discordBooster?.src,
 		}
 	}
 }
