@@ -128,6 +128,7 @@ export class Player {
 		div.style.background = 'url("https://csstats.gg/images/header-bg-image.png") 50%';
 		div.style.backgroundSize = 'cover';
 		div.style.width = '100%';
+		div.style.minHeight = '270.04px';
 
 		const container = document.createElement('div');
 		container.style.width = '100%';
@@ -422,6 +423,7 @@ export class Player {
 		div.style.width = '100%';
 		div.style.maxWidth = 'calc((' + this.NOT_COMPETITIVE_WIDTH + 'px - 20px) / 2)';
 		div.style.height = '100%';
+		div.style.minHeight = '105.02px';
 		div.style.maxHeight = 'calc((100% - 20px) / 2)';
 		div.style.backdropFilter = 'blur(10px)';
 		div.style.borderRadius = '3px';
