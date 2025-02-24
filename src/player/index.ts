@@ -60,8 +60,8 @@ export class Player {
 		this.fixTableNavbar();
 
 		// Move stuff around
-		const warnGlyph = document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0];
-		if (warnGlyph && warnGlyph.parentElement) {
+		const warnGlyph = document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0] as HTMLSpanElement;
+		if (warnGlyph && warnGlyph.parentElement?.children.length === 1) {
 			warnGlyph.parentElement.remove();
 			const warnBanner = this.warnBanner('This player does not have match tracking enabled. Some data may be missing.');
 			warnBanner.style.backgroundColor = 'rgba(208, 65, 67, .15)';
