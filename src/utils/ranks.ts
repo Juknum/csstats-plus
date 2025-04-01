@@ -38,7 +38,10 @@ export function getRanksInfo(): RankInfo[] {
 		// body
 		// each rankElement has two rows
 		const [over, bottom] = Array.from(rankElement.children);
-		const [icon, rank, best] = Array.from(over.children);
+		const overChildren = Array.from(over.children);
+		const icon = overChildren.filter((el) => el.className === "icon")[0] as HTMLDivElement;
+		const rank = overChildren.filter((el) => el.className === "rank")[0] as HTMLDivElement;
+		const best = overChildren.filter((el) => el.className === "best")[0] as HTMLDivElement;
 		const [date, wins, _unused] = Array.from(bottom.children);
 
 		// retrieve map & game mode info
