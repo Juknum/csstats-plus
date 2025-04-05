@@ -10,32 +10,39 @@ import { CS2Map } from "../utils/constants.js";
 export class PlayerInit {
 	constructor() {
 		const div = document.getElementById('content-wrapper')!;
-			const loader = document.createElement('div');
+		const loader = document.createElement('div');
 
-			loader.style.height = 'calc(100vh - 64px)';
-			loader.style.width = '100%';
-			loader.innerHTML = `
-				<svg class="circular" viewBox="25 25 50 50" style="height: 100px; width: 100px;">
-					<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-				</svg>
-			`;
+		loader.style.height = 'calc(100vh - 64px)';
+		loader.style.width = '100%';
+		loader.innerHTML = `
+			<svg class="circular" viewBox="25 25 50 50" style="height: 100px; width: 100px;">
+				<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+			</svg>
+		`;
 
-			div.appendChild(loader);
+		let playerOuter = document.getElementById('player-outer-section')!;
 
-			const observer = new MutationObserver((mutationsRecords) => {
-				if (mutationsRecords.find((mutationsRecord) => mutationsRecord.removedNodes.length > 0 && (mutationsRecord.removedNodes[0] as HTMLElement).id === 'loader-outer')) {
-					div.removeChild(loader);
+		div.appendChild(loader);
+		playerOuter.style.visibility = 'hidden';
 
-					try { new Player(); } catch (e) { console.error(e); }
-	
-					try { new PlayerStats(); } catch (e) { console.error(e); }
-					try { new PlayerMaps(); } catch (e) { console.error(e); }
-					try { new PlayerMatches(); } catch (e) { console.error(e); }
-					try { new PlayerPlayers(); } catch (e) { console.error(e); }
-				}
-			});
+		let player = null;
+		try { player = new Player(); } catch (e) { console.error(e); }
 
-			observer.observe(document.getElementById('player-outer-section')!, { childList: true });
+		const observer = new MutationObserver((mutationsRecords) => {
+			if (mutationsRecords.find((mutationsRecord) => mutationsRecord.removedNodes.length > 0 && (mutationsRecord.removedNodes[0] as HTMLElement).id === 'loader-outer')) {
+				div.removeChild(loader);
+				playerOuter.style.visibility = '';
+
+				try { new PlayerStats(); } catch (e) { console.error(e); }
+				try { new PlayerMaps(); } catch (e) { console.error(e); }
+				try { new PlayerMatches(); } catch (e) { console.error(e); }
+				try { new PlayerPlayers(); } catch (e) { console.error(e); }
+
+				player?.afterStatsLoad();
+			}
+		});
+
+		observer.observe(document.getElementById('player-outer-section')!, { childList: true });
 	}
 }
 
@@ -46,11 +53,13 @@ export class Player {
 	private readonly NOT_COMPETITIVE_WIDTH = 600;
 
 	private premierSeasonDisplayed: number = 0;
-	
+
 	constructor() {
 		// Custom HTML injection
 		document.getElementById('player')!.prepend(this.playerHeader);
-
+	}
+	
+	public afterStatsLoad() {
 		// CSS fixes
 		if (document.getElementById('kpd')) {
 			document.getElementById('kpd')!.parentElement!.style.transform = 'translateY(-70%)';
