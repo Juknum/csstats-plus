@@ -12,10 +12,13 @@ export class PlayerInit {
 		const div = document.getElementById('content-wrapper')!;
 		const loader = document.createElement('div');
 
-		loader.style.height = 'calc(100vh - 64px)';
+		loader.style.height = 'calc(100vh - 64px - 270px)';
 		loader.style.width = '100%';
+		loader.style.display = 'flex';
+		loader.style.justifyContent = 'center';
+		loader.style.alignItems = 'center';
 		loader.innerHTML = `
-			<svg class="circular" viewBox="25 25 50 50" style="height: 100px; width: 100px;">
+			<svg class="circular" viewBox="25 25 50 50" style="height: 100px; width: 100px; position: absolute; top: 270px">
 				<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
 			</svg>
 		`;
