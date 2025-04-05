@@ -293,7 +293,7 @@ export class Player {
 		rankInfo.style.height = '100%';
 		rankInfo.style.paddingBottom = 'calc(15px + 5px)'; // scrollbar height + padding
 
-		const spans = ['wins', 'played', 'current'];
+		const spans = ['wins', 'played', 'latest'];
 		if (this.ranksInfo.filter(ri => ri.gamemode.type === 'Competitive' && ri.game === 'CS2').map(ri => ri.rank.best).some(r => r !== 0)) {
 			spans.push('best');
 		}
