@@ -1,4 +1,5 @@
 import { Match } from './match/index.js';
+import { MatchesPage } from './matches-page/index.js';
 import { Navbar } from './navbar.js';
 import { PlayerInit } from './player/index.js';
 
@@ -39,6 +40,10 @@ function main(location: typeof window.location) {
 
 		case location.pathname.includes('/match/'):
 			try { new Match(); } catch (e) { console.error(e); }
+			break;
+
+		case location.pathname.includes('/match'):
+			try { new MatchesPage(); } catch (e) { console.error(e); }
 			break;
 	}
 }
