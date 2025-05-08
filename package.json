@@ -6,12 +6,12 @@
     "build": "vite build"
   },
   "dependencies": {
-    "chart.js": "^4.4.7"
+    "chart.js": "^4.4.9"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.313",
-    "vite": "^6.2.5",
-    "vite-plugin-static-copy": "^2.3.0",
+    "@types/chrome": "^0.0.320",
+    "vite": "^6.3.5",
+    "vite-plugin-static-copy": "^2.3.1",
     "typescript": "^5.8.3"
   }
 }
