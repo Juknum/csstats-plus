@@ -5,7 +5,7 @@ export default defineConfig({
 	build: {
 		outDir: 'dist',
 		rollupOptions: {
-			input: 'src/index.ts',
+			input: 'src/contentScript.tsx',
 			output: {
 				format: 'iife',
 				entryFileNames: '[name].js',
@@ -15,8 +15,7 @@ export default defineConfig({
 	plugins: [
 		viteStaticCopy({
 			targets: [
-				{ src: 'src/assets/*.css', dest: '' },
-				{ src: 'src/assets/*.json', dest: '' },
+				{ src: 'manifest.json', dest: '' },
 				{ src: 'src/assets/icons/*.png', dest: 'icons' },
 			],
 		}),

@@ -8,8 +8,7 @@
 	"content_scripts": [
 		{
 			"matches": ["https://csstats.gg/*", "https://csgostats.gg/cs2"],
-			"js": ["index.js"],
-			"css": ["styles.css"],
+			"js": ["contentScript.js"],
 			"type": "module",
 			"run_at": "document_idle"
 		}
