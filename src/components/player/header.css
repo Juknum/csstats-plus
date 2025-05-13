@@ -1,0 +1,68 @@
+
+.header-container {
+	padding: 20px;
+	background-image: url('https://csstats.gg/images/header-bg-image.png');
+}
+
+.header-contained {
+	max-width: 1680px;
+	width: 100%;
+	/* border: 1px solid red; */
+}
+
+.header-ranks {
+	max-width: calc(1680px - 120px - 10px);
+}
+
+.header-competitive-ranks {
+	max-width: calc(100% - (2 * 290px) - (2 * 10px));
+}
+
+.player-avatar {
+	border-radius: 3px;
+}
+
+.premier-season-btn {
+	position: absolute;
+	top: 49px;
+	height: 30px;
+	width: 30px;
+	border-width: initial;
+	border-style: none;
+	border-color: initial;
+	border-image: initial;
+	border-radius: 50%;
+	background: url(data:image/gif;base64,R0lGODlhEwAMAIABAMXDwgAAACH5BAEAAAEALAAAAAATAAwAAAIUjI+py+0PEZh0wmpjjSfzD4aiUQAAOw==) center center no-repeat transparent;
+	background-position: center center
+}
+
+.premier-season-btn:hover {
+	background: url(data:image/gif;base64,R0lGODlhEwAMAIABAMXDwgAAACH5BAEAAAEALAAAAAATAAwAAAIUjI+py+0PEZh0wmpjjSfzD4aiUQAAOw==) rgba(255, 255, 255, .1);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.username {
+	color: rgb(255, 255, 255);
+	font-size: 14px;
+	line-height: 14px;
+	text-align: center;
+	text-overflow: ellipsis;
+	width: 120px;
+	word-break: break-all;
+}
+
+.hoverable {
+	position: relative;
+}
+
+.hoverable:hover::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: -5px;
+	border-radius: 3px;
+	width: 60px;
+	height: 172.38px;
+	background: linear-gradient(0deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+}

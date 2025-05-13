@@ -1,0 +1,22 @@
+
+.tile {
+	background: rgba(0, 0, 0, 0.25);
+	width: 290px;
+	height: 120px;
+	backdrop-filter: blur(10px);
+	border-radius: 3px;
+	padding: 10px;
+	display: flex;
+	position: relative;
+}
+
+.text-competitive {
+	height: 22.3483px;
+	line-height: 22.3483px;
+	width: 60px;
+}
+
+.tile-scrollable {
+	overflow: auto;
+	padding-bottom: 5px;
+}

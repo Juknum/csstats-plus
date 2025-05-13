@@ -1,3 +1,4 @@
+import PlayerHeader from "@/components/player/header";
 
 export default function PlayerPage() {
 	return (
@@ -6,6 +7,7 @@ export default function PlayerPage() {
 				flexDirection: 'column',
 			}}
 		>
+			<PlayerHeader />
 
 		</div>
 	)

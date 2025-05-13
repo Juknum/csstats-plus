@@ -1,0 +1,170 @@
+*, *::before, *::after {
+	font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+	box-sizing: border-box;
+	margin: 0;
+}
+
+/* Scrollbar Styling */
+:root, * {
+	/* Firefox */
+	scrollbar-width: thin; /* Make the scrollbar thinner */
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* Translucent knob and invisible track */
+}
+
+:root::-webkit-scrollbar, *::-webkit-scrollbar {
+	width: 12px; /* Width of the entire scrollbar */
+	height: 12px; /* Height of the entire scrollbar */
+}
+
+:root::-webkit-scrollbar-track, *::-webkit-scrollbar-track {
+  background: transparent; /* Make the track invisible */
+}
+
+:root::-webkit-scrollbar-thumb, *::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25); /* Translucent scrollbar knob */
+  border-radius: 5px; /* Optional: rounded corners for the knob */
+}
+
+:root::-webkit-scrollbar-thumb:hover, *::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4); /* Darker knob on hover */
+}
+/* ----------------- */
+
+.row {
+	--gap: 10px;
+	display: flex;
+	flex-direction: row;
+	gap: var(--gap);
+}
+
+.col {
+	--gap: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+.full-width {
+	width: 100% !important;
+}
+.full-height {
+	height: 100% !important;
+}
+
+.nowrap {
+	flex-wrap: nowrap;
+}
+
+.wrap {
+	flex-wrap: wrap;
+}
+
+.nogap {
+	gap: 0px;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.center-y {
+	align-items: center;
+}
+
+.center-x {
+	justify-content: center;
+}
+
+.align-right {
+	align-items: flex-end;
+}
+
+.align-left {
+	align-items: flex-start;
+}
+
+.space-between {
+	justify-content: space-between;
+}
+
+.space-evenly {
+	justify-content: space-evenly;
+}
+
+.text {
+	font-size: 14px; 
+	line-height: 14px; 
+	height: 14px;
+	color: rgba(255,255,255,0.8);
+}
+
+.text-small {
+	font-size: 9px;
+	line-height: 14px;
+	height: 14px;
+	text-align: right;
+	color: rgba(255,255,255,0.8);
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-italic {
+	font-style: italic;
+}
+
+.cs2rating {
+	transform: scale(1.25);
+
+	width: 70px;
+	height: 24px;
+	display: flex;
+	font-size: 16px;
+	align-items: center;
+	justify-content: center;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	padding: .75rem .75rem .75rem 1.5rem;
+	text-shadow: 0 1px 0 black;
+	font-weight: bold;
+	margin: auto;
+}
+
+.cs2rating.ancient {
+	color: #EB4B4B;
+}
+
+.cs2rating.legendary {
+	color: #D22CE6;
+}
+
+.cs2rating.unusual {
+	color: #FED700;
+}
+
+.cs2rating.mythical {
+	color: #8846FF;
+}
+
+.cs2rating.rare {
+	color: #4B69FF;
+}
+
+.cs2rating.uncommon {
+	color: #5E98D7;
+}
+
+.cs2rating.common {
+	color: #B1C3D9;
+}
+
+.cs2rating-big {
+	transform: skew(-15deg);
+}
+
+.cs2rating small {
+	font-size: 12px !important;
+}
