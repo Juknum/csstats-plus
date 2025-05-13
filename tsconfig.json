@@ -1,15 +1,7 @@
 {
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
-    "module": "NodeNext",
-    "lib": ["ESNext", "DOM"],
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
-    "moduleResolution": "NodeNext",
-    "jsx": "react",
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx"
+  }
 }
