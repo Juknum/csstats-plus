@@ -68,6 +68,10 @@
 	cursor: pointer;
 }
 
+.relative {
+	position: relative;
+}
+
 .center-y {
 	align-items: center;
 }
@@ -91,12 +95,11 @@
 .space-evenly {
 	justify-content: space-evenly;
 }
-
 .text {
 	font-size: 14px; 
 	line-height: 14px; 
 	height: 14px;
-	color: rgba(255,255,255,0.8);
+	color: rgba(255,255,255);
 }
 
 .text-small {
@@ -104,11 +107,19 @@
 	line-height: 14px;
 	height: 14px;
 	text-align: right;
-	color: rgba(255,255,255,0.8);
+	color: rgba(255,255,255);
+}
+
+.text-gray {
+	color: rgb(170, 170, 170);
 }
 
 .text-center {
 	text-align: center;
+}
+
+.text-right {
+	text-align: right;
 }
 
 .text-italic {
@@ -116,7 +127,7 @@
 }
 
 .cs2rating {
-	transform: scale(1.25);
+	transform: scale(1);
 
 	width: 70px;
 	height: 24px;
@@ -130,7 +141,6 @@
 	padding: .75rem .75rem .75rem 1.5rem;
 	text-shadow: 0 1px 0 black;
 	font-weight: bold;
-	margin: auto;
 }
 
 .cs2rating.ancient {

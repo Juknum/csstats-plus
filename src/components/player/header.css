@@ -15,7 +15,7 @@
 }
 
 .header-competitive-ranks {
-	max-width: calc(100% - (2 * 290px) - (2 * 10px));
+	max-width: calc(100% - 330px  - 63px - (2 * 20px));
 }
 
 .player-avatar {
@@ -24,22 +24,22 @@
 
 .premier-season-btn {
 	position: absolute;
-	top: 49px;
 	height: 30px;
 	width: 30px;
 	border-width: initial;
 	border-style: none;
 	border-color: initial;
 	border-image: initial;
-	border-radius: 50%;
-	background: url(data:image/gif;base64,R0lGODlhEwAMAIABAMXDwgAAACH5BAEAAAEALAAAAAATAAwAAAIUjI+py+0PEZh0wmpjjSfzD4aiUQAAOw==) center center no-repeat transparent;
-	background-position: center center
+	background-color: transparent;
 }
 
-.premier-season-btn:hover {
-	background: url(data:image/gif;base64,R0lGODlhEwAMAIABAMXDwgAAACH5BAEAAAEALAAAAAATAAwAAAIUjI+py+0PEZh0wmpjjSfzD4aiUQAAOw==) rgba(255, 255, 255, .1);
-	background-position: center;
-	background-repeat: no-repeat;
+.btn-on {
+	color: white;
+}
+
+.btn-off {
+	color: gray;
+	opacity: .3;
 }
 
 .username {
@@ -52,11 +52,11 @@
 	word-break: break-all;
 }
 
-.hoverable {
+.rank-competitive-hoverable {
 	position: relative;
 }
 
-.hoverable:hover::before {
+.rank-competitive-hoverable:hover::before {
 	content: '';
 	position: absolute;
 	z-index: -1;
@@ -65,4 +65,38 @@
 	width: 60px;
 	height: 172.38px;
 	background: linear-gradient(0deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+}
+
+.rank-tile-hoverable {
+	position: relative;
+	cursor: pointer;
+}
+
+.rank-tile-hoverable:hover::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	left: 0px;
+	border-radius: 3px;
+	width: 290px;
+	height: 63px;
+	background: linear-gradient(90deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+}
+
+.rank-faceit-hoverable {
+	position: relative;
+	cursor: pointer;
+}
+
+.rank-faceit-hoverable:hover::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	left: 0px;
+	border-radius: 3px;
+	width: 63px;
+	height: 63px;
+	background: rgba(255, 255, 255, .1) 50%;
 }

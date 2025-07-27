@@ -1,4 +1,5 @@
 import PlayerHeader from "@/components/player/header";
+import PlayerNavbar from "@/components/player/navbar";
 
 export default function PlayerPage() {
 	return (
@@ -8,7 +9,7 @@ export default function PlayerPage() {
 			}}
 		>
 			<PlayerHeader />
-
+			<PlayerNavbar />
 		</div>
 	)
 }

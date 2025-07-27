@@ -8,6 +8,7 @@ export const CS2_MAPS = [
 	'cs_office',
 	'de_ancient',
 	'de_anubis',
+	'de_cache',
 	'de_dust',
 	'de_dust2',
 	'de_inferno',
@@ -16,6 +17,18 @@ export const CS2_MAPS = [
 	'de_overpass',
 	'de_train',
 	'de_vertigo',
+] as const;
+
+export const SOME_COMMUNITY_MAPS = [
+	'cs_agency',
+	'de_thera',
+	'de_mills',
+	'de_edin',
+	'de_basalt',
+	'de_jura',
+	'de_grail',
+	'de_dogtown',
+	'de_brewery',
 ] as const;
 
 export type CS2Map = typeof CS2_MAPS[number];

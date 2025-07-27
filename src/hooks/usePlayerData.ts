@@ -1,39 +1,20 @@
 import { GAME_MODES } from "@/utils/constants";
 import { CSGame, CSGameMode, RankInfo, Stats } from "@/utils/types";
-
-async function waitForScriptLoad(filter: (s: HTMLScriptElement) => boolean): Promise<HTMLScriptElement> {
-	return new Promise((res) => {
-		const existing = Array.from(document.scripts).find((s) => filter(s));
-		if (existing) return res(existing);
-
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				for (const node of Array.from(mutation.addedNodes)) {
-					if (node instanceof HTMLScriptElement && filter(node)) {
-						observer.disconnect();
-						res(node);
-						return;
-					}
-				}
-			}
-		});
-
-		observer.observe(document, {
-			childList: true,
-			subtree: true,
-		});
-	});
-}
+import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
 
 export function usePlayerData() {
 	const [stats, setStats] = useState<Stats | undefined>(undefined);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		if (!window.location.href.includes('/player/')) return;
 
 		waitForScriptLoad((s) => (s.textContent ?? '').includes('var stats = '))
-			.then((script) => setStats(JSON.parse((script.textContent ?? '').split('var stats = ')[1].split(';')[0]) as Stats))
-
+			.then((script) => {
+				setLoading(false);
+				setStats(JSON.parse((script.textContent ?? '').split('var stats = ')[1].split(';')[0]) as Stats)
+			})
+		
 	}, []);
 
 	const user = useMemo(() => {
@@ -141,7 +122,7 @@ export function usePlayerData() {
 	}, []);
 
 	return {
-		loading: !stats,
+		loading,
 		user: {
 			...user,
 			stats,

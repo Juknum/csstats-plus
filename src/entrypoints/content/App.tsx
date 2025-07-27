@@ -17,9 +17,11 @@ export default function App() {
 				if (!(child instanceof HTMLElement)) return;
 
 				if (child.id === 'outer-wrapper') {
-					child.style.display = 'none';
+					// child.style.display = 'none';
 
 					const el = document.getElementById('page-bg-outer');
+					const el2 = document.getElementById('player-profile');
+					if (el2) el2.style.display = 'none';
 					if (el) el.style.display = 'none';
 				}
 			})

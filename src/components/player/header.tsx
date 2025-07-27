@@ -60,72 +60,100 @@ export default function PlayerHeader() {
 		return ranks.filter((r) => r.gamemode.type === 'Competitive' && r.game === 'CS2');
 	}, [ranks]);
 
-	const rankIcons = (rank: RankInfo) => {
+	const setUrl = (params: [string, string][], csgo: boolean = false) => {
+		// /csgo?platforms=Valve&date=7d&maps=de_mirage&modes=ESEA&groups=ESEA%20S47&vs=5v5
+		// ?platforms=Valve&date=7d&maps=de_mirage&modes=ESEA&groups=ESEA%20S47&vs=5v5
+
+		const url = new URL(window.location.href);
+		if (url.pathname.includes('/csgo')) url.pathname = url.pathname.replace(/\/csgo/, '');
+
+		url.searchParams.keys().forEach((key) => url.searchParams.delete(key));
+		url.searchParams.keys().forEach((key) => url.searchParams.delete(key));
+		params.forEach(([key, val]) => url.searchParams.append(key, val));
+
+		if (csgo) url.pathname += '/csgo';
+
+		window.history.pushState({}, '', url.toString());
+		window.location.reload();
+	}
+
+	const rankedTile = (rank: RankInfo, clickParams: [string, string][]) => {
 		const types: ('current' | 'best')[] = ['current', 'best'];
+
 		if (rank.rank.best === 0) types.pop();
 
 		return (
-			<div className="row nowrap full-width space-evenly">
-				{types.map((type) => {
-					const [thousand, hundred, color] = slicePremierRank(rank.rank[type]);
-					
-					return (
-						<div key={type} className="col center-y">
-							{rank.gamemode.type === 'Premier' && (
-								<div 
-									className={`cs2rating ${color}`}
-									style={{ backgroundImage: `url(${getRankPicture(rank.rank[type], rank.gamemode.type)})` }}
-								>
-									<span className="cs2rating-big">
-										{thousand === 0 ? '---' : thousand}
-										<small>{thousand === 0 ? '' : `,${hundred}`}</small>
-									</span>
-								</div>
-							)}
-							{rank.gamemode.type !== 'Premier' && (
-								<img 
-									height={rank.gamemode.type === 'FACEIT' ? 40 : 30}
-									src={getRankPicture(rank.rank[type], rank.gamemode.type)}
-								/>
-							)}
-							<span className="text-small">
-								{(type === 'current' && (rank.game === 'CS:GO' || ranks
-										.filter((r) => r.gamemode.type === rank.gamemode.type)
-										.sort((a, b) => (b.gamemode.season ?? 0) - (a.gamemode.season ?? 0))[0].gamemode.season !== rank.gamemode.season
-									)
-										? 'last'
-										: type
-									).toUpperCase()
-								}
-							</span>
+			<Tile
+				height={63}
+				width={290}
+				className="rank-tile-hoverable"
+				onClick={() => setUrl(clickParams, rank.game ===  'CS:GO')}
+				content={
+					<div className="row space-between full-width">
+						<div className="col nogap align-left">
+							<div className="text">
+								{rank.game === 'CS:GO' ? 'CS:GO' : rank.gamemode.type.toUpperCase()}&nbsp;
+								{rank.gamemode.season !== null ? `- S${rank.gamemode.season}` : ''}
+							</div>
+							<div className="text-small text-gray">{rank.date.toUpperCase()}</div>
+							{!Number.isNaN(rank.wins) && <div className="text-small text-gray">{rank.wins} WINS</div>}
 						</div>
-					);
-				})}
-			</div>
-		)
-	};
 
-	const ranksTitle = (rank: RankInfo) => {
-		return (
-			<div className="row nowrap space-between">
-				<span className="text">
-					{rank.game === 'CS:GO' ? 'CS:GO' : rank.gamemode.type.toUpperCase()}&nbsp;
-					{rank.gamemode.season !== null ? `- S${rank.gamemode.season}` : ''}
-				</span>
-				<div className="col nogap align-right">
-					<span className="text-small">{rank.date.toUpperCase()}</span>
-					{!Number.isNaN(rank.wins) && (<span className="text-small">{rank.wins} WINS</span>)}
-				</div>
-			</div>
+						<div className="row space-between">
+							{types.map((type) => {
+
+								if (rank.gamemode.type === 'Premier') {
+									const [thousand, hundred, color] = slicePremierRank(rank.rank[type]);
+									
+									return (
+										<div key={type} className="col" style={{ '--gap': '4px' }}>
+											<div
+												className={`cs2rating ${color}`}
+												style={{ backgroundImage: `url(${getRankPicture(rank.rank[type], rank.gamemode.type)})` }}
+											>
+												<span className="cs2rating-big">
+													{thousand === 0 ? '---' : thousand}
+													<small>{thousand === 0 ? '' : `,${hundred}`}</small>
+												</span>
+											</div>
+											<span
+												className="text-small text-gray text-center"
+												style={{ width: '70px' }}
+											>
+												{type === 'current' && rank.gamemode.season !== maxSeason ? 'LAST' : type.toUpperCase()}
+											</span>
+										</div>
+									)
+								}
+
+								return (
+									<div key={type} className="col" style={{ '--gap': '4px' }}>
+										<img
+											height={25}
+											src={getRankPicture(rank.rank[type], rank.gamemode.type)}
+										/>
+										<span
+											className="text-small text-gray text-center"
+											style={{ width: '70px' }}
+										>
+											{type === 'current' && rank.game === 'CS:GO' ? 'LAST' : type.toUpperCase()}
+										</span>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				}
+			/>
 		)
-	};
+	}
 
 	const [showCommunityMaps, setShowCommunityMaps] = useState(false);
 	const canShowCommunityMaps = useMemo(() => competitiveRanks.some((cr) => !CS2_MAPS.includes(cr.map as any)), [competitiveRanks]) 
 
 	return (
 		<div className="row center-x header-container">
-			<div className="row header-contained">
+			<div className="row header-contained" style={{ '--gap': '20px' }}>
 				<div className="col">
 					<img 
 						className="player-avatar"
@@ -152,109 +180,115 @@ export default function PlayerHeader() {
 					</div>
 				</div>
 
-				<div className="row full-width align-left header-ranks">
-					<div className="col wrap" style={{ maxHeight: 'calc(120px * 2 + 10px)' }}>
-						{currPremierRank && (
-							<Tile
-								title={ranksTitle(currPremierRank)}
-								content={(
-									<>
-										{currSeason - 1 >= 1 && (
-											<button 
-												onClick={(e) => handleSeasonSwitch(e, -1)}
-												className="premier-season-btn clickable"
-												style={{ left: '10px', transform: 'rotate(90deg)' }}
-											/>
-										)}
-										{rankIcons(currPremierRank)}
-										{currSeason + 1 <= maxSeason && (
-											<button 
-												onClick={(e) => handleSeasonSwitch(e, 1)}
-												className="premier-season-btn clickable"
-												style={{ right: '10px', transform: 'rotate(-90deg)' }}
-											/>
-										)}
-									</>
-								)}
-							/>
-						)}
-						{wingmanRank && (
-							<Tile 
-								title={ranksTitle(wingmanRank)}
-								content={rankIcons(wingmanRank)}
-							/>
-						)}
+				<div className="row full-width header-ranks wrap" style={{ '--gap': '20px' }}>
+					<div className="col center-y">
 						{faceitRank && (
-							<Tile
-								title={ranksTitle(faceitRank)}
-								content={rankIcons(faceitRank)}
-							/>
+							<Tile 
+								className="center-x center-y rank-faceit-hoverable" 
+								onClick={() => setUrl([['platforms', 'FACEIT']])}
+								height={63} width={63} 
+								content={
+								<img width="40" height="40" src={getRankPicture(faceitRank.rank['current'], faceitRank.gamemode.type)}/>
+							}/>
 						)}
-						{csgoRank && (
+						<img width="58" src="https://static.csstats.gg/images/faceit.png" />
+					</div>
+
+					<div className="col align-right">
+						<div className="row relative">
 							<Tile
-								title={ranksTitle(csgoRank)}
-								content={rankIcons(csgoRank)}
+								width={30}
+								content={<>
+									<button
+										onClick={(e) => handleSeasonSwitch(e, 1)}
+										className={`premier-season-btn clickable text-small ${currSeason + 1 > maxSeason ? 'btn-off' : 'btn-on'} `}
+										style={{ top: '0px', left: '0px', transform: 'rotate(90deg)' }}
+									>
+										◀
+									</button>
+									<button
+										onClick={(e) => handleSeasonSwitch(e, -1)}
+										className={`premier-season-btn clickable text-small ${currSeason - 1 < 1 ? 'btn-off' : 'btn-on'}`}
+										style={{ bottom: '10px', left: '0px', transform: 'rotate(90deg)' }}
+									>
+										▶
+									</button>
+								</>}
 							/>
-						)}
+							{currPremierRank && (rankedTile(currPremierRank, [['modes', currPremierRank.gamemode.season === 1 ? 'Premier' : `Premier - Season ${currPremierRank.gamemode.season}`]]))}
+						</div>
+
+						<div className="row">
+							<Tile width={30} content={null} />
+							{csgoRank && (rankedTile(csgoRank, [['platforms', 'Valve']]))}
+						</div>
+						<div className="row">
+							<Tile width={30} content={null}/>
+							{wingmanRank && (rankedTile(wingmanRank, [['vs', '2v2']]))}
+						</div>
+						
 					</div>
 
 					<div className="col full-width full-height header-competitive-ranks">
 						{competitiveRanks && (
 							<Tile
-								className="full-width full-height"
-								title={(
-									<div className="row nowrap space-between">
-										<span className="text">
-											COMPETITIVE&nbsp;
-										</span>
-										<div className="col nogap align-right">
-											<span className="text-small">{competitiveRanks.reduce((prev, curr) => prev + curr.wins, 0)} WINS TOTAL</span>
-
-											{canShowCommunityMaps && (
-												<div className="row nowrap" style={{ '--gap': '5px' }}>
-													<label className="text-small clickable" htmlFor="checkbox">Show Community Maps</label>
-													<input 
-														id="checkbox" 
-														type="checkbox" 
-														className="clickable" 
-														checked={showCommunityMaps} 
-														onClick={() => setShowCommunityMaps(!showCommunityMaps)} 
-													/>
-												</div>
-											)}
-											{!canShowCommunityMaps && (
-												<span className="text-small text-italic">No Community Maps played</span>
-											)}
-										</div>
-									</div>
-								)}
+								height={209}
+								className="col full-width"
 								content={(
-									<div className="row nowrap" style={{ '--gap': '7px' }}>
-										<div className="col" style={{ '--gap': '5px', height: '180px' }}>
-											<span style={{ height: '55px' }} />
-											<span className="text-small text-competitive">WINS</span>
-											<span className="text-small text-competitive">PLAYED</span>
-											<span className="text-small text-competitive">LATEST</span>
-											<span className="text-small text-competitive">BEST</span>
-										</div>
-										<div className="row nowrap tile-scrollable" style={{ '--gap': '2.5px' }}>
-											{competitiveRanks
-												.filter((cr) => !showCommunityMaps ? CS2_MAPS.includes(cr.map as any) : !CS2_MAPS.includes(cr.map as any))
-												.map((cr) => (
-													<div 
-														key={cr.map} 
-														className="col center-y hoverable clickable" 
-														style={{ '--gap': '5px' }}
-														onClick={() => window.alert('Not yet implemented')}
-													>
-														<img height="55" src={getMapIcon(cr.map!)} />
-														<span className="text-center text-small text-competitive">{cr.wins}</span>
-														<span className="text-center text-small text-competitive">{cr.date.replaceAll('Mon ', '').replaceAll('Tue ', '').replaceAll('Wed ', '').replaceAll('Thu ', '').replaceAll('Fri ', '').replaceAll('Sat ', '').replaceAll('Sun ', '')}</span>
-														<img width="55" src={getRankPicture(cr.rank.current, cr.gamemode.type)} />
-														{cr.rank.best !== 0 && (<img width="55" src={getRankPicture(cr.rank.best, cr.gamemode.type)} />)}
+									<div className="col nogap">
+										<div className="row nowrap space-between">
+											<span className="text">
+												COMPETITIVE
+											</span>
+											<div className="col nogap align-right">
+												<span className="text-small">{competitiveRanks.reduce((prev, curr) => prev + curr.wins, 0)} WINS TOTAL</span>
+
+												{canShowCommunityMaps && (
+													<div className="row nowrap" style={{ '--gap': '5px' }}>
+														<label className="text-small clickable" htmlFor="checkbox">Show Community Maps</label>
+														<input 
+															id="checkbox" 
+															type="checkbox" 
+															className="clickable" 
+															defaultChecked={showCommunityMaps} 
+															onClick={() => setShowCommunityMaps(!showCommunityMaps)} 
+														/>
 													</div>
-												)
-											)}
+												)}
+												{!canShowCommunityMaps && (
+													<span className="text-small text-italic">No Community Maps played</span>
+												)}
+											</div>
+										</div>
+										<div className="row nowrap" style={{ '--gap': '7px' }}>
+											<div className="col" style={{ '--gap': '5px', height: '180px' }}>
+												<span style={{ height: '40px' }} />
+												<span className="text-small text-competitive text-gray">WINS</span>
+												<span className="text-small text-competitive text-gray">PLAYED</span>
+												<span className="text-small text-competitive text-gray">LATEST</span>
+												<span className="text-small text-competitive text-gray">BEST</span>
+											</div>
+											<div className="row nowrap tile-scrollable" style={{ '--gap': '2.5px' }}>
+												{competitiveRanks
+													.filter((cr) => !showCommunityMaps ? CS2_MAPS.includes(cr.map as any) : !CS2_MAPS.includes(cr.map as any))
+													.map((cr) => (
+														<div 
+															key={cr.map} 
+															className="col center-y rank-competitive-hoverable clickable" 
+															style={{ '--gap': '5px' }}
+															onClick={() => setUrl([['maps', cr.map!], ['modes', 'Competitive']])}
+														>
+															<img height="40" src={getMapIcon(cr.map!)} />
+															<span className="text-center text-small text-competitive text-gray">{cr.wins}</span>
+															<span className="text-center text-small text-competitive text-gray">
+																{cr.date.replace(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) /, '').toUpperCase()}
+															</span>
+															<img width="55" src={getRankPicture(cr.rank.current, cr.gamemode.type)} />
+															{cr.rank.best !== 0 && (<img width="55" src={getRankPicture(cr.rank.best, cr.gamemode.type)} />)}
+														</div>
+													)
+												)}
+											</div>
 										</div>
 									</div>
 								)}
