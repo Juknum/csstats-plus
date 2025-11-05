@@ -8,6 +8,7 @@ interface TileProps {
 	className?: string;
 	width?: number;
 	height?: number;
+	style?: React.CSSProperties;
 	onClick?: () => void;
 }
 
@@ -17,12 +18,13 @@ export default function Tile({
 	width,
 	height,
 	onClick,
+	style,
 }: TileProps) {
 
 	return (
 		<div 
 			className={`tile ${className ?? ''}`} 
-			style={{ width, height }}
+			style={{ ...style, width, height }}
 			onClick={() => onClick?.()}
 		>
 			{content}
