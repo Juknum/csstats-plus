@@ -24,3 +24,9 @@ export interface RankInfo {
 	wins: number;
 	date: string;
 }
+
+declare module 'react' {
+	interface CSSProperties {
+		[customProperty: `--${string}`]: string | number;
+	}
+}
