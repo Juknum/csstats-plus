@@ -105,12 +105,39 @@
 	font-weight: 700;
 }
 
+.text-light {
+	font-size: 13px; 
+	line-height: 13px; 
+	height: 13px;
+	color: rgba(255,255,255,0.75);
+	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 400;
+}
+
+.text-big {
+	font-size: 30px;
+	font-family: Roboto;
+	color: white;
+}
+
 .text-small {
 	font-size: 9px;
 	line-height: 14px;
 	height: 14px;
 	text-align: right;
 	color: rgba(255,255,255);
+}
+
+.text-over-chart {
+	position: absolute;
+	top: calc(50% + 13px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+
+	font-family: "Roboto Condensed";
+	font-size: 50px;
+	color: white;
 }
 
 .text-gray {
@@ -194,4 +221,14 @@
 	height: 40px;
 	text-align: center;
 	line-height: 40px;
+}
+
+.grid-container {
+	max-width: 1680px;
+	margin: 10px auto;
+}
+
+.underlined {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	padding: 4px 0px;
 }

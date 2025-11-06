@@ -3,14 +3,11 @@ import { Chart } from 'react-chartjs-2';
 import { options } from "@/utils/chart";
 
 import 'chart.js/auto';
-import './grid.css';
+import DeltaIndicator from "./deltaIndicator";
 
 export default function KDStats() {
-	const { user: { stats }, loading } = usePlayerData();
+	const { user: { stats } } = usePlayerData();
 
-	const [kpdDelta, setKpdDelta] = useState(0);
-	const [kpdDeltaStatus, setKpdDeltaStatus] = useState<'up' | 'same' | 'down'>('same');
-	
 	const { baseKpd, kpd1, kpd2, isMaxed, isOverMaxed } = useMemo(() => {
 		const maxKpd = 3.0;
 		const baseKpd = stats?.overall?.kpd ?? 0;
@@ -35,42 +32,10 @@ export default function KDStats() {
 		return { baseKpd, kpd1, kpd2, isMaxed, isOverMaxed };
 	}, [stats?.overall?.kpd]);
 
-	useEffect(() => {
-		if (loading) return;
-
-		const topContainer = document.getElementById('kpd-delta');
-		const container    = topContainer && topContainer.querySelector('span');
-		const element      = container    && container.querySelector('span');
-
-		if (!element) return;
-
-		const className = element.className
-			.split(' ')
-			.filter((el) => el.startsWith('stat-'))[0] as `stat-${string}`;
-
-		switch (className) {
-			case 'stat-up':
-				setKpdDeltaStatus('up');
-				break;
-			case 'stat-same':
-				setKpdDeltaStatus('same');
-				setKpdDelta(0);
-				break;
-			case 'stat-down':
-				setKpdDeltaStatus('down');
-				break;
-		}
-
-		if (className !== 'stat-same') {
-			setKpdDelta(Math.abs(parseFloat(element.getAttribute('data-delta') || '0')));
-		}
-
-	}, [loading]);
-
 	return (
 		<Tile 
-			width={266}
-			height={266}
+			width={273}
+			height={273}
 			className="relative"
 			content={(
 				<div className="col nogap">
@@ -81,12 +46,7 @@ export default function KDStats() {
 					</div>
 					<div className="text-over-chart col center-y center-x">
 						{baseKpd}
-						<div className="row text">
-							{kpdDeltaStatus === 'up'   && (<span>▲</span>)}
-							{kpdDeltaStatus === 'same' && (<span>No variation</span>)}
-							{kpdDeltaStatus === 'down' && (<span>▼</span>)}
-							{kpdDelta !== 0 && (<span>{kpdDelta}</span>)}
-						</div>
+						<DeltaIndicator deltaKey="kpd" />
 					</div>
 					<Chart
 						type="doughnut"

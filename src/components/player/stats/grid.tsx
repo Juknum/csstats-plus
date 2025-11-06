@@ -1,6 +1,5 @@
 import MatchesStats from "./matches";
 
-import './grid.css';
 import MostPlayedStats from "./played";
 import MostSuccessStats from "./success";
 import KDStats from "./kd";

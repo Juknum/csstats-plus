@@ -4,7 +4,7 @@ export default function MatchesStats() {
 	return (
 		<Tile 
 			width={542}
-			height={128}
+			height={153.5}
 			content={(
 				<div className="col nogap">
 					<div className="row nowrap space-between">

@@ -3,8 +3,8 @@ import Tile from "@/components/tile/tile";
 export default function ClutchStats() {
 	return (
 		<Tile 
-			width={542}
-			height={128}
+			width={273*2 + 10}
+			height={153.5}
 			content={(
 				<div className="col nogap">
 					<div className="row nowrap space-between">
