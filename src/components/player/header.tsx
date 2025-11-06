@@ -224,37 +224,48 @@ export default function PlayerHeader() {
 					</div>
 
 					<div className="col align-right">
-						<div className="row relative">
-							<Tile
-								width={30}
-								content={<>
-									<button
-										onClick={(e) => handleSeasonSwitch(e, 1)}
-										className={`premier-season-btn clickable text-small ${isLastPremierSeason ? 'btn-off' : 'btn-on'}`}
-										style={{ top: '0px', right: '0px' }}
-									>
-										▲
-									</button>
-									<button
-										onClick={(e) => handleSeasonSwitch(e, -1)}
-										className={`premier-season-btn clickable text-small ${isFirstPremierSeason ? 'btn-off' : 'btn-on'}`}
-										style={{ bottom: '0px', right: '0px' }}
-									>
-										▼
-									</button>
-								</>}
-							/>
-							{currPremierRank && (rankedTile(currPremierRank, [['modes', currPremierRank.gamemode.season === 1 ? 'Premier' : `Premier - Season ${currPremierRank.gamemode.season}`]]))}
-						</div>
+						{currPremierRank && (
+							<div className="row relative">
+								<Tile
+									height={63}
+									width={30}
+									content={<>
+										<button
+											onClick={(e) => handleSeasonSwitch(e, 1)}
+											className={`premier-season-btn clickable text-small ${isLastPremierSeason ? 'btn-off' : 'btn-on'}`}
+											style={{ top: '0px', right: '0px' }}
+										>
+											▲
+										</button>
+										<button
+											onClick={(e) => handleSeasonSwitch(e, -1)}
+											className={`premier-season-btn clickable text-small ${isFirstPremierSeason ? 'btn-off' : 'btn-on'}`}
+											style={{ bottom: '0px', right: '0px' }}
+										>
+											▼
+										</button>
+									</>}
+								/>
+								{ rankedTile(currPremierRank, [['modes', currPremierRank.gamemode.season === 1 ? 'Premier' : `Premier - Season ${currPremierRank.gamemode.season}`]]) }
+							</div>
+						)}
 
-						<div className="row">
-							<Tile width={30} content={null} />
-							{csgoRank && (rankedTile(csgoRank, [['platforms', 'Valve']]))}
-						</div>
-						<div className="row">
-							<Tile width={30} content={null}/>
-							{wingmanRank && (rankedTile(wingmanRank, [['vs', '2v2']]))}
-						</div>
+						{csgoRank && (
+							<div className="row">
+								{currPremierRank && (
+									<Tile height={63} width={30} content={null} />
+								)}
+								{ rankedTile(csgoRank, [['platforms', 'Valve']]) }
+							</div>
+						)}
+						{wingmanRank && (
+							<div className="row">
+								{currPremierRank && (
+									<Tile height={63} width={30} content={null}/>
+								)}
+								{ rankedTile(wingmanRank, [['vs', '2v2']]) }
+							</div>
+						)}
 						
 					</div>
 
