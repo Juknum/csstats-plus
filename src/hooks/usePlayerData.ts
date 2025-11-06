@@ -70,13 +70,13 @@ export function usePlayerData() {
 			const [date, wins, _unused] = Array.from(bottom.children);
 
 			// retrieve map & game mode info
-			const mapImgOrText = icon.children[0] as HTMLImageElement | null ?? icon.textContent!.trim();
+			const mapImgOrText = (icon.children[0] as HTMLImageElement | null) ?? icon.textContent!.trim();
 
-			const mapOrGameMode = game === 'CS:GO' 
+			const mapOrGameMode = (game === 'CS:GO' 
 				? null
 				: typeof mapImgOrText === 'string' 
 					? mapImgOrText
-					: mapImgOrText.alt;
+					: mapImgOrText.alt) as (CSGameMode | null);
 
 			const map = mapOrGameMode?.includes('_') ? mapOrGameMode : null;
 			const gamemode = {
@@ -85,7 +85,7 @@ export function usePlayerData() {
 					: null,
 				type: mapOrGameMode?.includes('Premier') 
 					? 'Premier'
-					: mapOrGameMode && GAME_MODES.includes(mapOrGameMode as CSGameMode) ? mapOrGameMode as CSGameMode : 'Competitive',
+					: mapOrGameMode && GAME_MODES.includes(mapOrGameMode) ? mapOrGameMode : 'Competitive',
 			};
 
 			// retrieve rank info

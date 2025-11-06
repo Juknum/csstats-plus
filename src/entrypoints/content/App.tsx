@@ -1,42 +1,39 @@
 import PlayerPage from './player/player-page';
 
 export default function App() {
-	const url = window.location.href;
+	const url = useMemo(() => window.location.href, [window.location]);
 
-	const modifiedPages = useMemo(() => [
-		'/player/'
-	] as const, []);
-
-	const isModifiedPage = useMemo(() => {
-		return modifiedPages.some((u) => url.includes(u));
-	}, [url, modifiedPages]);
-
+	// remove add banner 
 	useEffect(() => {
-		if (isModifiedPage) {
-			Array.from(document.body.children).forEach((child) => {
-				if (!(child instanceof HTMLElement)) return;
+		const removeBanner = () => {
+			const el = document.getElementById('sticky-banner');
+			if (el) el.remove();
+		};
 
-				if (child.id === 'outer-wrapper') {
-					// TODO: to be removed once the new layout is done
-					// child.style.display = 'none';
-					const tmp1 = document.getElementById('player');
-					if (tmp1) tmp1.style.justifyContent = 'center';
-					// TODO END ---
+		// remove if already present
+		removeBanner();
 
-					const el = document.getElementById('page-bg-outer');
-					const el2 = document.getElementById('player-profile');
-					if (el2) el2.style.display = 'none';
-					if (el) el.style.display = 'none';
+		// watch for future additions
+		const observer = new MutationObserver((mutations) => {
+			for (const m of mutations) {
+				if (m.addedNodes.length) {
+					removeBanner();
+					break;
 				}
-			})
-		}
+			}
+		});
 
-	}, [isModifiedPage]);
+		observer.observe(document.body ?? document.documentElement, {
+			childList: true,
+			subtree: true,
+		});
 
-	switch (true) {
-		case url.includes(modifiedPages[0]):
-			return <PlayerPage />;
-	}
+		return () => observer.disconnect();
+	}, []);
 
-	return null;
+	return (
+		<>
+			{url.includes('/player/') && <PlayerPage />}
+		</>
+	);
 }

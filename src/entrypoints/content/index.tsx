@@ -28,7 +28,5 @@ export default defineContentScript({
     });
 
     ui.mount();
-
-    
   },
 });
