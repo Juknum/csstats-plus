@@ -25,20 +25,49 @@ export default function PlayerHeader() {
 	useEffect(() => {
 		if (premierRanks.length === 0) return;
 		setCurrentSeason(premierRanks[0].gamemode.season ?? 0);
-
 	}, [premierRanks]);
 
 	const handleSeasonSwitch = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, newIndex: -1 | 1) => {
 		e.preventDefault();
 
-		setCurrentSeason((prev) => 
-			prev + newIndex <= 1 
-			? 1 
-			: prev + newIndex >= maxSeason 
-				? maxSeason 
-				: prev + newIndex
-		);
+		const findNextAvailableSeason = (startSeason: number, direction: -1 | 1): number | null => {
+			let nextSeason = startSeason + direction;
+			const seasons = premierRanks.map(r => r.gamemode.season ?? 0);
+			const minSeason = Math.min(...seasons);
+			const maxSeason = Math.max(...seasons);
+
+			while (nextSeason >= minSeason && nextSeason <= maxSeason) {
+				if (seasons.includes(nextSeason)) {
+					return nextSeason;
+				}
+				nextSeason += direction;
+			}
+			return null;
+		};
+
+		setCurrentSeason(prev => {
+			const nextSeason = findNextAvailableSeason(prev, newIndex);
+			return nextSeason !== null ? nextSeason : prev;
+		});
 	}
+
+	const isLastPremierSeason = useMemo(() => {
+		if (!currPremierRank) return true;
+		
+		const seasons = premierRanks.map(r => r.gamemode.season ?? 0);
+		const maxSeason = Math.max(...seasons);
+
+		return currPremierRank.gamemode.season === maxSeason;
+	}, [currPremierRank, premierRanks]);
+
+	const isFirstPremierSeason = useMemo(() => {
+		if (!currPremierRank) return true;
+
+		const seasons = premierRanks.map(r => r.gamemode.season ?? 0);
+		const minSeason = Math.min(...seasons);
+
+		return currPremierRank.gamemode.season === minSeason;
+	}, [currPremierRank, premierRanks]);
 
 	const wingmanRank = useMemo(() => {
 		if (!ranks) return null;
@@ -201,17 +230,17 @@ export default function PlayerHeader() {
 								content={<>
 									<button
 										onClick={(e) => handleSeasonSwitch(e, 1)}
-										className={`premier-season-btn clickable text-small ${currSeason + 1 > maxSeason ? 'btn-off' : 'btn-on'} `}
-										style={{ top: '0px', left: '0px', transform: 'rotate(90deg)' }}
+										className={`premier-season-btn clickable text-small ${isLastPremierSeason ? 'btn-off' : 'btn-on'}`}
+										style={{ top: '0px', right: '0px' }}
 									>
-										◀
+										▲
 									</button>
 									<button
 										onClick={(e) => handleSeasonSwitch(e, -1)}
-										className={`premier-season-btn clickable text-small ${currSeason - 1 < 1 ? 'btn-off' : 'btn-on'}`}
-										style={{ bottom: '10px', left: '0px', transform: 'rotate(90deg)' }}
+										className={`premier-season-btn clickable text-small ${isFirstPremierSeason ? 'btn-off' : 'btn-on'}`}
+										style={{ bottom: '0px', right: '0px' }}
 									>
-										▶
+										▼
 									</button>
 								</>}
 							/>

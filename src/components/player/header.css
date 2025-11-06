@@ -7,7 +7,6 @@
 .header-contained {
 	max-width: 1680px;
 	width: 100%;
-	/* border: 1px solid red; */
 }
 
 .header-ranks {
@@ -31,14 +30,17 @@
 	border-color: initial;
 	border-image: initial;
 	background-color: transparent;
+	padding-right: 10px;
 }
 
 .btn-on {
 	color: white;
+	cursor: pointer;
 }
 
 .btn-off {
 	color: gray;
+	cursor: not-allowed;
 	opacity: .3;
 }
 
