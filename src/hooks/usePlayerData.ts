@@ -4,6 +4,7 @@ import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
 
 export function usePlayerData() {
 	const [stats, setStats] = useState<Stats | undefined>(undefined);
+	const [hasTrackingEnabled, setHasTrackingEnabled] = useState<boolean>(true);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -12,6 +13,7 @@ export function usePlayerData() {
 		waitForScriptLoad((s) => (s.textContent ?? '').includes('var stats = '))
 			.then((script) => {
 				setLoading(false);
+				setHasTrackingEnabled(document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0] === undefined);
 				setStats(JSON.parse((script.textContent ?? '').split('var stats = ')[1].split(';')[0]) as Stats)
 			})
 		
@@ -31,6 +33,7 @@ export function usePlayerData() {
 		return {
 			img: document.getElementById('player-avatar')?.children[0]?.getAttribute('src'),
 			name: document.getElementById('player-name')?.textContent?.trim(),
+			tracked: hasTrackingEnabled,
 			banned: bannedBanner ? bannedBanner.innerText.trim() : undefined,
 			profiles: {
 				steam: steamAnchor?.href,
@@ -39,7 +42,7 @@ export function usePlayerData() {
 			}
 		}
 
-	}, []);
+	}, [hasTrackingEnabled]);
 
 	const ranks = useMemo(() => {
 		if (!window.location.href.includes('/player/')) return [];

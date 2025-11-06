@@ -13,10 +13,6 @@
 	max-width: calc(1680px - 120px - 10px);
 }
 
-.header-competitive-ranks {
-	max-width: calc(100% - 330px  - 63px - (2 * 20px));
-}
-
 .player-avatar {
 	border-radius: 3px;
 }

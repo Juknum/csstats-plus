@@ -4,6 +4,7 @@ import StatsGrid from "@/components/player/stats/grid";
 
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
+	const { user } = usePlayerData();
 
 	// hide overriden elements on mount
 	useEffect(() => {
@@ -45,6 +46,9 @@ export default function PlayerPage() {
 
 	return (
 		<div className="col" style={{ '--gap': 0 }}>
+			{!user.tracked && (
+				<div className="info-banner text">This player does not have match tracking enabled. Some data may be missing.</div>
+			)}
 			<PlayerHeader />
 			<PlayerNavbar />
 			{ !fragment && <StatsGrid /> }

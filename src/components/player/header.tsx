@@ -7,7 +7,18 @@ import '../common.css';
 import './header.css';
 
 export default function PlayerHeader() {
-	const { user, user: { ranks }, loading } = usePlayerData();
+	const { user, user: { ranks } } = usePlayerData();
+
+	const GRID_GAP = 10;
+
+	const RANK_WIDTH_TINY   = 63;
+	const RANK_HEIGHT_TINY  = 63;
+
+	const RANK_WIDTH_MEDIUM_HANDLE  = 30;
+	const RANK_WIDTH_MEDIUM_CONTENT = 290;
+
+	const RANK_WIDTH_MEDIUM  = RANK_WIDTH_MEDIUM_CONTENT + RANK_WIDTH_MEDIUM_HANDLE + GRID_GAP;
+	const RANK_HEIGHT_MEDIUM = 63;
 
 	const premierRanks = useMemo(() => {
 		if (!ranks) return [];
@@ -113,8 +124,8 @@ export default function PlayerHeader() {
 
 		return (
 			<Tile
-				height={63}
-				width={290}
+				height={RANK_HEIGHT_MEDIUM}
+				width={RANK_WIDTH_MEDIUM_CONTENT}
 				className="rank-tile-hoverable"
 				onClick={() => setUrl(clickParams, rank.game ===  'CS:GO')}
 				content={
@@ -182,7 +193,7 @@ export default function PlayerHeader() {
 
 	return (
 		<div className="row center-x header-container">
-			<div className="row header-contained" style={{ '--gap': '20px' }}>
+			<div className="row header-contained" style={{ '--gap': `${GRID_GAP * 2}px` }}>
 				<div className="col">
 					<img 
 						className="player-avatar"
@@ -209,131 +220,166 @@ export default function PlayerHeader() {
 					</div>
 				</div>
 
-				<div className="row full-width header-ranks wrap" style={{ '--gap': '20px' }}>
-					<div className="col center-y">
-						{faceitRank && (
-							<Tile 
-								className="center-x center-y rank-faceit-hoverable" 
-								onClick={() => setUrl([['platforms', 'FACEIT']])}
-								height={63} width={63} 
-								content={
-								<img width="40" height="40" src={getRankPicture(faceitRank.rank['current'], faceitRank.gamemode.type)}/>
-							}/>
-						)}
-						<img width="58" src="https://static.csstats.gg/images/faceit.png" />
-					</div>
+				<div className="row full-width header-ranks wrap" style={{ '--gap': `${GRID_GAP * 2}px` }}>
+					<div className="row full-width wrap" style={{ '--gap': `${GRID_GAP}px` }}>
+						<div className="col">
+							{user.banned && (
+								<div 
+									className="banned-banner text full-width"
+								>
+									{user.banned}
+								</div>
+							)}
 
-					<div className="col align-right">
-						{currPremierRank && (
-							<div className="row relative">
-								<Tile
-									height={63}
-									width={30}
-									content={<>
-										<button
-											onClick={(e) => handleSeasonSwitch(e, 1)}
-											className={`premier-season-btn clickable text-small ${isLastPremierSeason ? 'btn-off' : 'btn-on'}`}
-											style={{ top: '0px', right: '0px' }}
-										>
-											▲
-										</button>
-										<button
-											onClick={(e) => handleSeasonSwitch(e, -1)}
-											className={`premier-season-btn clickable text-small ${isFirstPremierSeason ? 'btn-off' : 'btn-on'}`}
-											style={{ bottom: '0px', right: '0px' }}
-										>
-											▼
-										</button>
-									</>}
-								/>
-								{ rankedTile(currPremierRank, [['modes', currPremierRank.gamemode.season === 1 ? 'Premier' : `Premier - Season ${currPremierRank.gamemode.season}`]]) }
-							</div>
-						)}
+							<div 
+								className="row full-width"
+								id="oui"
+								style={{ 
+									'--gap': `${GRID_GAP}px`,
+									maxWidth: 0 
+										+ (faceitRank ? RANK_WIDTH_TINY : 0)
+										+ ((currPremierRank || csgoRank || wingmanRank) ? RANK_WIDTH_MEDIUM : 0)
+										+ ((faceitRank && (currPremierRank || csgoRank || wingmanRank)) ? GRID_GAP : 0)
+										+ 'px'
+									}}
+							>
 
-						{csgoRank && (
-							<div className="row">
-								{currPremierRank && (
-									<Tile height={63} width={30} content={null} />
-								)}
-								{ rankedTile(csgoRank, [['platforms', 'Valve']]) }
-							</div>
-						)}
-						{wingmanRank && (
-							<div className="row">
-								{currPremierRank && (
-									<Tile height={63} width={30} content={null}/>
-								)}
-								{ rankedTile(wingmanRank, [['vs', '2v2']]) }
-							</div>
-						)}
-						
-					</div>
-
-					<div className="col full-width full-height header-competitive-ranks">
-						{competitiveRanks && (
-							<Tile
-								height={209}
-								className="col full-width"
-								content={(
-									<div className="col nogap">
-										<div className="row nowrap space-between">
-											<span className="text">
-												COMPETITIVE
-											</span>
-											<div className="col nogap align-right">
-												<span className="text-small">{competitiveRanks.reduce((prev, curr) => prev + curr.wins, 0)} WINS TOTAL</span>
-
-												{canShowCommunityMaps && (
-													<div className="row nowrap" style={{ '--gap': '5px' }}>
-														<label className="text-small clickable" htmlFor="checkbox">Show Community Maps</label>
-														<input 
-															id="checkbox" 
-															type="checkbox" 
-															className="clickable" 
-															defaultChecked={showCommunityMaps} 
-															onClick={() => setShowCommunityMaps(!showCommunityMaps)} 
-														/>
-													</div>
-												)}
-												{!canShowCommunityMaps && (
-													<span className="text-small text-italic">No Community Maps played</span>
-												)}
-											</div>
-										</div>
-										<div className="row nowrap" style={{ '--gap': '7px' }}>
-											<div className="col" style={{ '--gap': '5px', height: '180px' }}>
-												<span style={{ height: '40px' }} />
-												<span className="text-small text-competitive text-gray">WINS</span>
-												<span className="text-small text-competitive text-gray">PLAYED</span>
-												<span className="text-small text-competitive text-gray">LATEST</span>
-												<span className="text-small text-competitive text-gray">BEST</span>
-											</div>
-											<div className="row nowrap tile-scrollable" style={{ '--gap': '2.5px' }}>
-												{competitiveRanks
-													.filter((cr) => !showCommunityMaps ? CS2_MAPS.includes(cr.map as any) : !CS2_MAPS.includes(cr.map as any))
-													.map((cr) => (
-														<div 
-															key={cr.map} 
-															className="col center-y rank-competitive-hoverable clickable" 
-															style={{ '--gap': '5px' }}
-															onClick={() => setUrl([['maps', cr.map!], ['modes', 'Competitive']])}
-														>
-															<img height="40" src={getMapIcon(cr.map!)} />
-															<span className="text-center text-small text-competitive text-gray">{cr.wins}</span>
-															<span className="text-center text-small text-competitive text-gray">
-																{cr.date.replace(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) /, '').toUpperCase()}
-															</span>
-															<img width="55" src={getRankPicture(cr.rank.current, cr.gamemode.type)} />
-															{cr.rank.best !== 0 && (<img width="55" src={getRankPicture(cr.rank.best, cr.gamemode.type)} />)}
-														</div>
-													)
-												)}
-											</div>
-										</div>
+								{faceitRank && (
+									<div className="col center-y">
+										<Tile 
+											className="center-x center-y rank-faceit-hoverable" 
+											onClick={() => setUrl([['platforms', 'FACEIT']])}
+											height={RANK_WIDTH_TINY} 
+											width={RANK_HEIGHT_TINY} 
+											content={
+												<img width="40" height="40" src={getRankPicture(faceitRank.rank['current'], faceitRank.gamemode.type)}/>
+											}/>
+										<img width="58" src="https://static.csstats.gg/images/faceit.png" />
 									</div>
 								)}
-							/>
-						)}
+
+								<div className="col align-right">
+									{currPremierRank && (
+										<div className="row relative">
+											<Tile
+												height={RANK_WIDTH_TINY}
+												width={RANK_WIDTH_MEDIUM_HANDLE}
+												content={<>
+													<button
+														onClick={(e) => handleSeasonSwitch(e, 1)}
+														className={`premier-season-btn clickable text-small ${isLastPremierSeason ? 'btn-off' : 'btn-on'}`}
+														style={{ top: '0px', right: '0px' }}
+													>
+														▲
+													</button>
+													<button
+														onClick={(e) => handleSeasonSwitch(e, -1)}
+														className={`premier-season-btn clickable text-small ${isFirstPremierSeason ? 'btn-off' : 'btn-on'}`}
+														style={{ bottom: '0px', right: '0px' }}
+													>
+														▼
+													</button>
+												</>}
+											/>
+											{ rankedTile(currPremierRank, [['modes', currPremierRank.gamemode.season === 1 ? 'Premier' : `Premier - Season ${currPremierRank.gamemode.season}`]]) }
+										</div>
+									)}
+
+									{csgoRank && (
+										<div className="row">
+											{currPremierRank && (
+												<Tile height={RANK_HEIGHT_MEDIUM} width={RANK_WIDTH_MEDIUM_HANDLE} content={null} />
+											)}
+											{ rankedTile(csgoRank, [['platforms', 'Valve']]) }
+										</div>
+									)}
+
+									{wingmanRank && (
+										<div className="row">
+											{currPremierRank && (
+												<Tile height={RANK_HEIGHT_MEDIUM} width={RANK_WIDTH_MEDIUM_HANDLE} content={null} />
+											)}
+											{ rankedTile(wingmanRank, [['vs', '2v2']]) }
+										</div>
+									)}
+								</div>
+							</div>
+						</div>
+
+						<div 
+							className="col full-width full-height" 
+							style={{ 
+								maxWidth: `calc(100% - ${0
+									+ (faceitRank ? RANK_WIDTH_TINY + GRID_GAP : 0)
+									+ (currPremierRank || csgoRank || wingmanRank ? RANK_WIDTH_MEDIUM + GRID_GAP : 0)
+								}px)`
+							}}
+						>
+							{competitiveRanks && (
+								<Tile
+									height={209}
+									className="col full-width"
+									content={(
+										<div className="col nogap">
+											<div className="row nowrap space-between">
+												<span className="text">
+													COMPETITIVE
+												</span>
+												<div className="col nogap align-right">
+													<span className="text-small">{competitiveRanks.reduce((prev, curr) => prev + curr.wins, 0)} WINS TOTAL</span>
+
+													{canShowCommunityMaps && (
+														<div className="row nowrap" style={{ '--gap': '5px' }}>
+															<label className="text-small clickable" htmlFor="checkbox">Show Community Maps</label>
+															<input 
+																id="checkbox" 
+																type="checkbox" 
+																className="clickable" 
+																defaultChecked={showCommunityMaps} 
+																onClick={() => setShowCommunityMaps(!showCommunityMaps)} 
+															/>
+														</div>
+													)}
+													{!canShowCommunityMaps && (
+														<span className="text-small text-italic">No Community Maps played</span>
+													)}
+												</div>
+											</div>
+											<div className="row nowrap" style={{ '--gap': '7px' }}>
+												<div className="col" style={{ '--gap': '5px', height: '180px' }}>
+													<span style={{ height: '40px' }} />
+													<span className="text-small text-competitive text-gray">WINS</span>
+													<span className="text-small text-competitive text-gray">PLAYED</span>
+													<span className="text-small text-competitive text-gray">LATEST</span>
+													<span className="text-small text-competitive text-gray">BEST</span>
+												</div>
+												<div className="row nowrap tile-scrollable" style={{ '--gap': '2.5px' }}>
+													{competitiveRanks
+														.filter((cr) => !showCommunityMaps ? CS2_MAPS.includes(cr.map as any) : !CS2_MAPS.includes(cr.map as any))
+														.map((cr) => (
+															<div 
+																key={cr.map} 
+																className="col center-y rank-competitive-hoverable clickable" 
+																style={{ '--gap': '5px' }}
+																onClick={() => setUrl([['maps', cr.map!], ['modes', 'Competitive']])}
+															>
+																<img height="40" src={getMapIcon(cr.map!)} />
+																<span className="text-center text-small text-competitive text-gray">{cr.wins}</span>
+																<span className="text-center text-small text-competitive text-gray">
+																	{cr.date.replace(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) /, '').toUpperCase()}
+																</span>
+																<img width="55" src={getRankPicture(cr.rank.current, cr.gamemode.type)} />
+																{cr.rank.best !== 0 && (<img width="55" src={getRankPicture(cr.rank.best, cr.gamemode.type)} />)}
+															</div>
+														)
+													)}
+												</div>
+											</div>
+										</div>
+									)}
+								/>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>
