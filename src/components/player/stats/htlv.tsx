@@ -6,9 +6,17 @@ import 'chart.js/auto';
 import DeltaIndicator from "./deltaIndicator";
 
 export default function HLTVStats() {
-	const { user: { stats } } = usePlayerData();
+	const { user: { stats }, loading } = usePlayerData();
 
 	const { baseRating, rating1, rating2, isMaxed, isOverMaxed } = useMemo(() => {
+		if (loading) return {
+			baseRating: 0,
+			rating1: 0,
+			rating2: 100,
+			isMaxed: false,
+			isOverMaxed: false
+		};
+
 		const offset = 0.4;
 		const maxHLTVRating = 1.8;
 		const baseRating = stats?.overall?.rating ?? 0;
@@ -35,7 +43,7 @@ export default function HLTVStats() {
 			isMaxed,
 			isOverMaxed
 		};
-	}, [stats?.overall?.rating]);
+	}, [stats, loading]);
 
 	return (
 		<Tile 

@@ -18,7 +18,6 @@ export default function HeadShotsStats() {
 		setHeadShots(stats?.totals.overall.HS ?? 0);
 	}, [loading]);
 
-	console.log(stats);
 	const headShotsRate = useMemo(() => ((headShots / (kills || 1)) * 100).toFixed(0), [headShots, kills]);
 
 	return (

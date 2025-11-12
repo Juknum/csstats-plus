@@ -1,4 +1,4 @@
-import { GAME_MODES } from "@/utils/constants";
+import { CS2Map, GAME_MODES } from "@/utils/constants";
 import { CSGame, CSGameMode, RankInfo, Stats } from "@/utils/types";
 import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
 
@@ -81,7 +81,7 @@ export function usePlayerData() {
 					? mapImgOrText
 					: mapImgOrText.alt) as (CSGameMode | null);
 
-			const map = mapOrGameMode?.includes('_') ? mapOrGameMode : null;
+			const map = mapOrGameMode?.includes('_') ? mapOrGameMode as CS2Map : null;
 			const gamemode = {
 				season: mapOrGameMode?.includes('Premier') 
 					? isNaN(parseInt(mapOrGameMode.replace('Premier - Season ', ''), 10)) ? 1 : parseInt(mapOrGameMode.replace('Premier - Season ', ''), 10)

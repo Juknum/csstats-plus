@@ -4,22 +4,31 @@ import StatsGrid from "@/components/player/stats/grid";
 
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
-	const { user } = usePlayerData();
+	const { user: { tracked }, loading } = usePlayerData();
 
 	// hide overriden elements on mount
 	useEffect(() => {
 		Array.from(document.body.children).forEach((child) => {
 			if (!(child instanceof HTMLElement)) return;
 
-			if (child.id === 'outer-wrapper') {
-				const bgOuter = document.getElementById('page-bg-outer');
-				bgOuter && (bgOuter.style.display = 'none');
+			const bgOuter = document.getElementById('page-bg-outer');
+			bgOuter && (bgOuter.style.display = 'none');
 
-				const profileInfo = document.getElementById('player-profile');
-				profileInfo && (profileInfo.style.display = 'none');
+			const profileInfo = document.getElementById('player-profile');
+			profileInfo && (profileInfo.style.display = 'none');
+
+			const filters = document.getElementById('player-filters');
+			filters && (filters.style.display = 'none');
+
+			const statsSection = document.getElementById('player-outer-section');
+			statsSection && (statsSection.style.display = !fragment ? 'none' : '');
+
+			if (!tracked) {
+				const banner = document.getElementsByClassName('glyphicon glyphicon-warning-sign')?.[0]?.parentElement;
+				banner && (banner.style.display = 'none');
 			}
 		});
-	}, []);
+	}, [fragment, tracked, loading]);
 
 	// watch URL Hash Fragment changes
 	useEffect(() => {
@@ -46,7 +55,7 @@ export default function PlayerPage() {
 
 	return (
 		<div className="col" style={{ '--gap': 0 }}>
-			{!user.tracked && (
+			{!tracked && (
 				<div className="info-banner text">This player does not have match tracking enabled. Some data may be missing.</div>
 			)}
 			<PlayerHeader />

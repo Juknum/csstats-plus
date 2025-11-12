@@ -1,7 +1,11 @@
 import { CS2Map } from "./constants";
 
-export function getMapIcon(name: string) {
-	return BASE_URL + 'maps-icons/' + (CS2_MAPS.includes(name as CS2Map) ? '' : 'community/') + name + '.svg';
+export function getMapIcon(name: CS2Map) {
+	if (CS2_MAPS.includes(name as any) || SOME_COMMUNITY_MAPS.includes(name as any)) {
+		return BASE_URL + 'maps-icons/' + (CS2_MAPS.includes(name as any) ? '' : 'community/') + name + '.svg';
+	}
+
+	return 'https://static.csstats.gg/images/maps/icons/' + name + '.png';
 }
 
 export function getMapName(name: string) {

@@ -8,7 +8,6 @@ export const CS2_MAPS = [
 	'cs_office',
 	'de_ancient',
 	'de_anubis',
-	'de_cache',
 	'de_dust',
 	'de_dust2',
 	'de_inferno',
@@ -31,7 +30,7 @@ export const SOME_COMMUNITY_MAPS = [
 	'de_brewery',
 ] as const;
 
-export type CS2Map = typeof CS2_MAPS[number];
+export type CS2Map = typeof CS2_MAPS[number] | typeof SOME_COMMUNITY_MAPS[number];
 
 export const BASE_URL = 'https://raw.githubusercontent.com/Juknum/csgo-rank-icons/main/' as const;
 

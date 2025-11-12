@@ -72,6 +72,10 @@
 	position: relative;
 }
 
+.absolute {
+	position: absolute;
+}
+
 .center-y {
 	align-items: center;
 }
@@ -103,6 +107,10 @@
 	color: rgba(255,255,255);
 	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 700;
+}
+
+.text-capitalize {
+	text-transform: capitalize;
 }
 
 .text-light {
@@ -231,4 +239,25 @@
 .underlined {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	padding: 4px 0px;
+}
+
+.match-hoverable {
+	position: relative;
+	cursor: pointer;
+}
+
+.match-hoverable:hover::before {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	top: -5px;
+	border-radius: 3px;
+	width: 40px;
+	height: calc(100% + 10px);
+	background: linear-gradient(0deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+}
+
+.border-left {
+	border-left: 1px solid #4B505E;
+	padding-left: 10px;
 }
