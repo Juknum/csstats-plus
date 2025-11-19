@@ -1,4 +1,6 @@
 import { createRoot } from "react-dom/client";
+import { defineContentScript, createShadowRootUi } from "#imports";
+
 import App from "./App";
 
 export default defineContentScript({

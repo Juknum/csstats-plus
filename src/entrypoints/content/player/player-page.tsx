@@ -1,18 +1,26 @@
+import { useEffect, useState } from "react";
+
 import PlayerHeader from "@/components/player/header";
 import PlayerNavbar from "@/components/player/navbar";
 import StatsGrid from "@/components/player/stats/grid";
+import { usePlayerData } from "@/hooks/usePlayerData";
+
+import '@/components/common.css';
 
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
 	const { user: { tracked }, loading } = usePlayerData();
 
-	// hide overriden elements on mount
+	// hide overridden elements on mount
 	useEffect(() => {
 		Array.from(document.body.children).forEach((child) => {
 			if (!(child instanceof HTMLElement)) return;
 
 			const bgOuter = document.getElementById('page-bg-outer');
 			bgOuter && (bgOuter.style.display = 'none');
+
+			const player = document.getElementById('player');
+			player && (player.style.justifyContent = 'center');
 
 			const profileInfo = document.getElementById('player-profile');
 			profileInfo && (profileInfo.style.display = 'none');

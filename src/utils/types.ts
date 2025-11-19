@@ -1,4 +1,4 @@
-import { CS2Map } from "./constants";
+import { CS2Map, GAME_MODES } from "./constants";
 
 export interface Stats { 
 	[key: string]: unknown;

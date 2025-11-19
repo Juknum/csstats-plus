@@ -1,6 +1,7 @@
 import { CS2Map, GAME_MODES } from "@/utils/constants";
 import { CSGame, CSGameMode, RankInfo, Stats } from "@/utils/types";
 import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
+import { useEffect, useMemo, useState } from "react";
 
 export function usePlayerData() {
 	const [stats, setStats] = useState<Stats | undefined>(undefined);

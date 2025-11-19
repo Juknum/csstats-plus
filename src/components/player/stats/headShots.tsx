@@ -1,4 +1,8 @@
+import { useEffect, useMemo, useState } from "react";
+
 import Tile from "@/components/tile/tile";
+import { usePlayerData } from "@/hooks/usePlayerData";
+
 import DeltaIndicator from "./deltaIndicator";
 
 export default function HeadShotsStats() {

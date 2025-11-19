@@ -1,3 +1,5 @@
+import { useEffect, useMemo } from 'react';
+
 import PlayerPage from './player/player-page';
 
 export default function App() {

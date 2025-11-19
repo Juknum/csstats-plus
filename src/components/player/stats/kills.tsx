@@ -1,4 +1,8 @@
+import { useState, useEffect } from "react";
+
 import Tile from "@/components/tile/tile";
+import { usePlayerData } from "@/hooks/usePlayerData";
+import { Stats } from "@/utils/types";
 import { getWeaponIcon } from "@/utils/weapons";
 
 export default function MostKillsStats() {

@@ -1,9 +1,13 @@
-import Tile from "@/components/tile/tile";
+import { useMemo } from "react";
 import { Chart } from 'react-chartjs-2';
+
+import Tile from "@/components/tile/tile";
+import { usePlayerData } from "@/hooks/usePlayerData";
 import { options } from "@/utils/chart";
 
-import 'chart.js/auto';
 import DeltaIndicator from "./deltaIndicator";
+
+import 'chart.js/auto';
 
 export default function HLTVStats() {
 	const { user: { stats }, loading } = usePlayerData();

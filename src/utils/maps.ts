@@ -1,4 +1,4 @@
-import { CS2Map } from "./constants";
+import { BASE_URL, CS2_MAPS, CS2Map, SOME_COMMUNITY_MAPS } from "./constants";
 
 export function getMapIcon(name: CS2Map) {
 	if (CS2_MAPS.includes(name as any) || SOME_COMMUNITY_MAPS.includes(name as any)) {

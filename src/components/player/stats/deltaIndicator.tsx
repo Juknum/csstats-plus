@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+
+import { usePlayerData } from "@/hooks/usePlayerData";
+import { Stats } from "@/utils/types";
 
 interface DelatIndicatorProps {
 	deltaKey: keyof Stats['overall']['delta'];

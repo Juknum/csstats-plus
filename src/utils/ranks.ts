@@ -1,3 +1,6 @@
+import { BASE_URL, PREMIER_RANKS_COLOR } from "./constants";
+import type { CSGameMode } from "./types";
+
 export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR, string, typeof PREMIER_RANKS_COLOR[keyof typeof PREMIER_RANKS_COLOR]] {
 	return Number.isNaN(num) 
 		? [0, '000', PREMIER_RANKS_COLOR[0]] 

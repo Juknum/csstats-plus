@@ -1,3 +1,8 @@
+import { useState, useMemo, useRef, useEffect } from 'react';
+
+import { usePlayerData } from '@/hooks/usePlayerData';
+import { CS2_MAPS, SOME_COMMUNITY_MAPS } from '@/utils/constants';
+import { getMapName } from '@/utils/maps';
 
 import '../common.css';
 import './navbar.css';

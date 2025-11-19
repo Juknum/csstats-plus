@@ -1,5 +1,10 @@
+import { useState, useEffect } from "react";
+
 import Tile from "@/components/tile/tile";
+import { usePlayerData } from "@/hooks/usePlayerData";
 import { CS2Map } from "@/utils/constants";
+import { getMapIcon, getMapName } from "@/utils/maps";
+import { Stats } from "@/utils/types";
 
 export default function MostSuccessStats() {
 	const { user: { stats }, loading } = usePlayerData();

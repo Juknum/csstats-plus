@@ -1,8 +1,13 @@
-import { usePlayerData } from '@/hooks/usePlayerData';
-import Tile from '../tile/tile';
-import { RankInfo } from '@/utils/types';
-import { getRankPicture } from '@/utils/ranks';
+import { useMemo, useState, useEffect } from 'react';
+
+import { CS2_MAPS } from '@/utils/constants';
 import { getMapIcon } from '@/utils/maps';
+import { usePlayerData } from '@/hooks/usePlayerData';
+import { RankInfo } from '@/utils/types';
+import { getRankPicture, slicePremierRank } from '@/utils/ranks';
+
+import Tile from '../tile/tile';
+
 import '../common.css';
 import './header.css';
 
