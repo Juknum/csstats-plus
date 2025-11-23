@@ -1,13 +1,16 @@
-<p align="center">
-	<h1>CSStats+</h1>
-</p>
+# CSStats+
 
 CSStats Plus is web extension that aims to enhance the user experience on the CSStats platform by providing better UI/UX features and additional functionalities.
 
-<a href="https://chromewebstore.google.com/detail/csstats-plus/koackgklhpaahkbncajeieppmfnelkeh?authuser=0&hl=fr" 
-	target="_blank">
-	<img src="https://img.shields.io/chrome-web-store/v/koackgklhpaahkbncajeieppmfnelkeh?style=for-the-badge" />
-</a>
+<p>
+	<a align="left" href="https://chromewebstore.google.com/detail/csstats-plus/koackgklhpaahkbncajeieppmfnelkeh?authuser=0&hl=fr" target="_blank">
+		<img src="https://img.shields.io/chrome-web-store/v/koackgklhpaahkbncajeieppmfnelkeh?style=for-the-badge&logo=googlechrome&color=4285F4&logoColor=fff&labelColor=222" />
+	</a>
+	&nbsp;
+	<a align="left" href="https://addons.mozilla.org/en-US/firefox/addon/csstats-plus/" target="_blank">
+		<img src="https://img.shields.io/amo/v/csstats-plus?style=for-the-badge&logo=firefoxbrowser&color=FF7139&logoColor=fff&labelColor=222" />
+	</a>
+</p>
 
 ## Before and After comparison
 

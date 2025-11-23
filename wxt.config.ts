@@ -18,4 +18,15 @@ export default defineConfig({
       edge: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
     }
   },
+  manifest: {
+    browser_specific_settings: {
+      gecko: {
+        // @ts-ignore - WXT doesn't support this field yet but is required by Firefox
+        // @see https://github.com/wxt-dev/wxt/pull/1976
+        data_collection_permissions: {
+          required: ['none']
+        }
+      }
+    }
+  }
 });
