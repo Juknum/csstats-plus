@@ -1,11 +1,11 @@
-import { usePlayerData } from "@/hooks/usePlayerData";
-import { getMapIcon, getMapName } from "@/utils/maps";
 import { useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 
+import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
+import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank";
+import { usePlayerData } from "@/hooks/usePlayerData";
+import { getMapIcon, getMapName } from "@/utils/maps";
 import type { CS2Map } from "@/utils/constants";
-import { getRankPicture } from "@/utils/ranks";
-import { CSGameMode } from "@/utils/types";
 
 export default function Matches() {
 	const { loading } = usePlayerData();
@@ -35,7 +35,7 @@ export default function Matches() {
 
 			// rank change column
 			const rankCell = row.cells[4];
-			updateRankCell(rankCell);
+			updateAnyRankCell(rankCell);
 		});
 	};
 
@@ -51,7 +51,7 @@ export default function Matches() {
 		))());
 	};
 
-	const updateRankCell = (cell: HTMLTableCellElement) => {
+	const updateAnyRankCell = (cell: HTMLTableCellElement) => {
 		const child = cell.firstElementChild;
 		if (!child) return;
 
@@ -80,7 +80,14 @@ export default function Matches() {
 		const rankNumber = imageUrl.match(/wingman\/wingman(\d+)\.svg/)?.[1];
 		if (!rankNumber) return;
 
-		updateBaseRankCell(cell, parseInt(rankNumber), 'Wingman'); 
+		createRoot(cell).render(
+			<CompetitiveOrWingmanRankIcon
+				rankNumber={parseInt(rankNumber)}
+				gamemode={'Wingman'}
+				hasRankChanges={cell.childElementCount > 1}
+				isRankUp={cell.lastElementChild!.classList.contains('glyphicon-chevron-up')}
+			/>
+		);
 	};
 
 	const updateCompetitiveRankCell = (cell: HTMLTableCellElement, child: HTMLSpanElement) => {
@@ -88,68 +95,22 @@ export default function Matches() {
 		const rankNumber = backgroundImage.match(/ranks\/(\d+)\.png/)?.[1];
 		if (!rankNumber) return;
 
-		updateBaseRankCell(cell, parseInt(rankNumber), 'Competitive'); 
+		createRoot(cell).render(
+			<CompetitiveOrWingmanRankIcon
+				rankNumber={parseInt(rankNumber)}
+				gamemode={'Competitive'}
+				hasRankChanges={cell.childElementCount > 1}
+				isRankUp={cell.lastElementChild!.classList.contains('glyphicon-chevron-up')}
+			/>
+		);
 	}
-	
-	const updateBaseRankCell = (cell: HTMLTableCellElement, rankNumber: number, gamemode: CSGameMode) => {
-		// Either a rank up or rank down icon is present
-		if (cell.childElementCount > 1) {
-			const isRankUp = cell.lastElementChild!.classList.contains('glyphicon-chevron-up');
-
-			createRoot(cell).render((() => (
-				<div style={{ display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'flex-start', gap: '.25rem' }}>
-
-					<img 
-						width="55" 
-						src={getRankPicture(rankNumber + (isRankUp ? -1 : 1), gamemode)}
-						style={{ margin: 'auto' }}
-					/>
-
-					<div 
-						style={{
-							display: 'flex',
-							flexFlow: 'column',
-							alignItems: 'center',
-							justifyContent: 'center',
-							lineHeight: '.8em',
-							width: '23.2px',
-							height: '22.55px'
-						}}
-					>
-						<span
-							className="glyphicon glyphicon-arrow-right"
-							style={{ fontSize: '12px', marginBottom: '3px' }}
-						/>
-					</div>
-
-					<img 
-						width="55" 
-						src={getRankPicture(rankNumber, gamemode)} 
-						style={{ margin: 'auto' }}
-					/>
-
-				</div>
-			))());
-
-		}
-
-		else createRoot(cell).render((() => (
-			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
-				<img width="55" src={getRankPicture(rankNumber, gamemode)} />
-			</div>
-		))());
-	};
 
 	const updateFaceItRankCell = (cell: HTMLTableCellElement, child: HTMLImageElement) => {
 		const imageUrl = child.src as `https://static.csstats.gg/images/ranks/faceit/level${number}.png`;
 		const rankNumber = imageUrl.match(/faceit\/level(\d+)\.png/)?.[1];
 		if (!rankNumber) return;
 
-		createRoot(cell).render((() => (
-			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
-				<img height="22.34" src={getRankPicture(parseInt(rankNumber), 'FACEIT')} alt={rankNumber} />
-			</div>
-		))());
+		createRoot(cell).render(<FaceitRankIcon rankNumber={parseInt(rankNumber)} />);
 	};
 
 	return <></>;

@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 
 import PlayerPage from './player/player-page';
+import AllMatchesPage from './match/all-matches-page';
 
 export default function App() {
 	const url = useMemo(() => window.location.href, [window.location]);
@@ -35,7 +36,9 @@ export default function App() {
 
 	return (
 		<>
-			{url.includes('/player/') && <PlayerPage />}
+			{url === 'https://csstats.gg/match'              && <AllMatchesPage />}
+
+			{url.match(/https:\/\/csstats\.gg\/player\/\d+/) && <PlayerPage     />}
 		</>
 	);
 }

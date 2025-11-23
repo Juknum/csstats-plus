@@ -4,9 +4,11 @@ export const GAME_MODES = ['Competitive' , 'Wingman' , 'Premier' , 'Danger Zone'
 export const CS2_MAPS = [
 	'ar_baggage',
 	'ar_shoots',
+	'ar_shoots_night',
 	'cs_italy',
 	'cs_office',
 	'de_ancient',
+	'de_ancient_night',
 	'de_anubis',
 	'de_dust',
 	'de_dust2',
@@ -19,15 +21,23 @@ export const CS2_MAPS = [
 ] as const;
 
 export const SOME_COMMUNITY_MAPS = [
+	'ar_poolday',
 	'cs_agency',
-	'de_thera',
-	'de_mills',
-	'de_edin',
+	'de_assembly',
 	'de_basalt',
-	'de_jura',
-	'de_grail',
-	'de_dogtown',
 	'de_brewery',
+	'de_dogtown',
+	'de_edin',
+	'de_golden',
+	'de_grail',
+	'de_jura',
+	'de_memento',	
+	'de_mills',
+	'de_palacio',
+	'de_palais',
+	'de_rooftop',
+	'de_thera',
+	'de_whistle',
 ] as const;
 
 export type CS2Map = typeof CS2_MAPS[number] | typeof SOME_COMMUNITY_MAPS[number];
