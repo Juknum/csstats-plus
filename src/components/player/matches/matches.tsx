@@ -45,7 +45,7 @@ export default function Matches() {
 
 		createRoot(cell).render((() => (
 			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-				<img height="25" src={getMapIcon(mapName as CS2Map)} alt={mapName} className="map-icon" />
+				<img height="25" src={getMapIcon(mapName as CS2Map)} alt={mapName} />
 				<span style={{ textTransform: 'capitalize' }}>{getMapName(mapName)}</span>
 			</div>
 		))());

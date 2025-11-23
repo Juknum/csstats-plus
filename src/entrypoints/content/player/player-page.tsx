@@ -7,6 +7,7 @@ import { usePlayerData } from "@/hooks/usePlayerData";
 
 import '@/components/common.css';
 import Matches from "@/components/player/matches/matches";
+import Maps from "@/components/player/maps/maps";
 
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
@@ -72,6 +73,7 @@ export default function PlayerPage() {
 			{ !fragment && <StatsGrid /> }
 
 			{/* No element added, so no need to check for the fragment */}
+			<Maps />
 			<Matches />
 		</div>
 	)

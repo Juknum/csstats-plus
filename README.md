@@ -34,6 +34,11 @@ Most played/success maps improvements:
 - Map icons are displayed next to map names for better visual identification.
 - You can now see both amount of matches played/won and the corresponding percentages.
 
+### Player Profile - Maps Tab Enhancements
+
+- Made the maps icons bigger and use SVG format when available for better quality.
+- Map names are now displayed in full instead of using the map filenames, improving readability.
+
 ### Player Profile - Matches Tab Enhancements
 
 The Matches tab on the player profile page has been enhanced with the following features:
@@ -48,6 +53,12 @@ The Matches tab on the player profile page has been enhanced with the following 
 ### Player profile page
 
 | ![Before - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-before.png) | ![After - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-after.png) |
+|:--------:|:-------:|
+| Before | After |
+
+### Player profile - Maps tab
+
+| ![Before - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-maps-before.png) | ![After - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-maps-after.png) |
 |:--------:|:-------:|
 | Before | After |
 

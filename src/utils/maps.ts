@@ -9,5 +9,5 @@ export function getMapIcon(name: CS2Map) {
 }
 
 export function getMapName(name: string) {
-	return name.replace('de_', '').replace('cs_', '').replace('dust2', 'dust II');
+	return name.replace('de_', '').replace('cs_', '').replace('2', ' II');
 }
