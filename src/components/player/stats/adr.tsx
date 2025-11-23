@@ -12,10 +12,10 @@ export default function AverageDamagesStats() {
 	const [rounds, setRounds] = useState(0);
 
 	useEffect(() => {
-		if (loading) return;
+		if (loading || stats === false) return;
 
-		setDmg(stats?.totals.overall.dmg ?? 0);
-		setRounds(stats?.totals.overall.rounds ?? 0);
+		setDmg(stats.totals.overall.dmg ?? 0);
+		setRounds(stats.totals.overall.rounds ?? 0);
 	}, [loading]);
 
 	const adr = useMemo(() => (dmg / (rounds || 1)).toFixed(0), [dmg, rounds]);

@@ -35,7 +35,7 @@ export default function PlayerHeader() {
 	}, [ranks]);
 
 	const [currSeason, setCurrentSeason] = useState<number>(0);
-	const maxSeason = useMemo(() => premierRanks[0].gamemode.season ?? 0, [premierRanks]);
+	const maxSeason = useMemo(() => premierRanks.length ? premierRanks[0].gamemode.season ?? 0 : 0, [premierRanks]);
 	const currPremierRank = useMemo(() => premierRanks.find((r) => r.gamemode.season === currSeason), [currSeason]);
 
 	useEffect(() => {
@@ -320,7 +320,7 @@ export default function PlayerHeader() {
 								}px)`
 							}}
 						>
-							{competitiveRanks && (
+							{competitiveRanks.length > 0 && (
 								<Tile
 									height={209}
 									className="col full-width"

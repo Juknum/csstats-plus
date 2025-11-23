@@ -14,12 +14,12 @@ export default function WinRateStats() {
 	const [draw, setDraw] = useState(0);
 
 	useEffect(() => {
-		if (loading) return;
+		if (loading || stats === false) return;
 
-		setPlayed(stats?.totals.overall.games ?? 0);
-		setWon(stats?.totals.overall.wins ?? 0);
-		setLost(stats?.totals.overall.losses ?? 0);
-		setDraw(stats?.totals.overall.draws ?? 0);
+		setPlayed(stats.totals.overall.games ?? 0);
+		setWon(stats.totals.overall.wins ?? 0);
+		setLost(stats.totals.overall.losses ?? 0);
+		setDraw(stats.totals.overall.draws ?? 0);
 	}, [loading]);
 
 	const winRate = useMemo(() => ((won / (played || 1)) * 100).toFixed(0), [won, played]);

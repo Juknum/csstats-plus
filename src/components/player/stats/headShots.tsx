@@ -14,12 +14,12 @@ export default function HeadShotsStats() {
 	const [headShots, setHeadShots] = useState(0);
 
 	useEffect(() => {
-		if (loading) return;
+		if (loading || stats === false) return;
 
-		setKills(stats?.totals.overall.K ?? 0);
-		setDeaths(stats?.totals.overall.D ?? 0);
-		setAssists(stats?.totals.overall.A ?? 0);
-		setHeadShots(stats?.totals.overall.HS ?? 0);
+		setKills(stats.totals.overall.K ?? 0);
+		setDeaths(stats.totals.overall.D ?? 0);
+		setAssists(stats.totals.overall.A ?? 0);
+		setHeadShots(stats.totals.overall.HS ?? 0);
 	}, [loading]);
 
 	const headShotsRate = useMemo(() => ((headShots / (kills || 1)) * 100).toFixed(0), [headShots, kills]);
