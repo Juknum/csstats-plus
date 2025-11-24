@@ -10,6 +10,7 @@ import Tile from '../tile/tile';
 
 import '../common.css';
 import './header.css';
+import { PremierRankIcon } from '../rank-icons/premier-rank';
 
 export default function PlayerHeader() {
 	const { user, user: { ranks } } = usePlayerData();
@@ -148,19 +149,9 @@ export default function PlayerHeader() {
 							{types.map((type) => {
 
 								if (rank.gamemode.type === 'Premier') {
-									const [thousand, hundred, color] = slicePremierRank(rank.rank[type]);
-									
 									return (
 										<div key={type} className="col" style={{ '--gap': '4px' }}>
-											<div
-												className={`cs2rating ${color}`}
-												style={{ backgroundImage: `url(${getRankPicture(rank.rank[type], rank.gamemode.type)})` }}
-											>
-												<span className="cs2rating-big">
-													{thousand === 0 ? '---' : thousand}
-													<small>{thousand === 0 ? '' : `,${hundred}`}</small>
-												</span>
-											</div>
+											<PremierRankIcon rankNumber={rank.rank[type]} />
 											<span
 												className="text-small text-gray text-center"
 												style={{ width: '70px' }}

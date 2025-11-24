@@ -3,7 +3,7 @@
 CSStats Plus is web extension that aims to enhance the user experience on the CSStats platform by providing better UI/UX features and additional functionalities.
 
 <p>
-	<a align="left" href="https://chromewebstore.google.com/detail/csstats-plus/koackgklhpaahkbncajeieppmfnelkeh?authuser=0&hl=fr" target="_blank">
+	<a align="left" href="https://chromewebstore.google.com/detail/csstats-plus/koackgklhpaahkbncajeieppmfnelkeh" target="_blank">
 		<img src="https://img.shields.io/chrome-web-store/v/koackgklhpaahkbncajeieppmfnelkeh?style=for-the-badge&logo=googlechrome&color=4285F4&logoColor=fff&labelColor=222" />
 	</a>
 	&nbsp;
@@ -16,7 +16,7 @@ CSStats Plus is web extension that aims to enhance the user experience on the CS
 
 ### Player profile page
 
-| ![Before - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-before.png) | ![After - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-after.png) |
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-after.png) |
 |:--------:|:-------:|
 | Before | After |
 
@@ -41,7 +41,7 @@ Statistics charts:
 
 ### Player profile - Maps tab
 
-| ![Before - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-maps-before.png) | ![After - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-maps-after.png) |
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-maps-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-maps-after.png) |
 |:--------:|:-------:|
 | Before | After |
 
@@ -50,7 +50,7 @@ Statistics charts:
 
 ### Player profile - Matches tab
 
-| ![Before - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-matches-before.png) | ![After - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-matches-after.png) |
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-matches-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/player-matches-after.png) |
 |:--------:|:-------:|
 | Before | After |
 
@@ -61,10 +61,56 @@ Statistics charts:
 
 ### All Matches page
 
-| ![Before - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-before.png) | ![After - Player Profile](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-after.png) |
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-after.png) |
 |:--------:|:-------:|
 | Before | After |
 
 - Wingman matches now show their average rank, fetched from the match page since it's not displayed by default.
 - Average ranks icons for FACEIT, Competitive and Wingman matches are now displayed using SVG images for better quality and scalability.
 - Map icons are now in SVG format when available, ensuring better visual quality.
+
+### Match page
+
+#### All matches
+
+- Improved the match details header layout:
+	- Set the map icon to SVG format, centered in the match details header;
+	- Set the map name below the icon to full name;
+	- Set the average rank icon below the map name.
+
+- On match tie, the score blue color match the CSStats theme instead of being deep blue.
+
+#### Competitive match
+
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-competitive-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-competitive-after.png) |
+|:--------:|:-------:|
+| Before | After |
+
+- Rank up/downgrade are better displayed with arrows and the new/previous rank icon to illustrate the change;
+- If a user has no rank, the "unknown rank" icon is now displayed instead of nothing.
+
+#### Wingman match
+
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-wingman-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-wingman-after.png) |
+|:--------:|:-------:|
+| Before | After |
+
+- Rank up/downgrade are better displayed with arrows and the new/previous rank icon to illustrate the change;
+- Ranks shown now use the Wingman rank icons instead of Competitive ones.
+- If a user has no rank, the "unknown rank" icon is now displayed instead of nothing.
+
+#### FACEIT match
+
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-faceit-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-faceit-after.png) |
+|:--------:|:-------:|
+| Before | After |
+
+- FACEIT Levels are now bigger and use SVG format for better quality.
+
+#### Premier match
+
+| ![Before](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-premier-before.png) | ![After](https://raw.githubusercontent.com/Juknum/csstats-plus/refs/heads/main/media/screenshots/match-premier-after.png) |
+|:--------:|:-------:|
+| Before | After |
+
+- If a user has no rank, the "---" empty state is now displayed instead of nothing.
