@@ -1,3 +1,6 @@
 onlyBuiltDependencies:
   - esbuild
   - spawn-sync
+
+packages:
+  - 'packages/*'
