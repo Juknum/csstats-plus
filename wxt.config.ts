@@ -9,7 +9,7 @@ export default defineConfig({
     startUrls: ['https://csstats.gg/player/76561198088629896'],
     chromiumArgs: [
       // TODO: Make it compatible with MacOS/Linux
-      `--user-data-dir='C:\\Users\\${process.env.USERNAME}\\AppData\\Local\\Google\\Chrome\\User Data'`, 
+      `--user-data-dir='C:\\Users\\${process.env.USERNAME}\\AppData\\Local\\Google\\Microsoft\\Edge\\User Data'`, 
       // Edge v143.0.3650.28 says it's not working anymore but it seems to still mitigate CloudFlare issues
       "--disable-blink-features=AutomationControlled"
     ],
