@@ -37,8 +37,8 @@ export default function ClutchStats() {
 	return (
 		<Tile 
 			isLoading={loading}
-			width={273*2 + 10}
-			height={153.5}
+			width={(273 * 2) + 10}
+			height={153.5 + 4}
 			content={(
 				<div className="col nogap full-width">
 					<div className="row nowrap space-between">

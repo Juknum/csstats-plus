@@ -89,7 +89,7 @@ export default function EntriesStats() {
 		<Tile 
 			isLoading={loading}
 			width={542}
-			height={273}
+			height={273 + 4}
 			content={(
 				<div className="col full-width" style={{ '--gap': '20px' }}>
 					<div className="row nowrap space-between">

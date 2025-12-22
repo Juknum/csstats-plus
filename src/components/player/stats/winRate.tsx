@@ -28,6 +28,7 @@ export default function WinRateStats() {
 		<Tile 
 			isLoading={loading}
 			width={266}
+			height={155}
 			content={(
 				<div className="col full-width space-between">
 					<div className="row nowrap space-between">

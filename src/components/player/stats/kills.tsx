@@ -33,7 +33,7 @@ export default function MostKillsStats() {
 		<Tile 
 			isLoading={loading}
 			width={266}
-			height={(436.5 - 20) / 3}
+			height={((436.5 - 20) / 3) + 4}
 			content={(
 				<div className="col full-width">
 					<div className="row nowrap space-between">
