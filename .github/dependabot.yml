@@ -12,7 +12,7 @@ updates:
       day: "monday"
     target-branch: "main"
     commit-message:
-      prefix: "deps :"
-      prefix-development: "deps-dev :"
+      prefix: "deps:"
+      prefix-development: "deps-dev:"
     assignees:
       - "Juknum"
