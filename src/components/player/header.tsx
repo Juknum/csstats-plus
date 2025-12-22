@@ -113,8 +113,8 @@ export default function PlayerHeader() {
 		const url = new URL(window.location.href);
 		if (url.pathname.includes('/csgo')) url.pathname = url.pathname.replace(/\/csgo/, '');
 
-		url.searchParams.keys().forEach((key) => url.searchParams.delete(key));
-		url.searchParams.keys().forEach((key) => url.searchParams.delete(key));
+		url.search = '';
+		
 		params.forEach(([key, val]) => url.searchParams.append(key, val));
 
 		if (csgo) url.pathname += '/csgo';
