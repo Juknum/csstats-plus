@@ -24,6 +24,7 @@ export default function MatchesStats() {
 
 	return (
 		<Tile 
+			isLoading={loading}
 			width={542}
 			height={153.5}
 			content={(

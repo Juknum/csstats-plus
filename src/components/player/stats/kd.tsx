@@ -10,11 +10,11 @@ import DeltaIndicator from "./deltaIndicator";
 import 'chart.js/auto';
 
 export default function KDStats() {
-	const { user: { stats } } = usePlayerData();
+	const { user: { stats }, loading } = usePlayerData();
 
 	const { baseKpd, kpd1, kpd2, isMaxed, isOverMaxed } = useMemo(() => {
 		const maxKpd = 3.0;
-		const baseKpd = stats?.overall?.kpd ?? 0;
+		const baseKpd = stats !== false ? (stats?.overall?.kpd ?? 0) : 0;
 
 		const isOverMaxed = baseKpd > maxKpd;
 		const isMaxed = baseKpd > (maxKpd / 2);
@@ -34,10 +34,11 @@ export default function KDStats() {
 		}
 
 		return { baseKpd, kpd1, kpd2, isMaxed, isOverMaxed };
-	}, [stats?.overall?.kpd]);
+	}, [stats, loading]);
 
 	return (
 		<Tile 
+			isLoading={loading}
 			width={273}
 			height={273}
 			className="relative"

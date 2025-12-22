@@ -22,6 +22,7 @@ export default function AverageDamagesStats() {
 	
 	return (
 		<Tile 
+			isLoading={loading}
 			width={266}
 			content={(
 				<div className="col full-width space-between">

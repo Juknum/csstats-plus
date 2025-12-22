@@ -13,7 +13,7 @@ export default function HLTVStats() {
 	const { user: { stats }, loading } = usePlayerData();
 
 	const { baseRating, rating1, rating2, isMaxed, isOverMaxed } = useMemo(() => {
-		if (loading) return {
+		if (loading || !stats) return {
 			baseRating: 0,
 			rating1: 0,
 			rating2: 100,
@@ -51,6 +51,7 @@ export default function HLTVStats() {
 
 	return (
 		<Tile 
+			isLoading={loading}
 			width={273}
 			height={273}
 			content={(

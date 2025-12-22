@@ -17,7 +17,7 @@ export default function DeltaIndicator({ deltaKey, className, style, showZero }:
 	const [deltaStatus, setDeltaStatus] = useState<'up' | 'same' | 'down'>('same');
 	
 	useEffect(() => {
-		if (loading) return;
+		if (loading || !stats) return;
 
 		setDelta(Math.abs(stats?.overall?.delta[deltaKey] ?? 0));
 		setDeltaStatus(

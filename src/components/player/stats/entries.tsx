@@ -87,6 +87,7 @@ export default function EntriesStats() {
 
 	return (
 		<Tile 
+			isLoading={loading}
 			width={542}
 			height={273}
 			content={(

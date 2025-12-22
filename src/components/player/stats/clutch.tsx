@@ -36,6 +36,7 @@ export default function ClutchStats() {
 
 	return (
 		<Tile 
+			isLoading={loading}
 			width={273*2 + 10}
 			height={153.5}
 			content={(

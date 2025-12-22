@@ -31,6 +31,7 @@ export default function MostSuccessStats() {
 
 	return (
 		<Tile 
+			isLoading={loading}
 			width={266}
 			height={(436.5 - 20) / 3}
 			content={(
