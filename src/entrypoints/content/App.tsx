@@ -7,21 +7,24 @@ import MatchPage from './match/[id]/match.page';
 export default function App() {
 	const url = useMemo(() => window.location.href, [window.location]);
 
-	// remove add banner 
+	// remove Ad banner 
 	useEffect(() => {
-		const removeBanner = () => {
-			const el = document.getElementById('sticky-banner');
-			if (el) el.remove();
+		const removeAdBanner = () => {
+			const el1 = document.getElementById('sticky-banner');
+			if (el1) el1.remove();
+
+			const el2 = document.getElementsByClassName('publift-widget-sticky_footer-container')[0];
+			if (el2) el2.remove();
 		};
 
 		// remove if already present
-		removeBanner();
+		removeAdBanner();
 
 		// watch for future additions
 		const observer = new MutationObserver((mutations) => {
 			for (const m of mutations) {
 				if (m.addedNodes.length) {
-					removeBanner();
+					removeAdBanner();
 					break;
 				}
 			}
