@@ -4,7 +4,7 @@ import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
 import { useEffect, useMemo, useState } from "react";
 
 export function usePlayerData() {
-	const [stats, setStats] = useState<Stats | false>(false);
+	const [stats, setStats] = useState<Stats | false>(false); // false means no data
 	const [hasTrackingEnabled, setHasTrackingEnabled] = useState<boolean>(true);
 	const [loading, setLoading] = useState(true);
 
