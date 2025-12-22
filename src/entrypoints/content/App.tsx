@@ -40,10 +40,10 @@ export default function App() {
 
 	return (
 		<>
-			{url === 'https://csstats.gg/match'              && <AllMatchesPage />}
+			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?match$/) && <AllMatchesPage />}
 
-			{url.match(/https:\/\/csstats\.gg\/player\/\d+/) && <PlayerPage     />}
-			{url.match(/https:\/\/csstats\.gg\/match\/\d+/)  && <MatchPage      />}
+			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?player\/\d+/) && <PlayerPage     />}
+			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?match\/\d+/)  && <MatchPage      />}
 		</>
 	);
 }
