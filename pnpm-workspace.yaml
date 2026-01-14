@@ -1,6 +1,9 @@
+packages:
+  - packages/*
+
 onlyBuiltDependencies:
   - esbuild
   - spawn-sync
 
-packages:
-  - 'packages/*'
+overrides:
+  node-forge@<1.3.2: '>=1.3.2'
