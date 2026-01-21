@@ -23,6 +23,7 @@ export const CS2_MAPS = [
 export const SOME_COMMUNITY_MAPS = [
 	'ar_poolday',
 	'cs_agency',
+	'cs_alpine',
 	'de_assembly',
 	'de_basalt',
 	'de_brewery',
@@ -35,8 +36,12 @@ export const SOME_COMMUNITY_MAPS = [
 	'de_mills',
 	'de_palacio',
 	'de_palais',
+	'de_poseidon',
 	'de_rooftop',
+	'de_sanctum',
+	'de_stronghold',
 	'de_thera',
+	'de_warden',
 	'de_whistle',
 ] as const;
 
