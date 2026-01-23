@@ -41,11 +41,11 @@ export default function Matches() {
 
 	const updateMapCell = (cell: HTMLTableCellElement) => {
 		const img = cell.querySelector('img');
-		const mapName = img?.alt || cell.textContent || '';
+		const mapName = (img?.alt?.trim() || cell.textContent?.trim() || '').toLowerCase() as CS2Map | '';
 
 		createRoot(cell).render((() => (
 			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-				<img height="25" src={getMapIcon(mapName as CS2Map)} alt={mapName} />
+				{mapName !== '' && <img height="25" src={getMapIcon(mapName)} alt={mapName} />}
 				<span style={{ textTransform: 'capitalize' }}>{getMapName(mapName)}</span>
 			</div>
 		))());
