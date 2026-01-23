@@ -11,6 +11,7 @@
 		"build:all": "pnpm build && pnpm build:firefox && pnpm build:edge",
 		"build:edge": "wxt build -b edge",
 		"build:firefox": "wxt build -b firefox",
+		"build:safari": "wxt build -b safari",
 		"zip": "wxt zip",
 		"zip:all": "pnpm zip && pnpm zip:firefox && pnpm zip:edge",
 		"zip:edge": "wxt zip -b edge",
@@ -32,6 +33,7 @@
 		"@types/react-dom": "^19.2.2",
 		"@wxt-dev/module-react": "^1.1.5",
 		"typescript": "^5.9.3",
-		"wxt": "^0.20.13"
+		"wxt": "^0.20.13",
+		"wxt-module-safari-xcode": "^0.1.0"
 	}
 }

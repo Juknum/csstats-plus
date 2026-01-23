@@ -10,3 +10,4 @@ overrides:
 
 patchedDependencies:
   publish-browser-extension: patches/publish-browser-extension.patch
+  wxt-module-safari-xcode: patches/wxt-module-safari-xcode.patch

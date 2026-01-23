@@ -11,6 +11,9 @@ patchedDependencies:
   publish-browser-extension:
     hash: c1ed228f8fe9dcdcdda0d9354843916cba126d8c52310e5640268bdc7557c0c6
     path: patches/publish-browser-extension.patch
+  wxt-module-safari-xcode:
+    hash: e3f292cc51862756450e55b208cd0d7484db0e7774b8465b92e053b54eedfdeb
+    path: patches/wxt-module-safari-xcode.patch
 
 importers:
 
@@ -47,6 +50,9 @@ importers:
       wxt:
         specifier: ^0.20.13
         version: 0.20.13(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.2)
+      wxt-module-safari-xcode:
+        specifier: ^0.1.0
+        version: 0.1.0(patch_hash=e3f292cc51862756450e55b208cd0d7484db0e7774b8465b92e053b54eedfdeb)(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.2)
 
 packages:
 
@@ -1996,6 +2002,9 @@ packages:
     resolution: {integrity: sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==}
     engines: {node: '>=18'}
 
+  wxt-module-safari-xcode@0.1.0:
+    resolution: {integrity: sha512-Fp9t2U4EbSiK2YXn1wxuxm+FJHnUUWVJfd+n0k10OPgX09beXKNdaOkSpjkng4j4HktPmpRtzlalQzyclwgaSQ==}
+
   wxt@0.20.13:
     resolution: {integrity: sha512-FwQEk+0a4/pYha6rTKGl5iicU6kRYDBDiElJf55CFEfoJKqvGzBTZpphafurQfqU1X0hvAm9w5GEWC0thXI6wQ==}
     hasBin: true
@@ -2032,6 +2041,11 @@ packages:
 
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+
+  zx@8.8.5:
+    resolution: {integrity: sha512-SNgDF5L0gfN7FwVOdEFguY3orU5AkfFZm9B5YSHog/UDHv+lvmd82ZAsOenOkQixigwH2+yyH198AwNdKhj+RA==}
+    engines: {node: '>= 12.17.0'}
+    hasBin: true
 
 snapshots:
 
@@ -3824,6 +3838,27 @@ snapshots:
     dependencies:
       is-wsl: 3.1.0
 
+  wxt-module-safari-xcode@0.1.0(patch_hash=e3f292cc51862756450e55b208cd0d7484db0e7774b8465b92e053b54eedfdeb)(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.2):
+    dependencies:
+      zx: 8.8.5
+    optionalDependencies:
+      wxt: 0.20.13(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.2)
+    transitivePeerDependencies:
+      - '@types/node'
+      - canvas
+      - jiti
+      - less
+      - lightningcss
+      - rollup
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
   wxt@0.20.13(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.2):
     dependencies:
       '@1natsu/wait-element': 4.1.2
@@ -3918,3 +3953,5 @@ snapshots:
       jszip: 3.10.1
 
   zod@4.1.12: {}
+
+  zx@8.8.5: {}
