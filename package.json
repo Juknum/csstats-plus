@@ -2,7 +2,7 @@
 	"name": "csstats-plus",
 	"description": "Enhances the CSStats website",
 	"private": true,
-	"version": "2.2.1",
+	"version": "2.2.2",
 	"type": "module",
 	"scripts": {
 		"dev": "wxt -b edge",
@@ -12,7 +12,7 @@
 		"build:edge": "wxt build -b edge",
 		"build:firefox": "wxt build -b firefox",
 		"zip": "wxt zip",
-		"zip:all": "pnpm zip && pnpm zip:firefox",
+		"zip:all": "pnpm zip && pnpm zip:firefox && pnpm zip:edge",
 		"zip:edge": "wxt zip -b edge",
 		"zip:firefox": "wxt zip -b firefox",
 		"compile": "tsc --noEmit",
