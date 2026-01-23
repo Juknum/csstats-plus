@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import PlayerHeader from "@/components/player/header";
 import PlayerNavbar from "@/components/player/navbar";
 import StatsGrid from "@/components/player/stats/grid";
+import Matches from "@/components/player/matches/matches";
+import Maps from "@/components/player/maps/maps";
 import { usePlayerData } from "@/hooks/usePlayerData";
 
 import '@/components/common.css';
-import Matches from "@/components/player/matches/matches";
-import Maps from "@/components/player/maps/maps";
 
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
 	const { user: { tracked }, loading } = usePlayerData();
+	const [hasLoadingSection, setHasLoadingSection] = useState<boolean>(false);
 
 	// hide overridden elements on mount
 	useEffect(() => {
@@ -30,8 +31,11 @@ export default function PlayerPage() {
 			const filters = document.getElementById('player-filters');
 			filters && (filters.style.display = 'none');
 
-			const statsSection = document.getElementById('player-outer-section');
-			statsSection && (statsSection.style.display = !fragment ? 'none' : '');
+			const loadingSection = document.getElementById('player-loading-section');
+			if (loadingSection) setHasLoadingSection(true);
+			
+			const statsSection   = document.getElementById('player-outer-section');
+			statsSection && loadingSection && (statsSection.style.display = !fragment ? 'none' : '');
 
 			if (!tracked) {
 				const banner = document.getElementsByClassName('glyphicon glyphicon-warning-sign')?.[0]?.parentElement;
@@ -70,7 +74,7 @@ export default function PlayerPage() {
 			)}
 			<PlayerHeader />
 			<PlayerNavbar />
-			{ !fragment && <StatsGrid /> }
+			{ !fragment && hasLoadingSection && <StatsGrid /> }
 
 			{/* No element added, so no need to check for the fragment */}
 			<Maps />
