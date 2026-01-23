@@ -1,4 +1,3 @@
-
 export async function waitForScriptLoad(filter: (s: HTMLScriptElement) => boolean): Promise<HTMLScriptElement> {
 	return new Promise((res) => {
 		const existing = Array.from(document.scripts).find((s) => filter(s));

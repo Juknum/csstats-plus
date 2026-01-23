@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Chart } from 'react-chartjs-2';
+import { Chart } from "react-chartjs-2";
 
 import Tile from "@/components/tile/tile";
 import { usePlayerData } from "@/hooks/usePlayerData";
@@ -7,17 +7,20 @@ import { options } from "@/utils/chart";
 
 import DeltaIndicator from "./deltaIndicator";
 
-import 'chart.js/auto';
+import "chart.js/auto";
 
 export default function KDStats() {
-	const { user: { stats }, loading } = usePlayerData();
+	const {
+		user: { stats },
+		loading,
+	} = usePlayerData();
 
 	const { baseKpd, kpd1, kpd2, isMaxed, isOverMaxed } = useMemo(() => {
 		const maxKpd = 3.0;
 		const baseKpd = stats !== false ? (stats?.overall?.kpd ?? 0) : 0;
 
 		const isOverMaxed = baseKpd > maxKpd;
-		const isMaxed = baseKpd > (maxKpd / 2);
+		const isMaxed = baseKpd > maxKpd / 2;
 
 		let kpd1 = 0;
 		let kpd2 = 0;
@@ -26,7 +29,7 @@ export default function KDStats() {
 			kpd1 = 100;
 			kpd2 = 0;
 		} else if (isMaxed) {
-			kpd1 = ((baseKpd - (maxKpd / 2)) / (maxKpd / 2)) * 100;
+			kpd1 = ((baseKpd - maxKpd / 2) / (maxKpd / 2)) * 100;
 			kpd2 = 100 - kpd1;
 		} else {
 			kpd1 = (baseKpd / (maxKpd / 2)) * 100;
@@ -34,20 +37,18 @@ export default function KDStats() {
 		}
 
 		return { baseKpd, kpd1, kpd2, isMaxed, isOverMaxed };
-	}, [stats, loading]);
+	}, [stats]);
 
 	return (
-		<Tile 
+		<Tile
 			isLoading={loading}
 			width={273}
 			height={273}
 			className="relative"
-			content={(
+			content={
 				<div className="col nogap">
 					<div className="row nowrap space-between">
-						<span className="text">
-							K/D
-						</span>
+						<span className="text">K/D</span>
 					</div>
 					<div className="text-over-chart col center-y center-x">
 						{baseKpd}
@@ -56,34 +57,27 @@ export default function KDStats() {
 					<Chart
 						type="doughnut"
 						data={{
-							datasets: [{								
-								data: [kpd1, kpd2],
-								borderWidth: 0,
-								animation: false,
-								weight: 1,
-								backgroundColor: 
-									isOverMaxed ? [
-										'rgb(250, 173, 58)',
-									]
-									: 
-									isMaxed ? [
-										'rgb(125, 205, 78)',
-										'rgba(125, 205, 78, .2)',
-									]
-									: 
-									[
-										'rgb(125, 205, 78)',
-										'rgba(202, 81,  81, .2)',
-									],
-							}]
+							datasets: [
+								{
+									data: [kpd1, kpd2],
+									borderWidth: 0,
+									animation: false,
+									weight: 1,
+									backgroundColor: isOverMaxed
+										? ["rgb(250, 173, 58)"]
+										: isMaxed
+											? ["rgb(125, 205, 78)", "rgba(125, 205, 78, .2)"]
+											: ["rgb(125, 205, 78)", "rgba(202, 81,  81, .2)"],
+								},
+							],
 						}}
 						options={{
 							...options,
-							cutout: '95%'
+							cutout: "95%",
 						}}
 					/>
 				</div>
-			)} 
+			}
 		/>
 	);
 }

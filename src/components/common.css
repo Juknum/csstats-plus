@@ -1,4 +1,8 @@
-*, *::before, *::after {
+/** biome-ignore-all lint/complexity/noImportantStyles: we need to override the default css of the website */
+
+*,
+*::before,
+*::after {
 	font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 	box-sizing: border-box;
@@ -6,28 +10,33 @@
 }
 
 /* Scrollbar Styling */
-:root, * {
+:root,
+* {
 	/* Firefox */
 	scrollbar-width: thin; /* Make the scrollbar thinner */
-  scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* Translucent knob and invisible track */
+	scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* Translucent knob and invisible track */
 }
 
-:root::-webkit-scrollbar, *::-webkit-scrollbar {
+:root::-webkit-scrollbar,
+*::-webkit-scrollbar {
 	width: 12px; /* Width of the entire scrollbar */
 	height: 12px; /* Height of the entire scrollbar */
 }
 
-:root::-webkit-scrollbar-track, *::-webkit-scrollbar-track {
-  background: transparent; /* Make the track invisible */
+:root::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+	background: transparent; /* Make the track invisible */
 }
 
-:root::-webkit-scrollbar-thumb, *::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25); /* Translucent scrollbar knob */
-  border-radius: 5px; /* Optional: rounded corners for the knob */
+:root::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.25); /* Translucent scrollbar knob */
+	border-radius: 5px; /* Optional: rounded corners for the knob */
 }
 
-:root::-webkit-scrollbar-thumb:hover, *::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4); /* Darker knob on hover */
+:root::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.4); /* Darker knob on hover */
 }
 /* ----------------- */
 
@@ -62,6 +71,10 @@
 
 .nogap {
 	gap: 0px;
+}
+
+.cursor-default {
+	cursor: default;
 }
 
 .clickable {
@@ -101,10 +114,10 @@
 }
 
 .text {
-	font-size: 13px; 
-	line-height: 13px; 
+	font-size: 13px;
+	line-height: 13px;
 	height: 13px;
-	color: rgba(255,255,255);
+	color: rgba(255, 255, 255);
 	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 700;
 }
@@ -114,23 +127,23 @@
 }
 
 .text-light {
-	font-size: 13px; 
-	line-height: 13px; 
+	font-size: 13px;
+	line-height: 13px;
 	height: 13px;
-	color: rgba(255,255,255,0.75);
+	color: rgba(255, 255, 255, 0.75);
 	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 400;
 }
 
 .text-medium {
 	font-size: 20px;
-	font-family: Roboto;
+	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
 }
 
 .text-big {
 	font-size: 30px;
-	font-family: Roboto;
+	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: white;
 }
 
@@ -139,7 +152,7 @@
 	line-height: 14px;
 	height: 14px;
 	text-align: right;
-	color: rgba(255,255,255);
+	color: rgba(255, 255, 255);
 }
 
 .text-over-chart {
@@ -149,7 +162,7 @@
 	transform: translate(-50%, -50%);
 	text-align: center;
 
-	font-family: "Roboto Condensed";
+	font-family: "Roboto Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 50px;
 	color: white;
 }
@@ -182,37 +195,37 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
-	padding: .75rem .75rem .75rem 1.5rem;
+	padding: 0.75rem 0.75rem 0.75rem 1.5rem;
 	text-shadow: 0 1px 0 black;
 	font-weight: bold;
 }
 
 .cs2rating.ancient {
-	color: #EB4B4B;
+	color: #eb4b4b;
 }
 
 .cs2rating.legendary {
-	color: #D22CE6;
+	color: #d22ce6;
 }
 
 .cs2rating.unusual {
-	color: #FED700;
+	color: #fed700;
 }
 
 .cs2rating.mythical {
-	color: #8846FF;
+	color: #8846ff;
 }
 
 .cs2rating.rare {
-	color: #4B69FF;
+	color: #4b69ff;
 }
 
 .cs2rating.uncommon {
-	color: #5E98D7;
+	color: #5e98d7;
 }
 
 .cs2rating.common {
-	color: #B1C3D9;
+	color: #b1c3d9;
 }
 
 .cs2rating-big {
@@ -224,7 +237,7 @@
 }
 
 .info-banner {
-	background-color: rgba(208, 65, 67, .15);
+	background-color: rgba(208, 65, 67, 0.15);
 	height: 40px;
 	text-align: center;
 	line-height: 40px;
@@ -253,17 +266,17 @@
 }
 
 .match-hoverable:hover::before {
-	content: '';
+	content: "";
 	position: absolute;
 	z-index: -1;
 	top: -5px;
 	border-radius: 3px;
 	width: 40px;
 	height: calc(100% + 10px);
-	background: linear-gradient(0deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+	background: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0%, transparent 80%);
 }
 
 .border-left {
-	border-left: 1px solid #4B505E;
+	border-left: 1px solid #4b505e;
 	padding-left: 10px;
 }

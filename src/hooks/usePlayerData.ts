@@ -1,7 +1,7 @@
-import { CS2Map, GAME_MODES } from "@/utils/constants";
-import { CSGame, CSGameMode, RankInfo, Stats } from "@/utils/types";
-import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
 import { useEffect, useMemo, useState } from "react";
+import { type CS2Map, GAME_MODES } from "@/utils/constants";
+import type { CSGame, CSGameMode, RankInfo, Stats } from "@/utils/types";
+import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
 
 export function usePlayerData() {
 	const [stats, setStats] = useState<Stats | false>(false); // false means no data
@@ -9,54 +9,53 @@ export function usePlayerData() {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (!window.location.href.includes('/player/')) return;
+		if (!window.location.href.includes("/player/")) return;
 
-		waitForScriptLoad((s) => (s.textContent ?? '').includes('var stats = '))
-			.then((script) => {
-				setLoading(false);
-				setHasTrackingEnabled(document.getElementsByClassName('glyphicon glyphicon-warning-sign')[0] === undefined);
-				setStats(JSON.parse((script.textContent ?? '').split('var stats = ')[1].split(';')[0]) as Stats)
-			})
-		
+		waitForScriptLoad((s) => (s.textContent ?? "").includes("var stats = ")).then((script) => {
+			setLoading(false);
+			setHasTrackingEnabled(document.getElementsByClassName("glyphicon glyphicon-warning-sign")[0] === undefined);
+			setStats(JSON.parse((script.textContent ?? "").split("var stats = ")[1].split(";")[0]) as Stats);
+		});
 	}, []);
 
 	const user = useMemo(() => {
-		if (!window.location.href.includes('/player/')) return undefined;
+		if (!window.location.href.includes("/player/")) return undefined;
 
-		const socials = document.getElementById('other-profiles') as HTMLDivElement;
-		const icons = Array.from(socials.children).filter((c) => c.classList.contains('icon')).filter(Boolean) as HTMLDivElement[];
-		const bannedBanner = (Array.from(socials.children) as HTMLDivElement[]).find((c) => c.innerText.includes('VAC') || c.innerText.includes('Overwatch'));
+		const socials = document.getElementById("other-profiles") as HTMLDivElement;
+		const icons = Array.from(socials.children)
+			.filter((c) => c.classList.contains("icon"))
+			.filter(Boolean) as HTMLDivElement[];
+		const bannedBanner = (Array.from(socials.children) as HTMLDivElement[]).find((c) => c.innerText.includes("VAC") || c.innerText.includes("Overwatch"));
 
-		const steamAnchor = icons.find((i) => i.children[0]?.getAttribute('href')?.includes('steamcommunity.com'))?.children[0] as HTMLAnchorElement | undefined;
-		const faceitAnchor = icons.find((i) => i.children[0]?.getAttribute('href')?.includes('faceit.com'))?.children[0] as HTMLAnchorElement | undefined;
-		const discordBooster = icons.find((i) => i.children[0]?.getAttribute('src')?.includes('discord-booster-1.png'))?.children[0] as HTMLImageElement | undefined;
-	
+		const steamAnchor = icons.find((i) => i.children[0]?.getAttribute("href")?.includes("steamcommunity.com"))?.children[0] as HTMLAnchorElement | undefined;
+		const faceitAnchor = icons.find((i) => i.children[0]?.getAttribute("href")?.includes("faceit.com"))?.children[0] as HTMLAnchorElement | undefined;
+		const discordBooster = icons.find((i) => i.children[0]?.getAttribute("src")?.includes("discord-booster-1.png"))?.children[0] as HTMLImageElement | undefined;
+
 		return {
-			img: document.getElementById('player-avatar')?.children[0]?.getAttribute('src'),
-			name: document.getElementById('player-name')?.textContent?.trim(),
+			img: document.getElementById("player-avatar")?.children[0]?.getAttribute("src"),
+			name: document.getElementById("player-name")?.textContent?.trim(),
 			tracked: hasTrackingEnabled,
 			banned: bannedBanner ? bannedBanner.innerText.trim() : undefined,
 			profiles: {
 				steam: steamAnchor?.href,
 				faceit: faceitAnchor?.href,
 				discordBooster: discordBooster?.src,
-			}
-		}
-
+			},
+		};
 	}, [hasTrackingEnabled]);
 
 	const ranks = useMemo(() => {
-		if (!window.location.href.includes('/player/')) return [];
-		
-		const ranksSection = document.getElementById('player-ranks') as HTMLDivElement;
+		if (!window.location.href.includes("/player/")) return [];
+
+		const ranksSection = document.getElementById("player-ranks") as HTMLDivElement;
 		if (!ranksSection) return [];
 
 		const ranks: RankInfo[] = [];
-		let game: CSGame = 'CS2';
+		let game: CSGame = "CS2";
 
 		for (const rankElement of Array.from(ranksSection.children)) {
 			// header
-			if (rankElement.className === 'header') {
+			if (rankElement.className === "header") {
 				const [icon, _1, _2] = Array.from(rankElement.children);
 				const img = icon.children[0] as HTMLImageElement;
 				game = img.alt as CSGame;
@@ -74,50 +73,49 @@ export function usePlayerData() {
 			const [date, wins, _unused] = Array.from(bottom.children);
 
 			// retrieve map & game mode info
-			const mapImgOrText = (icon.children[0] as HTMLImageElement | null) ?? icon.textContent!.trim();
+			const mapImgOrText = (icon.children[0] as HTMLImageElement | null) ?? icon.textContent?.trim();
 
-			const mapOrGameMode = (game === 'CS:GO' 
-				? null
-				: typeof mapImgOrText === 'string' 
-					? mapImgOrText
-					: mapImgOrText.alt) as (CSGameMode | null);
+			const mapOrGameMode = (game === "CS:GO" ? null : typeof mapImgOrText === "string" ? mapImgOrText : mapImgOrText.alt) as CSGameMode | null;
 
-			const map = mapOrGameMode?.includes('_') ? mapOrGameMode as CS2Map : null;
+			const map = mapOrGameMode?.includes("_") ? (mapOrGameMode as CS2Map) : null;
 			const gamemode = {
-				season: mapOrGameMode?.includes('Premier') 
-					? isNaN(parseInt(mapOrGameMode.replace('Premier - Season ', ''), 10)) ? 1 : parseInt(mapOrGameMode.replace('Premier - Season ', ''), 10)
+				season: mapOrGameMode?.includes("Premier")
+					? Number.isNaN(parseInt(mapOrGameMode.replace("Premier - Season ", ""), 10))
+						? 1
+						: parseInt(mapOrGameMode.replace("Premier - Season ", ""), 10)
 					: null,
-				type: mapOrGameMode?.includes('Premier') 
-					? 'Premier'
-					: mapOrGameMode && GAME_MODES.includes(mapOrGameMode) ? mapOrGameMode : 'Competitive',
+				type: mapOrGameMode?.includes("Premier") ? "Premier" : mapOrGameMode && GAME_MODES.includes(mapOrGameMode) ? mapOrGameMode : "Competitive",
 			};
 
 			// retrieve rank info
 			const currRankEl = rank.children[0] as HTMLImageElement | HTMLDivElement | null;
 
-			const currentRank = currRankEl 
-				? currRankEl instanceof HTMLDivElement 
-					? parseInt(currRankEl.children[0].textContent!.replace(',', ''))
-					: parseInt(currRankEl.src.replaceAll('wingman', '').replaceAll('level', '').split('/').pop()!.split('.')[0], 10)
+			const currentRank = currRankEl
+				? currRankEl instanceof HTMLDivElement
+					? parseInt(currRankEl.children[0].textContent?.replace(",", "") || "0", 10)
+					: parseInt(currRankEl.src.replaceAll("wingman", "").replaceAll("level", "").split("/").pop()?.split(".")[0] || "0", 10)
 				: -1;
 
 			// same as above but for best rank
 			const bestRankEl = best.children[0] as HTMLImageElement | HTMLDivElement | null;
-			const bestRank = bestRankEl instanceof HTMLDivElement
-				? parseInt(bestRankEl.children[0].textContent!.replace(',', ''))
-				: bestRankEl ? parseInt(bestRankEl.src.replaceAll('wingman', '').replaceAll('level', '').split('/').pop()!.split('.')[0], 10) : 0;
+			const bestRank =
+				bestRankEl instanceof HTMLDivElement
+					? parseInt(bestRankEl.children[0].textContent?.replace(",", "") || "0", 10)
+					: bestRankEl
+						? parseInt(bestRankEl.src.replaceAll("wingman", "").replaceAll("level", "").split("/").pop()?.split(".")[0] || "0", 10)
+						: 0;
 
 			const rankToAdd: RankInfo = {
 				game,
-				map, 
+				map,
 				gamemode,
 				rank: {
 					best: bestRank === currentRank ? 0 : bestRank,
 					current: currentRank === 0 && bestRank !== 0 ? -1 : currentRank, // -1 means expired rank
 				},
-				wins: parseInt(wins.textContent!.replaceAll('\n', '').replace('Wins:', '').trim(), 10),
-				date: date.textContent!.replaceAll('\n', '').trim(),
-			}
+				wins: parseInt(wins.textContent?.replaceAll("\n", "").replace("Wins:", "").trim() || "0", 10),
+				date: date.textContent?.replaceAll("\n", "").trim() || "",
+			};
 
 			ranks.push(rankToAdd);
 		}
@@ -131,6 +129,6 @@ export function usePlayerData() {
 			...user,
 			stats,
 			ranks,
-		}
-	}
+		},
+	};
 }

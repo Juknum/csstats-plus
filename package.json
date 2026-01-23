@@ -1,35 +1,37 @@
 {
-  "name": "csstats-plus",
-  "description": "Enhances the CSStats website",
-  "private": true,
-  "version": "2.2.1",
-  "type": "module",
-  "scripts": {
-    "dev": "wxt -b edge",
-    "dev:firefox": "wxt -b firefox",
-    "build": "wxt build",
-    "build:all": "pnpm build && pnpm build:firefox && pnpm build:edge",
-    "build:edge": "wxt build -b edge",
-    "build:firefox": "wxt build -b firefox",
-    "zip": "wxt zip",
-    "zip:all": "pnpm zip && pnpm zip:firefox",
-    "zip:edge": "wxt zip -b edge",
-    "zip:firefox": "wxt zip -b firefox",
-    "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare",
-    "prepublish": "pnpm build:all && pnpm zip:all"
-  },
-  "dependencies": {
-    "chart.js": "^4.5.1",
-    "react": "^19.2.3",
-    "react-chartjs-2": "^5.3.1",
-    "react-dom": "^19.2.3"
-  },
-  "devDependencies": {
-    "@types/react": "^19.2.9",
-    "@types/react-dom": "^19.2.2",
-    "@wxt-dev/module-react": "^1.1.5",
-    "typescript": "^5.9.3",
-    "wxt": "^0.20.13"
-  }
+	"name": "csstats-plus",
+	"description": "Enhances the CSStats website",
+	"private": true,
+	"version": "2.2.1",
+	"type": "module",
+	"scripts": {
+		"dev": "wxt -b edge",
+		"dev:firefox": "wxt -b firefox",
+		"build": "wxt build",
+		"build:all": "pnpm build && pnpm build:firefox && pnpm build:edge",
+		"build:edge": "wxt build -b edge",
+		"build:firefox": "wxt build -b firefox",
+		"zip": "wxt zip",
+		"zip:all": "pnpm zip && pnpm zip:firefox",
+		"zip:edge": "wxt zip -b edge",
+		"zip:firefox": "wxt zip -b firefox",
+		"compile": "tsc --noEmit",
+		"postinstall": "wxt prepare",
+		"prepublish": "pnpm build:all && pnpm zip:all",
+		"lint": "pnpm exec biome format --write && pnpm exec biome lint --fix"
+	},
+	"dependencies": {
+		"chart.js": "^4.5.1",
+		"react": "^19.2.3",
+		"react-chartjs-2": "^5.3.1",
+		"react-dom": "^19.2.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.12",
+		"@types/react": "^19.2.9",
+		"@types/react-dom": "^19.2.2",
+		"@wxt-dev/module-react": "^1.1.5",
+		"typescript": "^5.9.3",
+		"wxt": "^0.20.13"
+	}
 }

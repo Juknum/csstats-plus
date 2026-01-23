@@ -1,7 +1,6 @@
-
 .header-container {
 	padding: 20px;
-	background-image: url('https://csstats.gg/images/header-bg-image.png');
+	background-image: url("https://csstats.gg/images/header-bg-image.png");
 }
 
 .header-contained {
@@ -29,6 +28,12 @@
 	padding-right: 10px;
 }
 
+.map-btn {
+	border: none;
+	background: none;
+	padding: 0;
+}
+
 .btn-on {
 	color: white;
 	cursor: pointer;
@@ -37,7 +42,7 @@
 .btn-off {
 	color: gray;
 	cursor: not-allowed;
-	opacity: .3;
+	opacity: 0.3;
 }
 
 .username {
@@ -55,14 +60,14 @@
 }
 
 .rank-competitive-hoverable:hover::before {
-	content: '';
+	content: "";
 	position: absolute;
 	z-index: -1;
 	top: -5px;
 	border-radius: 3px;
 	width: 60px;
 	height: 172.38px;
-	background: linear-gradient(0deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+	background: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0%, transparent 80%);
 }
 
 .rank-tile-hoverable {
@@ -71,7 +76,7 @@
 }
 
 .rank-tile-hoverable:hover::before {
-	content: '';
+	content: "";
 	position: absolute;
 	z-index: -1;
 	top: 0px;
@@ -79,7 +84,7 @@
 	border-radius: 3px;
 	width: 290px;
 	height: 63px;
-	background: linear-gradient(90deg,rgba(255, 255, 255, .2) 0%, transparent 80%)
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, transparent 80%);
 }
 
 .rank-faceit-hoverable {
@@ -88,7 +93,7 @@
 }
 
 .rank-faceit-hoverable:hover::before {
-	content: '';
+	content: "";
 	position: absolute;
 	z-index: -1;
 	top: 0px;
@@ -96,5 +101,5 @@
 	border-radius: 3px;
 	width: 63px;
 	height: 63px;
-	background: rgba(255, 255, 255, .1) 50%;
+	background: rgba(255, 255, 255, 0.1) 50%;
 }

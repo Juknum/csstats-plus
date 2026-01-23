@@ -1,23 +1,24 @@
-import MatchesStats from "./matches";
-
-import { usePlayerData } from "@/hooks/usePlayerData";
 import Tile from "@/components/tile/tile";
-
+import { usePlayerData } from "@/hooks/usePlayerData";
+import AverageDamagesStats from "./adr";
+import ClutchStats from "./clutch";
+import EntriesStats from "./entries";
+import HeadShotsStats from "./headShots";
+import HLTVStats from "./htlv";
+import KDStats from "./kd";
+import MostKillsStats from "./kills";
+import MatchesStats from "./matches";
 import MostPlayedStats from "./played";
 import MostSuccessStats from "./success";
-import KDStats from "./kd";
-import HLTVStats from "./htlv";
-import ClutchStats from "./clutch";
-import MostKillsStats from "./kills";
-import HeadShotsStats from "./headShots";
 import WinRateStats from "./winRate";
-import AverageDamagesStats from "./adr";
-import EntriesStats from "./entries";
 
 import "@/components/common.css";
 
 export default function StatsGrid() {
-	const { user: { stats }, loading } = usePlayerData();
+	const {
+		user: { stats },
+		loading,
+	} = usePlayerData();
 
 	return (
 		<div className="col grid-container">
@@ -52,13 +53,10 @@ export default function StatsGrid() {
 				)}
 
 				{!loading && !stats && (
-					<Tile 
+					<Tile
 						width={800}
 						content={
-							<div 
-								style={{ lineHeight: 2, height: 40, width: "100%" }} 
-								className="text text-medium text-center"
-							>
+							<div style={{ lineHeight: 2, height: 40, width: "100%" }} className="text text-medium text-center">
 								No statistics available for this player.
 							</div>
 						}
@@ -66,5 +64,5 @@ export default function StatsGrid() {
 				)}
 			</div>
 		</div>
-	)
+	);
 }

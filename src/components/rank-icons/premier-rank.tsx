@@ -6,12 +6,14 @@ export function PremierRankIcon({ rankNumber }: { rankNumber: number }) {
 	return (
 		<div
 			className={`cs2rating ${color}`}
-			style={{ backgroundImage: `url(${getRankPicture(rankNumber, 'Premier')})` }}
+			style={{
+				backgroundImage: `url(${getRankPicture(rankNumber, "Premier")})`,
+			}}
 		>
 			<span className="cs2rating-big">
-				{thousand === 0 ? '---' : thousand}
-				<small>{thousand === 0 ? '' : `,${hundred}`}</small>
+				{thousand === 0 ? "---" : thousand}
+				<small>{thousand === 0 ? "" : `,${hundred}`}</small>
 			</span>
 		</div>
-	)
+	);
 }

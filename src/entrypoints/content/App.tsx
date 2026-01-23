@@ -1,19 +1,18 @@
-import { useEffect, useMemo } from 'react';
-
-import PlayerPage from './player/player-page';
-import AllMatchesPage from './match/all-matches-page';
-import MatchPage from './match/[id]/match.page';
+import { useEffect, useMemo } from "react";
+import MatchPage from "./match/[id]/match.page";
+import AllMatchesPage from "./match/all-matches-page";
+import PlayerPage from "./player/player-page";
 
 export default function App() {
-	const url = useMemo(() => window.location.href, [window.location]);
+	const url = useMemo(() => window.location.href, []);
 
-	// remove Ad banner 
+	// remove Ad banner
 	useEffect(() => {
 		const removeAdBanner = () => {
-			const el1 = document.getElementById('sticky-banner');
+			const el1 = document.getElementById("sticky-banner");
 			if (el1) el1.remove();
 
-			const el2 = document.getElementsByClassName('publift-widget-sticky_footer-container')[0];
+			const el2 = document.getElementsByClassName("publift-widget-sticky_footer-container")[0];
 			if (el2) el2.remove();
 		};
 
@@ -42,8 +41,8 @@ export default function App() {
 		<>
 			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?match$/) && <AllMatchesPage />}
 
-			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?player\/\d+/) && <PlayerPage     />}
-			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?match\/\d+/)  && <MatchPage      />}
+			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?player\/\d+/) && <PlayerPage />}
+			{url.match(/https:\/\/csstats\.gg\/(?:[a-z]{2}\/)?match\/\d+/) && <MatchPage />}
 		</>
 	);
 }
