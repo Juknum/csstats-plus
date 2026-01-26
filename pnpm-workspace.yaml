@@ -7,3 +7,6 @@ onlyBuiltDependencies:
 
 overrides:
   node-forge@<1.3.2: '>=1.3.2'
+
+patchedDependencies:
+  publish-browser-extension: patches/publish-browser-extension.patch
