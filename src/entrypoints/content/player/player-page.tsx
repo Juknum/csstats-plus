@@ -10,14 +10,14 @@ import "@/components/common.css";
 
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
-	const {
-		user: { tracked },
-		loading,
-	} = usePlayerData();
 	const [hasLoadingSection, setHasLoadingSection] = useState<boolean>(false);
 
+	const {
+		user: { tracked },
+		isLoginRequired,
+	} = usePlayerData();
+
 	// hide overridden elements on mount
-	// biome-ignore lint/correctness/useExhaustiveDependencies: elements needs to be re-checked on loading change
 	useEffect(() => {
 		Array.from(document.body.children).forEach((child) => {
 			if (!(child instanceof HTMLElement)) return;
@@ -38,14 +38,17 @@ export default function PlayerPage() {
 			if (loadingSection) setHasLoadingSection(true);
 
 			const statsSection = document.getElementById("player-outer-section");
-			if (statsSection && loadingSection) statsSection.style.display = !fragment ? "none" : "";
+			if (statsSection) {
+				if (loadingSection && !isLoginRequired) statsSection.style.display = !fragment ? "none" : "";
+				if (isLoginRequired) statsSection.style.display = "";
+			}
 
 			if (!tracked) {
 				const banner = document.getElementsByClassName("glyphicon glyphicon-warning-sign")?.[0]?.parentElement;
 				if (banner) banner.style.display = "none";
 			}
 		});
-	}, [fragment, tracked, loading]);
+	}, [fragment, tracked, isLoginRequired]);
 
 	// watch URL Hash Fragment changes
 	useEffect(() => {

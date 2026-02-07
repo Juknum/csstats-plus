@@ -7,7 +7,7 @@ import "../common.css";
 import "./navbar.css";
 
 export default function PlayerNavbar() {
-	const { loading } = usePlayerData();
+	const { loading, isLoginRequired } = usePlayerData();
 	const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false);
 
 	const defaultGameType = "cs2";
@@ -93,6 +93,7 @@ export default function PlayerNavbar() {
 		window.location.reload();
 	};
 
+	if (isLoginRequired) return null;
 	if (loading) return <div className="navbar-container">&nbsp;</div>;
 	return (
 		<div className="navbar-container" ref={navbarRef}>

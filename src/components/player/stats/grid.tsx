@@ -17,8 +17,11 @@ import "@/components/common.css";
 export default function StatsGrid() {
 	const {
 		user: { stats },
+		isLoginRequired,
 		loading,
 	} = usePlayerData();
+
+	if (isLoginRequired) return null;
 
 	return (
 		<div className="col grid-container">

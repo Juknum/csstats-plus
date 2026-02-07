@@ -14,6 +14,9 @@ export default function App() {
 
 			const el2 = document.getElementsByClassName("publift-widget-sticky_footer-container")[0];
 			if (el2) el2.remove();
+
+			const el3 = document.getElementById("primis-video-container");
+			if (el3) el3.remove();
 		};
 
 		// remove if already present

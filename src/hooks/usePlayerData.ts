@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { type CS2Map, GAME_MODES } from "@/utils/constants";
 import type { CSGame, CSGameMode, RankInfo, Stats } from "@/utils/types";
 import { waitForScriptLoad } from "@/utils/waitForScriptLoad";
+import { watchElement } from "@/utils/watchElement";
 
 export function usePlayerData() {
 	const [stats, setStats] = useState<Stats | false>(false); // false means no data
 	const [hasTrackingEnabled, setHasTrackingEnabled] = useState<boolean>(true);
+	const [isLoginRequired, setLoginRequired] = useState<boolean>(false);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -15,6 +17,11 @@ export function usePlayerData() {
 			setLoading(false);
 			setHasTrackingEnabled(document.getElementsByClassName("glyphicon glyphicon-warning-sign")[0] === undefined);
 			setStats(JSON.parse((script.textContent ?? "").split("var stats = ")[1].split(";")[0]) as Stats);
+		});
+
+		watchElement("player-login-required", (element, mutation) => {
+			if (mutation.type !== "attributes" && mutation.attributeName !== "style") return;
+			setLoginRequired(element.style.display !== "none");
 		});
 	}, []);
 
@@ -125,6 +132,7 @@ export function usePlayerData() {
 
 	return {
 		loading,
+		isLoginRequired,
 		user: {
 			...user,
 			stats,
