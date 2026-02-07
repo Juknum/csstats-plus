@@ -19,6 +19,7 @@ export default defineConfig({
 		},
 	},
 	manifest: {
+		name: "CSStats+",
 		browser_specific_settings: {
 			gecko: {
 				// @ts-expect-error - WXT doesn't support this field yet but is required by Firefox
