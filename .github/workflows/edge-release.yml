@@ -1,0 +1,33 @@
+name: Release on Edge Addon Store
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Zip extensions
+        run: pnpm zip
+
+      - name: Submit to stores
+        run: pnpm wxt submit --edge-zip .output/*-edge.zip
+        env:
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_CLIENT_ID:  ${{ secrets.EDGE_CLIENT_ID }}
+          EDGE_API_KEY:    ${{ secrets.EDGE_API_KEY }}
