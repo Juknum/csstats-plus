@@ -1,7 +1,11 @@
 name: Release on Edge Addon Store
 
 on:
+  workflow_call:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -23,7 +27,7 @@ jobs:
         run: pnpm install
 
       - name: Zip extensions
-        run: pnpm zip
+        run: pnpm zip -b edge
 
       - name: Submit to stores
         run: pnpm wxt submit --edge-zip .output/*-edge.zip

@@ -1,0 +1,20 @@
+name: Release to All Stores
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chrome:
+    uses: ./.github/workflows/chrome-release.yml
+    secrets: inherit
+
+  firefox:
+    uses: ./.github/workflows/firefox-release.yml
+    secrets: inherit
+
+  edge:
+    uses: ./.github/workflows/edge-release.yml
+    secrets: inherit

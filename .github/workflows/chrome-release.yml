@@ -1,7 +1,11 @@
 name: Release on Chrome Web Store
 
 on:
+  workflow_call:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
