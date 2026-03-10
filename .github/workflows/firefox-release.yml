@@ -1,7 +1,12 @@
-name: Release on Firefox Add-ons
+name: Release - Firefox Add-ons
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch, tag, or SHA) to build
+        required: false
+        type: string
   workflow_dispatch:
 
 permissions:
@@ -13,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
 
       - uses: pnpm/action-setup@v4
         with:
@@ -20,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -29,11 +36,22 @@ jobs:
       - name: Zip extensions
         run: pnpm zip -b firefox
 
-      - name: Submit to stores
-        run: pnpm wxt submit --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
-        env:
-          FIREFOX_CHANNEL:      ${{ secrets.FIREFOX_CHANNEL }}
-          FIREFOX_JWT_ISSUER:   ${{ secrets.FIREFOX_JWT_ISSUER }}
-          FIREFOX_JWT_SECRET:   ${{ secrets.FIREFOX_JWT_SECRET }}
-          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+      - name: Upload Firefox zip artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-zips
+          path: |
+            .output/*-firefox.zip
+            .output/*-sources.zip
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+
+      # - name: Submit to stores
+      #   run: pnpm wxt submit --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
+      #   env:
+      #     FIREFOX_CHANNEL:      ${{ secrets.FIREFOX_CHANNEL }}
+      #     FIREFOX_JWT_ISSUER:   ${{ secrets.FIREFOX_JWT_ISSUER }}
+      #     FIREFOX_JWT_SECRET:   ${{ secrets.FIREFOX_JWT_SECRET }}
+      #     FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
           

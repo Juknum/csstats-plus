@@ -1,7 +1,12 @@
-name: Release on Edge Addon Store
+name: Release - Edge Addon Store
 
 on:
   workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch, tag, or SHA) to build
+        required: false
+        type: string
   workflow_dispatch:
 
 permissions:
@@ -13,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
 
       - uses: pnpm/action-setup@v4
         with:
@@ -20,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -29,9 +36,18 @@ jobs:
       - name: Zip extensions
         run: pnpm zip -b edge
 
-      - name: Submit to stores
-        run: pnpm wxt submit --edge-zip .output/*-edge.zip
-        env:
-          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
-          EDGE_CLIENT_ID:  ${{ secrets.EDGE_CLIENT_ID }}
-          EDGE_API_KEY:    ${{ secrets.EDGE_API_KEY }}
+      - name: Upload Edge zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-zip
+          path: .output/*-edge.zip
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+
+      # - name: Submit to stores
+      #   run: pnpm wxt submit --edge-zip .output/*-edge.zip
+      #   env:
+      #     EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+      #     EDGE_CLIENT_ID:  ${{ secrets.EDGE_CLIENT_ID }}
+      #     EDGE_API_KEY:    ${{ secrets.EDGE_API_KEY }}

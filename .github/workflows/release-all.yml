@@ -1,20 +1,105 @@
-name: Release to All Stores
+name: Bump version and release to all stores
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Semantic version to release (for example: 2.3.0)"
+        required: true
+        type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
+  bump-version:
+    name: Bump version, commit, and tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      sha: ${{ steps.meta.outputs.sha }}
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Validate semantic version
+        run: |
+          version='${{ inputs.version }}'
+          if ! [[ "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid semver: $version"
+            exit 1
+          fi
+
+      - name: Configure git author
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update package.json version
+        run: |
+          VERSION='${{ inputs.version }}' node -e "const fs=require('fs'); const p='package.json'; const d=JSON.parse(fs.readFileSync(p,'utf8')); d.version=process.env.VERSION; fs.writeFileSync(p, JSON.stringify(d, null, '\t')+'\n');"
+
+      - name: Commit and push version bump
+        run: |
+          git add package.json
+          git commit -m "chore: bump to ${{ inputs.version }}"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Create and push git tag
+        run: |
+          git tag "v${{ inputs.version }}"
+          git push origin "v${{ inputs.version }}"
+
+      - name: Export release metadata
+        id: meta
+        run: |
+          echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
   chrome:
+    needs: bump-version
     uses: ./.github/workflows/chrome-release.yml
+    with:
+      ref: ${{ needs.bump-version.outputs.sha }}
     secrets: inherit
 
   firefox:
+    needs: bump-version
     uses: ./.github/workflows/firefox-release.yml
+    with:
+      ref: ${{ needs.bump-version.outputs.sha }}
     secrets: inherit
 
   edge:
+    needs: bump-version
     uses: ./.github/workflows/edge-release.yml
+    with:
+      ref: ${{ needs.bump-version.outputs.sha }}
     secrets: inherit
+
+  github-release:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+    needs: [bump-version, chrome, firefox, edge]
+
+    steps:
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.bump-version.outputs.tag }}
+          name: ${{ needs.bump-version.outputs.tag }}
+          target_commitish: ${{ needs.bump-version.outputs.sha }}
+          generate_release_notes: true
+          prerelease: ${{ contains(needs.bump-version.outputs.version, '-') }}
+          files: |
+            artifacts/**/*.zip
+          fail_on_unmatched_files: true
