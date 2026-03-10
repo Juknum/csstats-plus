@@ -86,8 +86,8 @@ export default function EntriesStats() {
 					<div className="row nogap full-height">
 						<div className="col nogap full-height full-width space-between" style={{ maxWidth: "70%" }}>
 							<div className="row full-width" style={{ marginLeft: 65 }}>
-								{Object.values(types).map((label, index) => (
-									<span key={index + label} className="text-light text-center" style={{ width: 90 }}>
+								{Object.values(types).map((label) => (
+									<span key={label} className="text-light text-center" style={{ width: 90 }}>
 										{label}
 									</span>
 								))}
