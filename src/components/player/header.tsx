@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import { CS2_MAPS, type CS2OfficialMap } from "@/utils/constants";
-import { getMapIcon } from "@/utils/maps";
 import { getRankPicture } from "@/utils/ranks";
 import type { RankInfo } from "@/utils/types";
 import { PremierRankIcon } from "../rank-icons/premier-rank";
+import { MapIcon } from "../map-icon";
 import Tile from "../tile/tile";
 
 import "../common.css";
@@ -339,7 +339,7 @@ export default function PlayerHeader() {
 															}
 														>
 															{/** biome-ignore lint/style/noNonNullAssertion: cr.map can't be null as it's filtered above */}
-															<img height="40" src={getMapIcon(cr.map!)} alt={cr.map ?? "unknown_map"} />
+															<MapIcon height="40" src={cr.map!} alt={cr.map ?? "unknown_map"} />
 															<span className="text-center text-small text-competitive text-gray">{cr.wins}</span>
 															<span className="text-center text-small text-competitive text-gray">{cr.date.replace(/^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) /, "").toUpperCase()}</span>
 															<img width="55" src={getRankPicture(cr.rank.current, cr.gamemode.type)} alt={`${cr.rank.current} rank`} />

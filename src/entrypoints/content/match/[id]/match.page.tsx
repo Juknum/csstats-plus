@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank";
 import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
 import { PremierRankIcon } from "@/components/rank-icons/premier-rank";
-import type { CS2Map } from "@/utils/constants";
-import { getMapIcon, getMapName } from "@/utils/maps";
+import { getMapName } from "@/utils/maps";
 import type { CSGameMode } from "@/utils/types";
+import { MapIcon } from "@/components/map-icon";
 
 export default function MatchPage() {
 	const hideHeaderRanks = useCallback(() => {
@@ -126,7 +126,7 @@ export default function MatchPage() {
 					top: "30px",
 				}}
 			>
-				<img src={getMapIcon(map as CS2Map)} alt={map} width="80" />
+				<MapIcon src={map} alt={map} width="80" />
 				<span style={{ marginTop: "-5px", textTransform: "capitalize" }}>{getMapName(map)}</span>
 
 				{gamemode === "Premier" && <PremierRankIcon rankNumber={rankNumber} />}

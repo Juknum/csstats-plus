@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { usePlayerData } from "@/hooks/usePlayerData";
-import type { CS2Map } from "@/utils/constants";
-import { getMapIcon, getMapName } from "@/utils/maps";
+import { getMapName } from "@/utils/maps";
+import { MapIcon } from "@/components/map-icon";
 
 export default function Maps() {
 	const { loading } = usePlayerData();
@@ -26,7 +26,7 @@ export default function Maps() {
 							gap: ".5rem",
 						}}
 					>
-						<img height="60" src={getMapIcon(mapName as CS2Map)} alt={mapName} />
+						<MapIcon height="60" src={mapName} alt={mapName} />
 						<span style={{ textTransform: "capitalize" }}>{getMapName(mapName)}</span>
 					</div>
 				))(),

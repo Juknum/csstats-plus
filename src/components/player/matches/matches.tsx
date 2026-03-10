@@ -4,7 +4,8 @@ import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank"
 import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import type { CS2Map } from "@/utils/constants";
-import { getMapIcon, getMapName } from "@/utils/maps";
+import { getMapName } from "@/utils/maps";
+import { MapIcon } from "@/components/map-icon";
 
 export default function Matches() {
 	const { loading } = usePlayerData();
@@ -17,7 +18,7 @@ export default function Matches() {
 		createRoot(cell).render(
 			(() => (
 				<div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-					{mapName !== "" && <img height="25" src={getMapIcon(mapName)} alt={mapName} />}
+					{mapName !== "" && <MapIcon height="25" src={mapName} alt={mapName} />}
 					<span style={{ textTransform: "capitalize" }}>{getMapName(mapName)}</span>
 				</div>
 			))(),

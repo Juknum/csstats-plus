@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Tile from "@/components/tile/tile";
 import { usePlayerData } from "@/hooks/usePlayerData";
-import { getMapIcon } from "@/utils/maps";
 import type { Stats } from "@/utils/types";
+import { MapIcon } from "@/components/map-icon";
 
 export default function MatchesStats() {
 	const {
@@ -44,7 +44,7 @@ export default function MatchesStats() {
 								className="map-btn col space-evenly nowrap full-height full-width center-x center-y match-hoverable"
 								onClick={() => openMatchDetails(match.id)}
 							>
-								<img src={getMapIcon(match.map)} alt={match.map} height={35} width={35} />
+								<MapIcon src={match.map} alt={match.map} height={35} width={35} />
 								<div className="row nogap relative full-width center-x center-y">
 									<span
 										className="absolute"

@@ -2,10 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank";
 import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
-import type { CS2Map } from "@/utils/constants";
-import { getMapIcon } from "@/utils/maps";
 
 import "@/components/common.css";
+import { MapIcon } from "@/components/map-icon";
 
 export default function AllMatchesPage() {
 	const rootsRef = useState(() => new WeakMap())[0];
@@ -20,17 +19,7 @@ export default function AllMatchesPage() {
 			if (!rootsRef.has(cell)) {
 				rootsRef.set(cell, createRoot(cell));
 			}
-			rootsRef.get(cell)?.render(
-				<img
-					height="25"
-					src={getMapIcon(img as CS2Map)}
-					alt={img}
-					title={img}
-					style={{
-						margin: "0 25px",
-					}}
-				/>,
-			);
+			rootsRef.get(cell)?.render(<MapIcon height="25" src={img} alt={img} title={img} style={{ margin: "0 25px" }} />);
 		},
 		[rootsRef],
 	);

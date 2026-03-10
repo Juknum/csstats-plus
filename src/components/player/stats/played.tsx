@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import Tile from "@/components/tile/tile";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import type { CS2Map } from "@/utils/constants";
-import { getMapIcon, getMapName } from "@/utils/maps";
+import { getMapName } from "@/utils/maps";
 import type { Stats } from "@/utils/types";
+import { MapIcon } from "@/components/map-icon";
 
 export default function MostPlayedStats() {
 	const {
@@ -42,7 +43,7 @@ export default function MostPlayedStats() {
 					<div className="col nogap" style={{ overflowY: "scroll" }}>
 						{mostPlayed.map(({ map, played }) => (
 							<div key={map} className="row space-between center-y underlined">
-								<img src={getMapIcon(map)} height={20} width={20} alt={map} />
+								<MapIcon src={map} height={20} width={20} alt={map} />
 								<span className="text-light full-width align-left text-capitalize">{getMapName(map)}</span>
 								<span className="text-light text-gray">{played}</span>
 								<div className="row nogap nowrap full-width" style={{ width: "70px" }}>
