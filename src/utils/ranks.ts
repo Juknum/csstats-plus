@@ -1,4 +1,4 @@
-import { BASE_URL, PREMIER_RANKS_COLOR } from "./constants";
+import { PREMIER_RANKS_COLOR } from "./constants";
 import type { CSGameMode } from "./types";
 
 /**
@@ -18,6 +18,11 @@ export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR
 			})();
 }
 
+// export const BASE_URL = "https://raw.githubusercontent.com/Juknum/csgo-rank-icons/main/" as const;
+const BASE_URL = "https://raw.githubusercontent.com/Juknum/counter-strike-icons/main/" as const;
+const CS2_BASE_URL = `${BASE_URL}cs2/panorama/images/icons/skillgroups/` as const;
+const FACEIT_BASE_URL = `${BASE_URL}faceit/` as const;
+
 /**
  * Get the URL of the rank picture based on its number and game mode.
  * @param rank - The rank number.
@@ -27,17 +32,17 @@ export function slicePremierRank(num: number): [keyof typeof PREMIER_RANKS_COLOR
 export function getRankPicture(rank: number, mode: CSGameMode = "Competitive") {
 	switch (mode) {
 		case "Competitive":
-			if (rank === -1) return `${BASE_URL}matchmaking/expired.svg`;
-			if (rank === 0) return `${BASE_URL}matchmaking/none.svg`;
-			return `${BASE_URL}matchmaking/${rank}.svg`;
+			if (rank === -1) return `${CS2_BASE_URL}skillgroup_expired.svg`;
+			if (rank === 0) return `${CS2_BASE_URL}skillgroup_none.svg`;
+			return `${CS2_BASE_URL}skillgroup${rank}.svg`;
 
 		case "Wingman":
-			if (rank === -1) return `${BASE_URL}wingman/expired.svg`;
-			if (rank === 0) return `${BASE_URL}wingman/none.svg`;
-			return `${BASE_URL}wingman/${rank}.svg`;
+			if (rank === -1) return `${CS2_BASE_URL}wingman_expired.svg`;
+			if (rank === 0) return `${CS2_BASE_URL}wingman_none.svg`;
+			return `${CS2_BASE_URL}wingman${rank}.svg`;
 
 		case "FACEIT":
-			return `${BASE_URL}faceit/${rank}.svg`;
+			return `${FACEIT_BASE_URL}${rank}.svg`;
 
 		case "Premier": {
 			const [, , color] = slicePremierRank(rank);

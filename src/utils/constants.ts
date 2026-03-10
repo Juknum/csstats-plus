@@ -53,8 +53,6 @@ export type CS2CommunityMap = (typeof __SOME_COMMUNITY_MAPS)[number];
 
 export type CS2Map = CS2OfficialMap | CS2CommunityMap;
 
-export const BASE_URL = "https://raw.githubusercontent.com/Juknum/csgo-rank-icons/main/" as const;
-
 export const PREMIER_RANKS_COLOR = {
 	0: "common",
 	1: "common",
