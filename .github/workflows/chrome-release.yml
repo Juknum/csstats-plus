@@ -45,10 +45,10 @@ jobs:
           compression-level: 0
           if-no-files-found: error
 
-      # - name: Submit to stores
-      #   run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
-      #   env:
-      #     CHROME_CLIENT_ID:     ${{ secrets.CHROME_CLIENT_ID }}
-      #     CHROME_EXTENSION_ID:  ${{ secrets.CHROME_EXTENSION_ID }}
-      #     CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-      #     CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      - name: Submit
+        run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
+        env:
+          CHROME_CLIENT_ID:     ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_EXTENSION_ID:  ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}

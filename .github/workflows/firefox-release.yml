@@ -47,11 +47,11 @@ jobs:
           compression-level: 0
           if-no-files-found: error
 
-      # - name: Submit to stores
-      #   run: pnpm wxt submit --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
-      #   env:
-      #     FIREFOX_CHANNEL:      ${{ secrets.FIREFOX_CHANNEL }}
-      #     FIREFOX_JWT_ISSUER:   ${{ secrets.FIREFOX_JWT_ISSUER }}
-      #     FIREFOX_JWT_SECRET:   ${{ secrets.FIREFOX_JWT_SECRET }}
-      #     FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+      - name: Submit
+        run: pnpm wxt submit --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
+        env:
+          FIREFOX_CHANNEL:      ${{ secrets.FIREFOX_CHANNEL }}
+          FIREFOX_JWT_ISSUER:   ${{ secrets.FIREFOX_JWT_ISSUER }}
+          FIREFOX_JWT_SECRET:   ${{ secrets.FIREFOX_JWT_SECRET }}
+          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
           

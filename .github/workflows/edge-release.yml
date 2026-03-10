@@ -45,9 +45,9 @@ jobs:
           compression-level: 0
           if-no-files-found: error
 
-      # - name: Submit to stores
-      #   run: pnpm wxt submit --edge-zip .output/*-edge.zip
-      #   env:
-      #     EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
-      #     EDGE_CLIENT_ID:  ${{ secrets.EDGE_CLIENT_ID }}
-      #     EDGE_API_KEY:    ${{ secrets.EDGE_API_KEY }}
+      - name: Submit
+        run: pnpm wxt submit --edge-zip .output/*-edge.zip
+        env:
+          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_CLIENT_ID:  ${{ secrets.EDGE_CLIENT_ID }}
+          EDGE_API_KEY:    ${{ secrets.EDGE_API_KEY }}
