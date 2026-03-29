@@ -8,6 +8,20 @@ import { MapIcon } from "@/components/map-icon";
 
 export default function AllMatchesPage() {
 	const rootsRef = useState(() => new WeakMap())[0];
+	// Persistent cache for matchUrl -> wingManRankNumber using localStorage
+	const [matchRankCacheRef] = useState(() => {
+		let cache = new Map();
+		try {
+			const raw = localStorage.getItem("wingmanRankCache");
+			if (raw) {
+				const obj = JSON.parse(raw);
+				cache = new Map(Object.entries(obj));
+			}
+		} catch (e) {
+			// Ignore parse errors
+		}
+		return cache;
+	});
 
 	const updateMapCell = useCallback(
 		(cell: HTMLTableCellElement) => {
@@ -30,24 +44,41 @@ export default function AllMatchesPage() {
 			// This can causes a lot of requests which may lead to rate limiting by CloudFlare (ERR HTTP 429)
 			let wingManRankNumber: number | undefined;
 
-			// TODO: add caching to avoid multiple fetches for the same match
-
 			if (matchUrl && isWingman) {
-				// Add random delay (0-2 seconds) to mitigate rate limiting
-				await new Promise((resolve) => setTimeout(resolve, Math.random() * 2000));
+				// Check cache first
+				if (matchRankCacheRef.has(matchUrl)) {
+					wingManRankNumber = matchRankCacheRef.get(matchUrl);
+				} else {
+					// Add random delay (0-2 seconds) to mitigate rate limiting
+					await new Promise((resolve) => setTimeout(resolve, Math.random() * 2000));
 
-				const url = new URL(matchUrl, location.href).toString();
-				const res = await fetch(url);
-				if (!res.ok) return;
+					try {
+						const url = new URL(matchUrl, location.href).toString();
+						const res = await fetch(url);
+						if (!res.ok) return;
 
-				const html = await res.text();
-				const doc = new DOMParser().parseFromString(html, "text/html");
-				const matchInfoInner = doc.getElementById("match-info-inner");
+						const html = await res.text();
+						const doc = new DOMParser().parseFromString(html, "text/html");
+						const matchInfoInner = doc.getElementById("match-info-inner");
 
-				const avgRank = matchInfoInner?.querySelector("div")?.children[4]?.querySelector("img");
-				const avgRankUrl = avgRank?.src as `https://static.csstats.gg/images/ranks/${number}.png`;
+						const avgRank = matchInfoInner?.querySelector("div")?.children[4]?.querySelector("img");
+						const avgRankUrl = avgRank?.src as `https://static.csstats.gg/images/ranks/${number}.png`;
 
-				wingManRankNumber = parseInt(avgRankUrl.split("/").pop()?.split(".").shift() || "0", 10);
+						wingManRankNumber = parseInt(avgRankUrl.split("/").pop()?.split(".").shift() || "0", 10);
+						// Store in cache
+						matchRankCacheRef.set(matchUrl, wingManRankNumber);
+						// Persist cache to localStorage
+						try {
+							const obj = Object.fromEntries(matchRankCacheRef.entries());
+							localStorage.setItem("wingmanRankCache", JSON.stringify(obj));
+						} catch (e) {
+							// Ignore localStorage errors
+						}
+					} catch (e) {
+						// Ignore errors, do not cache failed attempts
+						return;
+					}
+				}
 			}
 
 			const child = cell.firstElementChild;
@@ -68,7 +99,7 @@ export default function AllMatchesPage() {
 				</>,
 			);
 		},
-		[rootsRef],
+		[rootsRef, matchRankCacheRef],
 	);
 
 	useEffect(() => {
