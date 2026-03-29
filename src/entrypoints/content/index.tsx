@@ -11,10 +11,8 @@ export default defineContentScript({
 		const ui = await createShadowRootUi(ctx, {
 			name: "css-stats-plus",
 			position: "inline",
-			anchor: "body",
-			append: (anchor, container) => {
-				anchor.insertBefore(container, anchor.children[1]);
-			},
+			anchor: () => document.getElementById("header-nav-outer"),
+			append: "after",
 			onMount: (container) => {
 				const app = document.createElement("div");
 				container.append(app);
