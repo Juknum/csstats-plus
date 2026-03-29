@@ -17,7 +17,7 @@ export default function AllMatchesPage() {
 				const obj = JSON.parse(raw);
 				cache = new Map(Object.entries(obj));
 			}
-		} catch (e) {
+		} catch {
 			// Ignore parse errors
 		}
 		return cache;
@@ -71,10 +71,10 @@ export default function AllMatchesPage() {
 						try {
 							const obj = Object.fromEntries(matchRankCacheRef.entries());
 							localStorage.setItem("wingmanRankCache", JSON.stringify(obj));
-						} catch (e) {
+						} catch {
 							// Ignore localStorage errors
 						}
-					} catch (e) {
+					} catch {
 						// Ignore errors, do not cache failed attempts
 						return;
 					}
