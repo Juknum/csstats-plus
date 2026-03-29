@@ -139,7 +139,8 @@ export default function PlayerNavbar() {
 										<option value="Scrimmage">Scrimmage</option>
 										<option value="Premier">Premier</option>
 										<option value="Premier - Season 2">Premier - S2</option>
-										<option value="Premier - Season 2">Premier - S3</option>
+										<option value="Premier - Season 3">Premier - S3</option>
+										<option value="Premier - Season 4">Premier - S4</option>
 										<option value="Premier-Limited-Test">Premier Limited Test</option>
 									</>
 								)}
