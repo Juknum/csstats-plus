@@ -6,7 +6,7 @@ import PlayerPage from "./player/player-page";
 export default function App() {
 	const url = useMemo(() => window.location.href, []);
 
-	// remove Ad banner
+	// remove Ads banners
 	useEffect(() => {
 		const removeAdBanner = () => {
 			const el1 = document.getElementById("sticky-banner");
@@ -17,6 +17,9 @@ export default function App() {
 
 			const el3 = document.getElementById("primis-video-container");
 			if (el3) el3.remove();
+
+			const el4 = document.getElementById("prebid-video-container");
+			if (el4) el4.remove();
 		};
 
 		// remove if already present
