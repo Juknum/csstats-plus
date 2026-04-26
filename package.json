@@ -27,11 +27,14 @@
 		"react-dom": "^19.2.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.4.8",
+		"@biomejs/biome": "2.4.12",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.2",
 		"@wxt-dev/module-react": "^1.2.2",
 		"typescript": "^6.0.3",
 		"wxt": "^0.20.25"
+	},
+	"engines": {
+		"node": ">=24.14.0"
 	}
 }

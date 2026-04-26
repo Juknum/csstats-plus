@@ -41,8 +41,6 @@ export default defineConfig({
 		name: "CSStats+",
 		browser_specific_settings: {
 			gecko: {
-				// @ts-expect-error - WXT doesn't support this field yet but is required by Firefox
-				// @see https://github.com/wxt-dev/wxt/pull/1976
 				data_collection_permissions: {
 					required: ["none"],
 				},
