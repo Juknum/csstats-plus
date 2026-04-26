@@ -236,15 +236,85 @@
 	font-size: 12px !important;
 }
 
-.info-banner {
-	background-color: rgba(208, 65, 67, 0.15);
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
+.tracking-bar {
+	background: rgba(235, 127, 42, 0.12);
+	border-bottom: 2px solid rgba(235, 127, 42, 0.35);
+	padding: 14px 24px;
+	font-size: 14px;
+}
+
+.tracking-bar.is-error {
+	background: rgba(208, 65, 67, 0.12);
+	border-bottom-color: rgba(208, 65, 67, 0.35);
+}
+
+.tracking-bar-inner {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.tracking-badge-warning {
+	background: rgba(235, 127, 42, 0.15);
+	border: 1px solid rgba(235, 127, 42, 0.3);
+	color: rgba(235, 127, 42, 1);
+}
+
+.tracking-badge-error {
+	background: rgba(208, 65, 67, 0.15);
+	border: 1px solid rgba(208, 65, 67, 0.3);
+	color: rgba(208, 65, 67, 1);
+}
+
+.tracking-badge {
+	font-size: 11px;
+	font-weight: 600;
+	padding: 3px 10px;
+	border-radius: 4px;
+	text-transform: uppercase;
+	letter-spacing: 0.3px;
+	white-space: nowrap;
+}
+
+.tracking-desc {
+	color: rgba(255, 255, 255, 0.6);
+	flex: 1;
+	min-width: 200px;
+}
+
+.tracking-btn-action {
+	background: #4A7DFF;
+	text-transform: uppercase;
+	letter-spacing: 0.3px;
+}
+
+.tracking-btn-steam {
+	background: #2EA043;
+}
+
+.tracking-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	border-radius: 6px;
+	color: #fff;
+	padding: 7px 16px;
+	text-decoration: none;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+	transition: background .15s;
 }
 
 .banned-banner {
-	background-color: rgba(208, 65, 67, 1);
+	background: rgba(208, 65, 67, 0.12);
+	border: 2px solid rgba(208, 65, 67, 0.35);
+	border-radius: 5px;
+	color: #ccc;
 	height: 40px;
 	text-align: center;
 	line-height: 40px;

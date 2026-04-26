@@ -15,7 +15,7 @@ export function usePlayerData() {
 
 		waitForScriptLoad((s) => (s.textContent ?? "").includes("var stats = ")).then((script) => {
 			setLoading(false);
-			setHasTrackingEnabled(document.getElementsByClassName("glyphicon glyphicon-warning-sign")[0] === undefined);
+			setHasTrackingEnabled(document.getElementsByClassName("tracking-bar")[0] === undefined);
 			setStats(JSON.parse((script.textContent ?? "").split("var stats = ")[1].split(";")[0]) as Stats);
 		});
 

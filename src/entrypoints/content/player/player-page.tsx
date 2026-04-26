@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PlayerHeader from "@/components/player/header";
 import Maps from "@/components/player/maps/maps";
 import Matches from "@/components/player/matches/matches";
@@ -11,6 +11,8 @@ import "@/components/common.css";
 export default function PlayerPage() {
 	const [fragment, setFragment] = useState<string | null>(null);
 	const [hasLoadingSection, setHasLoadingSection] = useState<boolean>(false);
+
+	const bannerRef = useRef<HTMLDivElement>(null);
 
 	const {
 		user: { tracked },
@@ -44,9 +46,10 @@ export default function PlayerPage() {
 			}
 
 			if (!tracked) {
-				const banner = document.getElementsByClassName("glyphicon glyphicon-warning-sign")?.[0]?.parentElement;
-				if (banner) banner.style.display = "none";
+				const banner = document.getElementsByClassName("tracking-bar")?.[0] as HTMLElement | undefined;
+				if (banner) bannerRef.current?.appendChild(banner);
 			}
+			console.log(tracked);
 		});
 	}, [fragment, tracked, isLoginRequired]);
 
@@ -71,7 +74,7 @@ export default function PlayerPage() {
 
 	return (
 		<div className="col" style={{ "--gap": 0 }}>
-			{!tracked && <div className="info-banner text">This player does not have match tracking enabled. Some data may be missing.</div>}
+			{!tracked && <div ref={bannerRef} />}
 			<PlayerHeader />
 			<PlayerNavbar />
 			{!fragment && hasLoadingSection && <StatsGrid />}
