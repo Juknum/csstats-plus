@@ -42,6 +42,7 @@ export function getRankPicture(rank: number, mode: CSGameMode = "Competitive") {
 			return `${CS2_BASE_URL}wingman${rank}.svg`;
 
 		case "FACEIT":
+			if (rank === -1) return `${FACEIT_BASE_URL}0.svg`;
 			return `${FACEIT_BASE_URL}${rank}.svg`;
 
 		case "Premier": {
