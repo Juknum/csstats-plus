@@ -22,9 +22,9 @@
 	},
 	"dependencies": {
 		"chart.js": "^4.5.1",
-		"react": "^19.2.5",
+		"react": "^19.2.6",
 		"react-chartjs-2": "^5.3.1",
-		"react-dom": "^19.2.5"
+		"react-dom": "^19.2.6"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.12",
@@ -32,7 +32,7 @@
 		"@types/react-dom": "^19.2.2",
 		"@wxt-dev/module-react": "^1.2.2",
 		"typescript": "^6.0.3",
-		"wxt": "^0.20.25"
+		"wxt": "^0.20.26"
 	},
 	"engines": {
 		"node": ">=24"
