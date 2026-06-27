@@ -8,9 +8,10 @@
 		"dev": "wxt -b edge",
 		"dev:firefox": "wxt -b firefox",
 		"build": "wxt build",
-		"build:all": "pnpm build && pnpm build:firefox && pnpm build:edge",
+		"build:all": "pnpm build && pnpm build:firefox && pnpm build:edge && pnpm build:safari",
 		"build:edge": "wxt build -b edge",
 		"build:firefox": "wxt build -b firefox",
+		"build:safari": "wxt build -b safari",
 		"zip": "wxt zip",
 		"zip:all": "pnpm zip && pnpm zip:firefox && pnpm zip:edge",
 		"zip:edge": "wxt zip -b edge",
@@ -35,7 +36,8 @@
 		"tailwindcss": "^4.3.3",
 		"typescript": "^7.0.2",
 		"web-ext": "^10.5.0",
-		"wxt": "^0.21.2"
+		"wxt": "^0.21.2",
+		"wxt-module-safari-xcode": "^0.2.2"
 	},
 	"engines": {
 		"node": ">=24"

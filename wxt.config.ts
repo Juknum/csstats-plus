@@ -21,7 +21,7 @@ const EDGE_BIN_PATH = (() => {
 // See https://wxt.dev/api/config.html
 export default defineConfig({
 	imports: false,
-	modules: ["@wxt-dev/module-react"],
+	modules: ["@wxt-dev/module-react", "wxt-module-safari-xcode"],
 	srcDir: "src",
 	vite: () => ({
 		plugins: [tailwindcss()],
@@ -31,6 +31,14 @@ export default defineConfig({
 		chromiumArgs: CHROMIUM_ARGS,
 		keepProfileChanges: true,
 		...(EDGE_BIN_PATH ? { binaries: { edge: EDGE_BIN_PATH } } : {}),
+	},
+	safariXcode: {
+		appCategory: "public.app-category.utilities",
+		bundleIdentifier: "fr.juknum.csstats-plus",
+		developmentTeam: "LJX55H43JB",
+		outputPath: ".output/safari-xcode",
+		projectType: "macos",
+		openProject: false,
 	},
 	manifest: {
 		name: "CSStats+",
