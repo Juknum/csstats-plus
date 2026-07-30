@@ -167,7 +167,10 @@ export default function PlayerHeader() {
 	};
 
 	const [showCommunityMaps, setShowCommunityMaps] = useState(false);
-	const canShowCommunityMaps = useMemo(() => ranks.some((cr) => !CS2_MAPS.includes(cr.map as CS2OfficialMap)), [ranks]);
+	const canShowCommunityMaps = useMemo(
+		() => ranks.some((r) => r.gamemode.type === "Competitive" && r.game === "CS2" && Boolean(r.map) && !CS2_MAPS.includes(r.map as CS2OfficialMap)),
+		[ranks],
+	);
 
 	const competitiveRanks = useMemo(() => {
 		if (!ranks) return [];
@@ -185,7 +188,7 @@ export default function PlayerHeader() {
 				<div className="flex flex-row md:flex-col items-center justify-between md:justify-start w-full md:w-auto gap-4 shrink-0">
 					<div className="flex flex-row md:flex-col items-center md:items-center shrink-0 gap-[10px]">
 						<img className="rounded-[3px] w-[90px] h-[90px] md:w-[120px] md:h-[120px] object-cover shrink-0" src={user.img ?? ""} alt="avatar" />
-						
+
 						<div className="flex flex-col items-start md:items-center gap-[6px] md:gap-[10px]">
 							<span className="text-white text-[15px] md:text-[14px] leading-tight text-left md:text-center text-ellipsis max-w-[160px] md:w-[120px] break-all font-bold">
 								{user.name}
@@ -318,24 +321,22 @@ export default function PlayerHeader() {
 										<div className="flex flex-row flex-nowrap justify-between gap-[10px]">
 											<span className="text-[13px] leading-[13px] h-[13px] text-white font-bold">COMPETITIVE</span>
 											<div className="flex flex-col gap-0 items-end">
-												<span className="text-[9px] leading-[14px] h-[14px] text-right text-white">
-													{competitiveRanks.reduce((prev, curr) => prev + curr.wins, 0)} WINS TOTAL
-												</span>
+												<span className="text-[9px] leading-[14px] h-[14px] text-right text-white">{competitiveRanks.reduce((prev, curr) => prev + curr.wins, 0)} WINS TOTAL</span>
 												{canShowCommunityMaps && (
-													<div className="flex flex-row flex-nowrap gap-[5px]">
-														<label className="text-[9px] leading-[14px] h-[14px] text-right text-white cursor-pointer" htmlFor="checkbox">
-															Show Community Maps
-														</label>
-														<input
-															id="checkbox"
-															type="checkbox"
-															className="cursor-pointer"
-															defaultChecked={showCommunityMaps}
-															onClick={() => setShowCommunityMaps(!showCommunityMaps)}
-														/>
-													</div>
+													<label className="flex flex-row flex-nowrap items-center gap-[5px] cursor-pointer select-none group mt-[2px]">
+														<span className="text-[9px] leading-[14px] text-right text-white/80 group-hover:text-white transition-colors">Show Community Maps</span>
+														<div className="relative flex items-center justify-center">
+															<input type="checkbox" className="sr-only peer" checked={showCommunityMaps} onChange={(e) => setShowCommunityMaps(e.target.checked)} />
+															<div className="w-3.5 h-3.5 rounded-[3px] border border-white/40 bg-black/30 peer-checked:bg-[#3872fc] peer-checked:border-[#3872fc] peer-focus-visible:ring-1 peer-focus-visible:ring-white flex items-center justify-center transition-colors group-hover:border-white/70">
+																{showCommunityMaps && (
+																	<svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+																		<path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+																	</svg>
+																)}
+															</div>
+														</div>
+													</label>
 												)}
-												{!canShowCommunityMaps && <span className="text-[9px] leading-[14px] h-[14px] text-right text-white italic">No Community Maps played</span>}
 											</div>
 										</div>
 										<div className="flex flex-row flex-nowrap gap-[7px] max-w-full">
