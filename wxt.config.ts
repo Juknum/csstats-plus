@@ -38,6 +38,7 @@ export default defineConfig({
 		host_permissions: ["https://steamcommunity.com/*", "https://*.steamstatic.com/*"],
 		browser_specific_settings: {
 			gecko: {
+				id: "{ee7678f1-9717-47cd-81e1-12ebe567fe2e}",
 				data_collection_permissions: {
 					required: ["none"],
 				},
