@@ -346,7 +346,7 @@ export default function PlayerHeader() {
 												<span className="text-[9px] leading-[22.35px] h-[22.35px] w-[60px] text-[#aaaaaa]">LATEST</span>
 												<span className="text-[9px] leading-[22.35px] h-[22.35px] w-[60px] text-[#aaaaaa]">BEST</span>
 											</div>
-											<div className="flex flex-row flex-nowrap overflow-x-auto pb-[5px] gap-[2.5px] max-w-full">
+											<div className="flex flex-row flex-nowrap overflow-x-auto pt-[8px] gap-[2.5px] max-w-full">
 												{competitiveRanks.map((cr) => (
 													<button
 														type="button"
