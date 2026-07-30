@@ -17,7 +17,7 @@ export default function MatchesStats() {
 		const last10MatchesIds = stats.matches.slice(-10);
 		const past10Matches = stats.past10.map((match, index) => ({
 			...match,
-			id: last10MatchesIds[index],
+			id: last10MatchesIds[index] ?? 0,
 		}));
 		setPast10Matches(past10Matches);
 	}, [stats, loading]);
@@ -31,21 +31,22 @@ export default function MatchesStats() {
 			isLoading={loading}
 			width={542}
 			height={153.5}
+			className="overflow-hidden"
 			content={
-				<div className="col full-width">
-					<div className="row nowrap space-between">
-						<span className="text">MATCHES</span>
+				<div className="flex flex-col w-full h-full justify-between gap-[10px] overflow-hidden">
+					<div className="flex flex-row flex-nowrap justify-between gap-[10px] shrink-0">
+						<span className="text-[13px] leading-[13px] h-[13px] text-white font-bold">MATCHES</span>
 					</div>
-					<div className="row nogap full-width full-height">
+					<div className="flex flex-row gap-0 w-full flex-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 						{past10Matches.map((match, index) => (
 							<button
 								type="button"
 								key={match.id}
-								className="map-btn col space-evenly nowrap full-height full-width center-x center-y match-hoverable"
+								className="border-none bg-none p-0 flex flex-col justify-evenly flex-nowrap h-full min-w-[50px] flex-1 items-center match-hoverable shrink-0 sm:shrink"
 								onClick={() => openMatchDetails(match.id)}
 							>
 								<MapIcon src={match.map} alt={match.map} height={35} width={35} />
-								<div className="row nogap relative full-width center-x center-y">
+								<div className="flex flex-row gap-0 relative w-full justify-center items-center">
 									<span
 										className="absolute"
 										style={{
@@ -65,7 +66,7 @@ export default function MatchesStats() {
 										}}
 									/>
 								</div>
-								<span className="text-light">{match.score}</span>
+								<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">{match.score}</span>
 							</button>
 						))}
 					</div>

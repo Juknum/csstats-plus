@@ -24,30 +24,34 @@ export default function StatsGrid() {
 	if (isLoginRequired) return null;
 
 	return (
-		<div className="col grid-container">
-			<div className="row wrap full-width">
+		<div className="flex flex-col max-w-[1680px] my-[10px] mx-auto gap-[10px] px-2 sm:px-4 w-full box-border">
+			<div className="flex flex-row flex-wrap w-full justify-center xl:justify-start gap-[10px]">
 				{(stats || loading) && (
 					<>
-						<div className="col">
-							<div className="row full-width">
+						{/* Column 1: K/D & HLTV Rating (Top), Clutch success (Bottom) */}
+						<div className="flex flex-col gap-[10px] w-full sm:w-auto max-w-full items-center sm:items-start shrink-0">
+							<div className="flex flex-row flex-nowrap justify-between w-full gap-[10px]">
 								<KDStats />
 								<HLTVStats />
 							</div>
 							<ClutchStats />
 						</div>
 
-						<div className="col">
+						{/* Column 2: Matches (Top), Entries Success (Bottom) */}
+						<div className="flex flex-col gap-[10px] w-full sm:w-auto max-w-full items-center sm:items-start shrink-0">
 							<MatchesStats />
 							<EntriesStats />
 						</div>
 
-						<div className="col">
+						{/* Column 3: Win rate (Row 1), HS% (Row 2), ADR (Row 3) */}
+						<div className="flex flex-col gap-[10px] w-full sm:w-auto max-w-full items-center sm:items-start shrink-0">
 							<WinRateStats />
 							<HeadShotsStats />
 							<AverageDamagesStats />
 						</div>
 
-						<div className="col">
+						{/* Column 4: Most played (Row 1), Most success (Row 2), Most kills (Row 3) */}
+						<div className="flex flex-col gap-[10px] w-full sm:w-auto max-w-full items-center sm:items-start shrink-0">
 							<MostPlayedStats />
 							<MostSuccessStats />
 							<MostKillsStats />
@@ -59,7 +63,7 @@ export default function StatsGrid() {
 					<Tile
 						width={800}
 						content={
-							<div style={{ lineHeight: 2, height: 40, width: "100%" }} className="text text-medium text-center">
+							<div style={{ lineHeight: 2, height: 40, width: "100%" }} className="text-[20px] text-white text-center font-bold">
 								No statistics available for this player.
 							</div>
 						}

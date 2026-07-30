@@ -36,33 +36,33 @@ export default function MostPlayedStats() {
 			width={266}
 			height={(436.5 - 20) / 3}
 			content={
-				<div className="col full-width">
-					<div className="row nowrap space-between">
-						<span className="text">MOST PLAYED</span>
+				<div className="flex flex-col w-full gap-[10px]">
+					<div className="flex flex-row flex-nowrap justify-between gap-[10px]">
+						<span className="text-[13px] leading-[13px] h-[13px] text-white font-bold">MOST PLAYED</span>
 					</div>
-					<div className="col nogap" style={{ overflowY: "scroll" }}>
+					<div className="flex flex-col gap-0 overflow-y-auto">
 						{mostPlayed.map(({ map, played }) => (
-							<div key={map} className="row space-between center-y underlined">
+							<div key={map} className="flex flex-row justify-between items-center border-b border-white/20 py-1 gap-[10px]">
 								<MapIcon src={map} height={20} width={20} alt={map} />
-								<span className="text-light full-width align-left text-capitalize">{getMapName(map)}</span>
-								<span className="text-light text-gray">{played}</span>
-								<div className="row nogap nowrap full-width" style={{ width: "70px" }}>
+								<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal w-full text-left capitalize">{getMapName(map)}</span>
+								<span className="text-[13px] leading-[13px] h-[13px] text-[#aaaaaa] font-normal">{played}</span>
+								<div className="flex flex-row gap-0 flex-nowrap w-full" style={{ width: "70px" }}>
 									<div
 										style={{
 											height: "3px",
 											backgroundColor: "#3A74FA",
 											width: `${(played / totalPlayed) * 100}%`,
 										}}
-									></div>
+									/>
 									<div
 										style={{
 											height: "3px",
 											backgroundColor: "transparent",
 											width: `${((totalPlayed - played) / totalPlayed) * 100}%`,
 										}}
-									></div>
+									/>
 								</div>
-								<span className="text-light text-gray">{((played / totalPlayed) * 100).toFixed(0)}%</span>
+								<span className="text-[13px] leading-[13px] h-[13px] text-[#aaaaaa] font-normal">{((played / totalPlayed) * 100).toFixed(0)}%</span>
 							</div>
 						))}
 					</div>

@@ -49,7 +49,6 @@ export default function PlayerPage() {
 				const banner = document.getElementsByClassName("tracking-bar")?.[0] as HTMLElement | undefined;
 				if (banner) bannerRef.current?.appendChild(banner);
 			}
-			console.log(tracked);
 		});
 	}, [fragment, tracked, isLoginRequired]);
 
@@ -73,7 +72,7 @@ export default function PlayerPage() {
 	}, []);
 
 	return (
-		<div className="col" style={{ "--gap": 0 }}>
+		<div className="flex flex-col gap-0">
 			{!tracked && <div ref={bannerRef} />}
 			<PlayerHeader />
 			<PlayerNavbar />

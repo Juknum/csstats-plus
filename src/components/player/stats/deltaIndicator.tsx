@@ -26,7 +26,7 @@ export default function DeltaIndicator({ deltaKey, className, style, showZero }:
 	}, [loading, stats, deltaKey]);
 
 	return (
-		<div className={`row text relative ${className}`} style={style}>
+		<div className={`flex flex-row text-[13px] leading-[13px] h-[13px] font-bold text-white relative ${className ?? ""}`} style={style}>
 			{deltaStatus === "up" && (
 				<span
 					style={{
@@ -39,7 +39,7 @@ export default function DeltaIndicator({ deltaKey, className, style, showZero }:
 					⌃
 				</span>
 			)}
-			{showZero !== false && deltaStatus === "same" && <span className="text-light">No variation</span>}
+			{showZero !== false && deltaStatus === "same" && <span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">No variation</span>}
 			{deltaStatus === "down" && (
 				<span
 					style={{

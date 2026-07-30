@@ -173,9 +173,15 @@ export default function MatchPage() {
 				}
 				break;
 
-			// biome-ignore lint/suspicious/noFallthroughSwitchClause: intended fallthrough
 			case "Wingman":
 				if (row.children[1]) row.children[1].textContent = "Wingman";
+				if (row.children[4]) {
+					const img = row.children[4].querySelector("img");
+					rankNumber = parseInt(img?.src.match(/ranks\/(\d+)\.png/)?.[1] ?? "0", 10);
+					(row.children[4] as HTMLElement).style.display = "none";
+				}
+				break;
+
 			case "Competitive":
 				if (row.children[4]) {
 					const img = row.children[4].querySelector("img");

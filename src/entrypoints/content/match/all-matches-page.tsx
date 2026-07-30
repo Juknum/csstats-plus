@@ -118,12 +118,12 @@ export default function AllMatchesPage() {
 			const avgRankCell = cells[1];
 			const mapCell = cells[4];
 
-			const team1PlayersCount = cells[5].childElementCount;
-			const team2PlayersCount = cells[8].childElementCount;
+			const team1PlayersCount = cells[5]?.childElementCount ?? 0;
+			const team2PlayersCount = cells[8]?.childElementCount ?? 0;
 
 			const link = cells[20]?.querySelector("a")?.href || "";
-			updateAvgRankCell(avgRankCell, team1PlayersCount + team2PlayersCount === 4, link);
-			updateMapCell(mapCell);
+			if (avgRankCell) updateAvgRankCell(avgRankCell, team1PlayersCount + team2PlayersCount === 4, link);
+			if (mapCell) updateMapCell(mapCell);
 		});
 	}, [updateAvgRankCell, updateMapCell]);
 

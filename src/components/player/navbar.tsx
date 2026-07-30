@@ -4,7 +4,8 @@ import { CS2_MAPS, SOME_COMMUNITY_MAPS } from "@/utils/constants";
 import { getMapName } from "@/utils/maps";
 
 import "../common.css";
-import "./navbar.css";
+
+const SELECT_CLASS = "bg-[#181a26] border border-[#24262d] rounded px-2.5 max-w-fit text-white cursor-pointer h-8 appearance-none";
 
 export default function PlayerNavbar() {
 	const { loading, isLoginRequired } = usePlayerData();
@@ -43,8 +44,10 @@ export default function PlayerNavbar() {
 		if (loading) return;
 
 		const tableNav = document.getElementById("tab-h-nav") as HTMLDivElement | null;
-		if (tableNav) navbarRef.current?.prepend(tableNav);
-		else navbarRef.current?.classList.add("no-table-nav");
+		if (tableNav) {
+			tableNav.classList.add("max-w-full", "overflow-x-auto");
+			navbarRef.current?.prepend(tableNav);
+		} else navbarRef.current?.classList.add("no-table-nav");
 
 		// fetch the current filters from the URL
 		const url = new URL(window.location.href);
@@ -58,8 +61,6 @@ export default function PlayerNavbar() {
 	}, [loading]);
 
 	const handleApplyFilters = () => {
-		// /csgo?platforms=Valve&date=7d&maps=de_mirage&modes=ESEA&groups=ESEA%20S47&vs=5v5#/
-		// ?platforms=Valve&date=7d&maps=de_mirage&modes=ESEA&groups=ESEA%20S47&vs=5v5#/
 		const url = new URL(window.location.href);
 
 		if (platformType !== defaultPlatformType) url.searchParams.set("platforms", platformType);
@@ -78,7 +79,6 @@ export default function PlayerNavbar() {
 	};
 
 	const handleClearFilters = () => {
-		// remove all search  parameters
 		const url = new URL(window.location.href);
 		url.searchParams.delete("platforms");
 		url.searchParams.delete("date");
@@ -94,44 +94,49 @@ export default function PlayerNavbar() {
 	};
 
 	if (isLoginRequired) return null;
-	if (loading) return <div className="navbar-container">&nbsp;</div>;
+	if (loading)
+		return <div className="w-full max-w-[1680px] min-h-[50px] px-2 mx-auto flex justify-between bg-[rgba(11,13,24,0.6)] border border-white/[0.04] rounded-[2px]">&nbsp;</div>;
+
 	return (
-		<div className="navbar-container" ref={navbarRef}>
-			<div className="navbar-filters">
+		<div
+			className="w-full max-w-[1680px] min-h-[50px] px-2 py-1 mx-auto flex flex-row flex-nowrap items-center justify-between gap-2 bg-[rgba(11,13,24,0.6)] border border-white/[0.04] rounded-[2px] [&.no-table-nav]:justify-end overflow-hidden"
+			ref={navbarRef}
+		>
+			<div className="flex flex-row flex-nowrap gap-1.5 items-center justify-end shrink-0 relative">
 				{areFiltersTouched && (
 					<>
-						<button type="button" className="apply-button" onClick={() => handleApplyFilters()}>
+						<button type="button" className={`${SELECT_CLASS} border-[#3049a5] hover:bg-[#3049a5]/50 hover:text-white`} onClick={() => handleApplyFilters()}>
 							Apply
 						</button>
-						<button type="button" className="clear-button" onClick={() => handleClearFilters()}>
+						<button type="button" className={`${SELECT_CLASS} border-[#a53030] hover:bg-[#a53030]/50 hover:text-white`} onClick={() => handleClearFilters()}>
 							Clear
 						</button>
 					</>
 				)}
 
-				<select onChange={(e) => setGameType(e.target.value)} value={gameType}>
+				<select className={SELECT_CLASS} onChange={(e) => setGameType(e.target.value)} value={gameType}>
 					<option value="cs2">CS2</option>
 					<option value="csgo">CS:GO</option>
 				</select>
-				<select onChange={(e) => setVersusType(e.target.value)} value={versusType}>
+				<select className={SELECT_CLASS} onChange={(e) => setVersusType(e.target.value)} value={versusType}>
 					<option value="5v5">5v5</option>
 					<option value="2v2">2v2</option>
 				</select>
 
-				<button type="button" className="advanced-button" onClick={() => setDisplayAdvancedFilters(!displayAdvancedFilters)}>
+				<button type="button" className={`${SELECT_CLASS} w-8 px-0 text-center`} onClick={() => setDisplayAdvancedFilters(!displayAdvancedFilters)}>
 					⋮
 				</button>
 
 				{displayAdvancedFilters && (
-					<div className="advanced-filters">
-						<select onChange={(e) => setPlatformType(e.target.value)}>
+					<div className="absolute top-[calc(100%+0.25rem)] right-0 z-[1000] flex flex-col gap-1 bg-[#141622] p-2 rounded border border-[#24262d] shadow-lg min-w-[160px]">
+						<select className={`${SELECT_CLASS} min-w-[145px]`} onChange={(e) => setPlatformType(e.target.value)}>
 							<option value="All">All Platforms</option>
 							<option value="Valve">Valve</option>
 							<option value="FACEIT">FACEIT</option>
 						</select>
 
 						{versusType === "5v5" && (
-							<select onChange={(e) => setModeType(e.target.value)}>
+							<select className={`${SELECT_CLASS} min-w-[145px]`} onChange={(e) => setModeType(e.target.value)}>
 								<option value="all">All Modes</option>
 								{["Valve", "All"].includes(platformType) && (
 									<>
@@ -155,7 +160,7 @@ export default function PlayerNavbar() {
 						)}
 
 						{modeType === "ESEA" && (
-							<select onChange={(e) => setGroupType(e.target.value)}>
+							<select className={`${SELECT_CLASS} min-w-[145px]`} onChange={(e) => setGroupType(e.target.value)}>
 								<option value="all">All Seasons</option>
 								<option value="ESEA S46">Season S46</option>
 								<option value="ESEA S47">Season S47</option>
@@ -168,7 +173,7 @@ export default function PlayerNavbar() {
 							</select>
 						)}
 
-						<select onChange={(e) => setDateType(e.target.value)}>
+						<select className={`${SELECT_CLASS} min-w-[145px]`} onChange={(e) => setDateType(e.target.value)}>
 							<option value="all">All Dates</option>
 							<option value="7d">7 Days</option>
 							<option value="30d">30 Days</option>
@@ -179,13 +184,13 @@ export default function PlayerNavbar() {
 							</option>
 						</select>
 
-						<select onChange={(e) => setMapType(e.target.value)}>
+						<select className={`${SELECT_CLASS} min-w-[145px]`} onChange={(e) => setMapType(e.target.value)}>
 							<option value="all">All Maps</option>
 							{[...CS2_MAPS, ...SOME_COMMUNITY_MAPS]
 								.sort()
 								.filter((map) => map.startsWith("de") || map.startsWith("cs"))
 								.map((map) => (
-									<option key={map} value={map}>
+									<option key={map} value={map} className="capitalize">
 										{getMapName(map)}
 									</option>
 								))}

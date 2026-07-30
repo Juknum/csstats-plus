@@ -1,5 +1,6 @@
 import { defineConfig } from "wxt";
 import os from "node:os";
+import tailwindcss from "@tailwindcss/vite";
 
 const CHROMIUM_ARGS: string[] = [
 	// Edge says it's not working anymore but it seems to still mitigate CloudFlare issues
@@ -22,6 +23,9 @@ export default defineConfig({
 	imports: false,
 	modules: ["@wxt-dev/module-react"],
 	srcDir: "src",
+	vite: () => ({
+		plugins: [tailwindcss()],
+	}),
 	webExt: {
 		startUrls: ["https://csstats.gg/player/76561198088629896"],
 		chromiumArgs: CHROMIUM_ARGS,

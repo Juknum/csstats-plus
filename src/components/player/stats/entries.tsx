@@ -9,12 +9,27 @@ import "chart.js/auto";
 export default function EntriesStats() {
 	const { loading } = usePlayerData();
 
+	type Types = "both" | "T" | "CT";
+	const types: Record<Types, string> = {
+		both: "Combined",
+		T: "T Entries",
+		CT: "CT Entries",
+	};
+
+	type Kind = "success" | "attempts";
+	const kindLabel: Record<Kind, string> = {
+		success: "Success",
+		attempts: "Attempts",
+	};
+
 	const entryChart = (percentage: number, kind: Types | "avg") => {
 		return (
 			<Chart
 				type="pie"
 				options={{
 					...options,
+					responsive: true,
+					maintainAspectRatio: false,
 					cutout: "80%",
 				}}
 				data={{
@@ -30,19 +45,6 @@ export default function EntriesStats() {
 				}}
 			/>
 		);
-	};
-
-	type Types = "both" | "T" | "CT";
-	const types: Record<Types, string> = {
-		both: "Combined",
-		T: "T Entries",
-		CT: "CT Entries",
-	};
-
-	type Kind = "success" | "attempts";
-	const kind: Record<Kind, string> = {
-		success: "Entry Success",
-		attempts: "Entry Attempts",
 	};
 
 	const [values, setValues] = useState<Record<Kind, Record<Types, number>>>();
@@ -64,8 +66,6 @@ export default function EntriesStats() {
 			},
 		});
 
-		// OOF - navigating the DOM like this is gross but there's no other way to get this data currently ?
-		// unless it can be determined from the stats object
 		const spanElement = document.getElementById("player-overview")?.children[1]?.children[1]?.children[0]?.children[1]?.children[1]?.children[0]?.children[1] as
 			| HTMLSpanElement
 			| undefined;
@@ -77,49 +77,53 @@ export default function EntriesStats() {
 		<Tile
 			isLoading={loading}
 			width={542}
-			height={273 + 4}
+			height={277}
+			className="entries-tile overflow-hidden"
 			content={
-				<div className="col full-width" style={{ "--gap": "20px" }}>
-					<div className="row nowrap space-between">
-						<span className="text">ENTRIES SUCCESS</span>
+				<div className="flex flex-col w-full gap-[15px] overflow-hidden">
+					<div className="flex flex-row flex-nowrap justify-between gap-[10px] shrink-0">
+						<span className="text-[13px] leading-[13px] h-[13px] text-white font-bold">ENTRIES SUCCESS</span>
 					</div>
-					<div className="row nogap full-height">
-						<div className="col nogap full-height full-width space-between" style={{ maxWidth: "70%" }}>
-							<div className="row full-width" style={{ marginLeft: 65 }}>
+					<div className="flex flex-col sm:flex-row gap-4 w-full h-full justify-between items-center overflow-hidden">
+						{/* Left / Main Stats Grid */}
+						<div className="flex flex-col gap-2 w-full sm:flex-1">
+							{/* Column Headers */}
+							<div className="grid grid-cols-[60px_1fr_1fr_1fr] sm:grid-cols-[70px_1fr_1fr_1fr] items-center gap-1 text-center text-[11px] sm:text-[12px] text-white/75 font-medium">
+								<span />
 								{Object.values(types).map((label) => (
-									<span key={label} className="text-light text-center" style={{ width: 90 }}>
+									<span key={label} className="truncate">
 										{label}
 									</span>
 								))}
 							</div>
-							{(Object.entries(kind) as [Kind, string][]).map(([kindKey, value]) => (
-								<div key={kindKey} className="row center-y full-height full-width">
-									<span className="text-light" style={{ width: 55, marginBottom: 13 }}>
-										{value}
-									</span>
+
+							{/* Entry Rows */}
+							{(Object.entries(kindLabel) as [Kind, string][]).map(([kindKey, value]) => (
+								<div key={kindKey} className="grid grid-cols-[60px_1fr_1fr_1fr] sm:grid-cols-[70px_1fr_1fr_1fr] items-center gap-1">
+									<span className="text-[11px] sm:text-[13px] text-white/75 font-normal truncate">{value}</span>
 									{(Object.keys(types) as Types[]).map((typeKey) => (
-										<div key={typeKey} className="col nogap center-x center-y relative">
-											<div style={{ width: 90, height: 90 }}>{entryChart(values ? values[kindKey][typeKey] : 0, typeKey)}</div>
-											<span className="text-light absolute">{values ? values[kindKey][typeKey] : 0}%</span>
+										<div key={typeKey} className="flex flex-col gap-0 justify-center items-center relative py-1">
+											<div className="w-[65px] h-[65px] sm:w-[75px] sm:h-[75px] relative flex items-center justify-center">
+												{entryChart(values ? values[kindKey][typeKey] : 0, typeKey)}
+												<span className="text-[11px] sm:text-[12px] text-white/90 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+													{values ? values[kindKey][typeKey] : 0}%
+												</span>
+											</div>
 										</div>
 									))}
 								</div>
 							))}
 						</div>
-						<div className="col full-width center-x center-y relative border-left" style={{ maxWidth: "30%" }}>
-							<div style={{ width: 130, height: 130 }}>{entryChart(avg, "avg")}</div>
-							<span
-								className="text-light absolute"
-								style={{
-									top: "40%",
-									height: "24px",
-									lineHeight: "24px",
-									fontSize: 24,
-								}}
-							>
-								{avg}%
-							</span>
-							<span className="text-light">per Round</span>
+
+						{/* Right / Bottom "per Round" Average chart */}
+						<div className="flex flex-col justify-center items-center relative border-t sm:border-t-0 sm:border-l border-[#4b505e]/50 pt-3 sm:pt-0 sm:pl-3 gap-1 w-full sm:w-[130px] shrink-0">
+							<div className="w-[100px] h-[100px] sm:w-[110px] sm:h-[110px] relative flex items-center justify-center">
+								{entryChart(avg, "avg")}
+								<span className="text-[20px] sm:text-[22px] text-white/90 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+									{avg}%
+								</span>
+							</div>
+							<span className="text-[11px] sm:text-[13px] text-white/75 font-normal">per Round</span>
 						</div>
 					</div>
 				</div>

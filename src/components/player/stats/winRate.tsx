@@ -31,33 +31,33 @@ export default function WinRateStats() {
 			width={266}
 			height={155}
 			content={
-				<div className="col full-width space-between">
-					<div className="row nowrap space-between">
-						<span className="text">WIN RATE</span>
-						<div className="col nogap align-right">
-							<div className="row align-right">
-								<DeltaIndicator deltaKey="adr" className="text-gray" style={{ marginBottom: "5px" }} showZero={false} />
-								<span className="text-big">{winRate}%</span>
+				<div className="flex flex-col w-full justify-between gap-[10px]">
+					<div className="flex flex-row flex-nowrap justify-between gap-[10px]">
+						<span className="text-[13px] leading-[13px] h-[13px] text-white font-bold">WIN RATE</span>
+						<div className="flex flex-col gap-0 items-end">
+							<div className="flex flex-row items-end gap-[10px]">
+								<DeltaIndicator deltaKey="adr" className="text-[#aaaaaa]" style={{ marginBottom: "5px" }} showZero={false} />
+								<span className="text-[30px] text-white font-bold">{winRate}%</span>
 								<img height={35} width={35} src="https://static.csstats.gg/images/winrate-icon.png" alt="win-rate-icon" />
 							</div>
 						</div>
 					</div>
-					<div className="col nogap">
-						<div className="row space-between underlined">
-							<span className="text-light">PLAYED</span>
-							<span className="text-light">{played}</span>
+					<div className="flex flex-col gap-0">
+						<div className="flex flex-row justify-between border-b border-white/20 py-1 gap-[10px]">
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">PLAYED</span>
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">{played}</span>
 						</div>
-						<div className="row space-between underlined">
-							<span className="text-light">WON</span>
-							<span className="text-light">{won}</span>
+						<div className="flex flex-row justify-between border-b border-white/20 py-1 gap-[10px]">
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">WON</span>
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">{won}</span>
 						</div>
-						<div className="row space-between underlined">
-							<span className="text-light">LOST</span>
-							<span className="text-light">{lost}</span>
+						<div className="flex flex-row justify-between border-b border-white/20 py-1 gap-[10px]">
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">LOST</span>
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">{lost}</span>
 						</div>
-						<div className="row space-between underlined">
-							<span className="text-light">DRAW</span>
-							<span className="text-light">{draw}</span>
+						<div className="flex flex-row justify-between border-b border-white/20 py-1 gap-[10px]">
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">DRAW</span>
+							<span className="text-[13px] leading-[13px] h-[13px] text-white/75 font-normal">{draw}</span>
 						</div>
 					</div>
 				</div>

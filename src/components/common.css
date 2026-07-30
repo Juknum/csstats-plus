@@ -1,191 +1,146 @@
 /** biome-ignore-all lint/complexity/noImportantStyles: we need to override the default css of the website */
 
-*,
-*::before,
-*::after {
-	font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@import "tailwindcss";
 
-	box-sizing: border-box;
-	margin: 0;
+@layer base {
+	*,
+	*::before,
+	*::after {
+		font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		box-sizing: border-box;
+		margin: 0;
+	}
+
+	:root,
+	* {
+		/* Firefox */
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+	}
+
+	:root::-webkit-scrollbar,
+	*::-webkit-scrollbar {
+		width: 12px;
+		height: 12px;
+	}
+
+	:root::-webkit-scrollbar-track,
+	*::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	:root::-webkit-scrollbar-thumb,
+	*::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.25);
+		border-radius: 5px;
+	}
+
+	:root::-webkit-scrollbar-thumb:hover,
+	*::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.4);
+	}
 }
 
-/* Scrollbar Styling */
-:root,
-* {
-	/* Firefox */
-	scrollbar-width: thin; /* Make the scrollbar thinner */
-	scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* Translucent knob and invisible track */
-}
-
-:root::-webkit-scrollbar,
-*::-webkit-scrollbar {
-	width: 12px; /* Width of the entire scrollbar */
-	height: 12px; /* Height of the entire scrollbar */
-}
-
-:root::-webkit-scrollbar-track,
-*::-webkit-scrollbar-track {
-	background: transparent; /* Make the track invisible */
-}
-
-:root::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.25); /* Translucent scrollbar knob */
-	border-radius: 5px; /* Optional: rounded corners for the knob */
-}
-
-:root::-webkit-scrollbar-thumb:hover,
-*::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.4); /* Darker knob on hover */
-}
-/* ----------------- */
-
-.row {
-	--gap: 10px;
-	display: flex;
-	flex-direction: row;
-	gap: var(--gap);
-}
-
-.col {
-	--gap: 10px;
-	display: flex;
-	flex-direction: column;
-	gap: var(--gap);
-}
-
-.full-width {
-	width: 100% !important;
-}
-.full-height {
-	height: 100% !important;
-}
-
-.nowrap {
-	flex-wrap: nowrap;
-}
-
-.wrap {
-	flex-wrap: wrap;
-}
-
-.nogap {
-	gap: 0px;
-}
-
-.cursor-default {
-	cursor: default;
-}
-
-.clickable {
-	cursor: pointer;
-}
-
-.relative {
+/* CSStats.gg tab-h-nav website navigation element overrides */
+#tab-h-nav,
+.navbar {
 	position: relative;
+	min-height: 50px;
+	margin: 0px;
+	flex: 1 1 auto;
+	min-width: 0;
+	max-width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
 }
 
-.absolute {
-	position: absolute;
+#tab-h-nav::-webkit-scrollbar,
+.navbar::-webkit-scrollbar {
+	display: none;
 }
 
-.center-y {
+#tab-h-nav .nav,
+.nav {
+	display: flex;
+	gap: 0.5rem;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	height: 50px;
 	align-items: center;
+	padding-left: 0;
+	margin-bottom: 0;
+	list-style: none;
+	white-space: nowrap;
+	min-width: min-content;
 }
 
-.center-x {
-	justify-content: center;
+#tab-h-nav .nav > li,
+.nav > li {
+	position: relative;
+	display: block;
+	flex-shrink: 0;
 }
 
-.align-right {
-	align-items: flex-end;
+#tab-h-nav .nav > li:not(.nav-button),
+.navbar .nav > li:not(.nav-button) {
+	cursor: pointer;
+	flex-shrink: 0;
 }
 
-.align-left {
-	align-items: flex-start;
-}
-
-.space-between {
-	justify-content: space-between;
-}
-
-.space-evenly {
-	justify-content: space-evenly;
-}
-
-.text {
+#tab-h-nav .nav > li > a,
+#tab-h-nav .nav > li > span,
+.navbar .nav > li > a,
+.navbar .nav > li > span {
+	padding: 12px 14px;
+	color: #fff;
+	text-transform: uppercase;
 	font-size: 13px;
-	line-height: 13px;
-	height: 13px;
-	color: rgba(255, 255, 255);
-	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-weight: 700;
+	font-family: "Cairo", sans-serif;
+	font-variation-settings: "slnt" 0;
+	border-bottom: 0 !important;
+	position: relative;
+	font-weight: bold;
+	white-space: nowrap;
+	display: inline-block;
 }
 
-.text-capitalize {
-	text-transform: capitalize;
+@media (max-width: 640px) {
+	#tab-h-nav .nav > li > a,
+	#tab-h-nav .nav > li > span,
+	.navbar .nav > li > a,
+	.navbar .nav > li > span {
+		padding: 10px 8px;
+		font-size: 11px;
+	}
+
+	#tab-h-nav .nav,
+	.nav {
+		gap: 0.25rem;
+	}
 }
 
-.text-light {
-	font-size: 13px;
-	line-height: 13px;
-	height: 13px;
-	color: rgba(255, 255, 255, 0.75);
-	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-weight: 400;
-}
-
-.text-medium {
-	font-size: 20px;
-	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: white;
-}
-
-.text-big {
-	font-size: 30px;
-	font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: white;
-}
-
-.text-small {
-	font-size: 9px;
-	line-height: 14px;
-	height: 14px;
-	text-align: right;
-	color: rgba(255, 255, 255);
-}
-
-.text-over-chart {
+#tab-h-nav .nav > li:not(.nav-button):after,
+.navbar .nav > li:not(.nav-button):after {
+	content: "";
 	position: absolute;
-	top: calc(50% + 13px);
+	bottom: -12px !important;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	text-align: center;
-
-	font-family: "Roboto Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 50px;
-	color: white;
+	width: 0;
+	height: 3px;
+	color: #fff;
+	background: #3872fc;
 }
 
-.text-gray {
-	color: rgb(170, 170, 170);
-}
-
-.text-center {
-	text-align: center;
-}
-
-.text-right {
-	text-align: right;
-}
-
-.text-italic {
-	font-style: italic;
+#tab-h-nav .nav > li:hover:after,
+.navbar .nav > li:hover:after {
+	width: 100%;
+	margin-left: -50%;
+	transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .cs2rating {
 	transform: scale(1);
-
 	width: 70px;
 	height: 24px;
 	display: flex;
@@ -236,6 +191,64 @@
 	font-size: 12px !important;
 }
 
+.tile-square {
+	aspect-ratio: 1 / 1 !important;
+}
+
+.tile-square canvas {
+	width: 100% !important;
+	height: 100% !important;
+	max-width: 100% !important;
+	max-height: 100% !important;
+	object-fit: contain;
+}
+
+@media (max-width: 639px) {
+	.tile:not(.shrink-0):not(.tile-square),
+	.tile-loading:not(.shrink-0):not(.tile-square) {
+		width: 100% !important;
+		max-width: 100% !important;
+		box-sizing: border-box !important;
+	}
+
+	.tile-square {
+		width: calc(50% - 5px) !important;
+		max-width: calc(50% - 5px) !important;
+		height: auto !important;
+		aspect-ratio: 1 / 1 !important;
+		flex: 1 1 0% !important;
+	}
+
+	.entries-tile {
+		height: auto !important;
+		min-height: 277px;
+	}
+}
+
+.tile-loading {
+	background: linear-gradient(192deg, rgba(0, 0, 0, 0.38), rgba(128, 128, 128, 0.19));
+	background-size: 400% 400%;
+	animation: loadingAnimation 5s ease infinite;
+}
+
+@keyframes loadingAnimation {
+	0% {
+		background-position: 22% 0%;
+	}
+	50% {
+		background-position: 79% 100%;
+	}
+	100% {
+		background-position: 22% 0%;
+	}
+}
+
+.match-hoverable {
+	position: relative;
+	cursor: pointer;
+}
+
+/* CSStats.gg tracking-bar styles */
 .tracking-bar {
 	background: rgba(235, 127, 42, 0.12);
 	border-bottom: 2px solid rgba(235, 127, 42, 0.35);
@@ -310,31 +323,6 @@
 	transition: background .15s;
 }
 
-.banned-banner {
-	background: rgba(208, 65, 67, 0.12);
-	border: 2px solid rgba(208, 65, 67, 0.35);
-	border-radius: 5px;
-	color: #ccc;
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
-}
-
-.grid-container {
-	max-width: 1680px;
-	margin: 10px auto;
-}
-
-.underlined {
-	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-	padding: 4px 0px;
-}
-
-.match-hoverable {
-	position: relative;
-	cursor: pointer;
-}
-
 .match-hoverable:hover::before {
 	content: "";
 	position: absolute;
@@ -346,7 +334,51 @@
 	background: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0%, transparent 80%);
 }
 
-.border-left {
-	border-left: 1px solid #4b505e;
-	padding-left: 10px;
+.rank-competitive-hoverable {
+	position: relative;
+}
+
+.rank-competitive-hoverable:hover::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: -5px;
+	border-radius: 3px;
+	width: 60px;
+	height: 172.38px;
+	background: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 0%, transparent 80%);
+}
+
+.rank-tile-hoverable {
+	position: relative;
+	cursor: pointer;
+}
+
+.rank-tile-hoverable:hover::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	left: 0px;
+	border-radius: 3px;
+	width: 290px;
+	height: 63px;
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0%, transparent 80%);
+}
+
+.rank-faceit-hoverable {
+	position: relative;
+	cursor: pointer;
+}
+
+.rank-faceit-hoverable:hover::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	left: 0px;
+	border-radius: 3px;
+	width: 63px;
+	height: 63px;
+	background: rgba(255, 255, 255, 0.1) 50%;
 }

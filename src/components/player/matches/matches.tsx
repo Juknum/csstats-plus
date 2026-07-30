@@ -99,11 +99,11 @@ export default function Matches() {
 		rows.forEach((row) => {
 			// map name column
 			const mapCell = row.cells[2];
-			updateMapCell(mapCell);
+			if (mapCell) updateMapCell(mapCell);
 
 			// rank change column
 			const rankCell = row.cells[4];
-			updateAnyRankCell(rankCell);
+			if (rankCell) updateAnyRankCell(rankCell);
 		});
 	}, [updateMapCell, updateAnyRankCell]);
 
