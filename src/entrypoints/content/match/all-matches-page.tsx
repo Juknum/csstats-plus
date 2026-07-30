@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank";
 import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
@@ -6,22 +6,135 @@ import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
 import "@/components/common.css";
 import { MapIcon } from "@/components/map-icon";
 
+// @ts-expect-error
+const extStorage: typeof browser.storage.local | null =
+	// @ts-expect-error
+	typeof browser !== "undefined" ? browser.storage.local
+		// @ts-expect-error
+		: typeof chrome !== "undefined" ? chrome.storage.local
+		: null;
+
+const WINGMAN_RANK_CACHE_KEY = "wingmanRankCache";
+
+/** Minimum gap between consecutive wingman fetch requests (ms). */
+const FETCH_INTERVAL_MS = 1500;
+
 export default function AllMatchesPage() {
 	const rootsRef = useState(() => new WeakMap())[0];
-	// Persistent cache for matchUrl -> wingManRankNumber using localStorage
-	const [matchRankCacheRef] = useState(() => {
-		let cache = new Map();
-		try {
-			const raw = localStorage.getItem("wingmanRankCache");
-			if (raw) {
-				const obj = JSON.parse(raw);
-				cache = new Map(Object.entries(obj));
+	// Persistent cache for matchUrl -> wingManRankNumber using extension local storage
+	const matchRankCacheRef = useRef(new Map<string, number>());
+
+	// Sequential fetch queue — drains one item at a time with a fixed inter-request gap
+	// to avoid hammering the server and triggering CloudFlare rate limiting (HTTP 429).
+	type QueueItem = { matchUrl: string; cell: HTMLTableCellElement };
+	const fetchQueueRef = useRef<QueueItem[]>([]);
+	const isDrainingRef = useRef(false);
+	const lastFetchAtRef = useRef(0);
+
+	// Load the persisted cache from extension local storage on mount
+	useEffect(() => {
+		if (!extStorage) return;
+		extStorage
+			.get([WINGMAN_RANK_CACHE_KEY])
+			.then((result: Record<string, unknown>) => {
+				const raw = result[WINGMAN_RANK_CACHE_KEY];
+				if (raw && typeof raw === "object") {
+					matchRankCacheRef.current = new Map(Object.entries(raw as Record<string, number>));
+				}
+			})
+			.catch(() => {
+				// Ignore read errors — start with an empty cache
+			});
+	}, []);
+
+	const renderRankCell = useCallback(
+		(cell: HTMLTableCellElement, isWingman: boolean, wingManRankNumber: number | undefined) => {
+			const child = cell.firstElementChild;
+			// Only guard against non-image children on fresh DOM cells.
+			// If we already set up a React root for this cell (e.g. a placeholder),
+			// skip the guard so the real rank can replace it.
+			if (!rootsRef.has(cell) && child && !(child instanceof HTMLImageElement)) return;
+
+			const isFaceit = (!isWingman && child?.src.includes("faceit")) ?? false;
+			const rankNumber = isWingman
+				? wingManRankNumber
+				: parseInt(child?.src.match(/ranks\/(\d+)\.png/)?.[1] || "0", 10);
+
+			if (!rootsRef.has(cell)) {
+				rootsRef.set(cell, createRoot(cell));
 			}
-		} catch {
-			// Ignore parse errors
+
+			rootsRef.get(cell)?.render(
+				<>
+					{isFaceit && <FaceitRankIcon rankNumber={parseInt(child?.src.match(/faceit\/level(\d+)\.png/)?.[1] ?? "0", 10)} />}
+					{!isFaceit && <CompetitiveOrWingmanRankIcon rankNumber={rankNumber ?? 0} gamemode={isWingman ? "Wingman" : "Competitive"} hasRankChanges={false} isRankUp={false} />}
+				</>,
+			);
+		},
+		[rootsRef],
+	);
+
+	/**
+	 * Drain the fetch queue sequentially, enforcing at least FETCH_INTERVAL_MS between requests.
+	 * Only one drainer runs at a time (guarded by isDrainingRef).
+	 */
+	const drainQueue = useCallback(async () => {
+		if (isDrainingRef.current) return;
+		isDrainingRef.current = true;
+
+		while (fetchQueueRef.current.length > 0) {
+			const item = fetchQueueRef.current.shift();
+			if (!item) break;
+
+			const { matchUrl, cell } = item;
+
+			// Re-check cache in case a previous iteration already fetched it
+			if (matchRankCacheRef.current.has(matchUrl)) {
+				renderRankCell(cell, true, matchRankCacheRef.current.get(matchUrl));
+				continue;
+			}
+
+			// Enforce minimum gap between requests
+			const elapsed = Date.now() - lastFetchAtRef.current;
+			if (elapsed < FETCH_INTERVAL_MS) {
+				await new Promise((resolve) => setTimeout(resolve, FETCH_INTERVAL_MS - elapsed));
+			}
+
+			try {
+				const url = new URL(matchUrl, location.href).toString();
+				lastFetchAtRef.current = Date.now();
+				const res = await fetch(url);
+				if (!res.ok) continue;
+
+				const html = await res.text();
+				const doc = new DOMParser().parseFromString(html, "text/html");
+				const matchInfoInner = doc.getElementById("match-info-inner");
+
+				const avgRank = matchInfoInner?.querySelector("div")?.children[4]?.querySelector("img");
+				const avgRankUrl = avgRank?.src as `https://static.csstats.gg/images/ranks/${number}.png`;
+
+				const wingManRankNumber = parseInt(avgRankUrl.split("/").pop()?.split(".").shift() || "0", 10);
+
+				matchRankCacheRef.current.set(matchUrl, wingManRankNumber);
+
+				// Persist the updated cache to extension local storage
+				if (extStorage) {
+					try {
+						const obj = Object.fromEntries(matchRankCacheRef.current.entries());
+						await extStorage.set({ [WINGMAN_RANK_CACHE_KEY]: obj });
+					} catch {
+						// Ignore storage write errors
+					}
+				}
+
+				renderRankCell(cell, true, wingManRankNumber);
+			} catch {
+				// Ignore fetch errors — the cell will stay as-is
+			}
 		}
-		return cache;
-	});
+
+		isDrainingRef.current = false;
+	}, [renderRankCell]);
 
 	const updateMapCell = useCallback(
 		(cell: HTMLTableCellElement) => {
@@ -39,67 +152,27 @@ export default function AllMatchesPage() {
 	);
 
 	const updateAvgRankCell = useCallback(
-		async (cell: HTMLTableCellElement, isWingman: boolean, matchUrl: string) => {
-			// Fetch the wingman ranks has it is not displayed by default
-			// This can causes a lot of requests which may lead to rate limiting by CloudFlare (ERR HTTP 429)
-			let wingManRankNumber: number | undefined;
-
-			if (matchUrl && isWingman) {
-				// Check cache first
-				if (matchRankCacheRef.has(matchUrl)) {
-					wingManRankNumber = matchRankCacheRef.get(matchUrl);
-				} else {
-					// Add random delay (0-2 seconds) to mitigate rate limiting
-					await new Promise((resolve) => setTimeout(resolve, Math.random() * 2000));
-
-					try {
-						const url = new URL(matchUrl, location.href).toString();
-						const res = await fetch(url);
-						if (!res.ok) return;
-
-						const html = await res.text();
-						const doc = new DOMParser().parseFromString(html, "text/html");
-						const matchInfoInner = doc.getElementById("match-info-inner");
-
-						const avgRank = matchInfoInner?.querySelector("div")?.children[4]?.querySelector("img");
-						const avgRankUrl = avgRank?.src as `https://static.csstats.gg/images/ranks/${number}.png`;
-
-						wingManRankNumber = parseInt(avgRankUrl.split("/").pop()?.split(".").shift() || "0", 10);
-						// Store in cache
-						matchRankCacheRef.set(matchUrl, wingManRankNumber);
-						// Persist cache to localStorage
-						try {
-							const obj = Object.fromEntries(matchRankCacheRef.entries());
-							localStorage.setItem("wingmanRankCache", JSON.stringify(obj));
-						} catch {
-							// Ignore localStorage errors
-						}
-					} catch {
-						// Ignore errors, do not cache failed attempts
-						return;
-					}
-				}
+		(cell: HTMLTableCellElement, isWingman: boolean, matchUrl: string) => {
+			if (!isWingman) {
+				// Competitive / Faceit — rank is already in the DOM, render immediately
+				renderRankCell(cell, false, undefined);
+				return;
 			}
 
-			const child = cell.firstElementChild;
-			if (child && !(child instanceof HTMLImageElement)) return;
+			if (!matchUrl) return;
 
-			const isFaceit = (!isWingman && child?.src.includes("faceit")) ?? false;
-
-			const rankNumber = isWingman ? wingManRankNumber : parseInt(child?.src.match(/ranks\/(\d+)\.png/)?.[1] || "0", 10);
-
-			if (!rootsRef.has(cell)) {
-				rootsRef.set(cell, createRoot(cell));
+			// Cache hit — render immediately without queuing a request
+			if (matchRankCacheRef.current.has(matchUrl)) {
+				renderRankCell(cell, true, matchRankCacheRef.current.get(matchUrl));
+				return;
 			}
 
-			rootsRef.get(cell)?.render(
-				<>
-					{isFaceit && <FaceitRankIcon rankNumber={parseInt(child?.src.match(/faceit\/level(\d+)\.png/)?.[1] ?? "0", 10)} />}
-					{!isFaceit && <CompetitiveOrWingmanRankIcon rankNumber={rankNumber ?? 0} gamemode={isWingman ? "Wingman" : "Competitive"} hasRankChanges={false} isRankUp={false} />}
-				</>,
-			);
+			// Cache miss — show the "Unranked" placeholder immediately so the cell isn't
+			// blank while waiting for the fetch, then enqueue for throttled fetching.
+			renderRankCell(cell, true, 0);
+			fetchQueueRef.current.push({ matchUrl, cell });
 		},
-		[rootsRef, matchRankCacheRef],
+		[renderRankCell],
 	);
 
 	useEffect(() => {
@@ -125,7 +198,11 @@ export default function AllMatchesPage() {
 			if (avgRankCell) updateAvgRankCell(avgRankCell, team1PlayersCount + team2PlayersCount === 4, link);
 			if (mapCell) updateMapCell(mapCell);
 		});
-	}, [updateAvgRankCell, updateMapCell]);
+
+		// All cache hits have been rendered synchronously above.
+		// Now start draining the queue so uncached wingman fetches happen after.
+		drainQueue();
+	}, [updateAvgRankCell, updateMapCell, drainQueue]);
 
 	return null;
 }
