@@ -176,11 +176,10 @@ export default function PlayerHeader() {
 			.filter((r) => (showCommunityMaps ? !CS2_MAPS.includes(r.map as CS2OfficialMap) : CS2_MAPS.includes(r.map as CS2OfficialMap)));
 	}, [ranks, showCommunityMaps]);
 
+	const headerBg = user.bg ? `url('${user.bg}')` : "url('https://csstats.gg/images/header-bg-image.png')";
+
 	return (
-		<div
-			className="flex flex-row justify-center p-3 sm:p-5 bg-cover bg-center w-full gap-[10px]"
-			style={{ backgroundImage: "url('https://csstats.gg/images/header-bg-image.png')" }}
-		>
+		<div className="flex flex-row justify-center p-3 sm:p-5 bg-cover bg-center w-full gap-[10px]" style={{ backgroundImage: headerBg }}>
 			<div className="flex flex-col md:flex-row w-full max-w-[1680px] items-center md:items-start" style={{ gap: `${GRID_GAP * 2}px` }}>
 				{/* Avatar & User Info Header Block */}
 				<div className="flex flex-row md:flex-col items-center justify-between md:justify-start w-full md:w-auto gap-4 shrink-0">

@@ -30,6 +30,73 @@ export function usePlayerData() {
 		});
 	}, []);
 
+	const [steamBg, setSteamBg] = useState<string | undefined>(undefined);
+
+	useEffect(() => {
+		if (!window.location.href.includes("/player/")) return;
+
+		const getSteamUrl = (): string | null => {
+			const steamPathMatch = window.location.pathname.match(/\/player\/(\d{17})/);
+			if (steamPathMatch && steamPathMatch[1]) {
+				return `https://steamcommunity.com/profiles/${steamPathMatch[1]}`;
+			}
+
+			const steamAnchor = (document.querySelector('a[href*="steamcommunity.com"]') ||
+				document.getElementById("other-profiles")?.querySelector('a[href*="steamcommunity.com"]')) as HTMLAnchorElement | null;
+
+			return steamAnchor?.href ?? null;
+		};
+
+		let attempts = 0;
+		const checkAndFetch = () => {
+			const steamUrl = getSteamUrl();
+			if (steamUrl) {
+				const cacheKey = `csstats_steam_bg_${steamUrl}`;
+				const cached = sessionStorage.getItem(cacheKey);
+				if (cached) {
+					setSteamBg(cached);
+					return true;
+				}
+
+				// @ts-ignore
+				const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
+				if (runtime?.sendMessage) {
+					try {
+						console.log("[CSStats+] [Content] Requesting Steam background for URL:", steamUrl);
+						runtime.sendMessage({ type: "FETCH_STEAM_BG", steamUrl }, (response: any) => {
+							if (runtime.lastError) {
+								console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
+								return;
+							}
+							if (response?.bg) {
+								console.log("[CSStats+] [Content] Received Steam profile background URL:", response.bg);
+								sessionStorage.setItem(cacheKey, response.bg);
+								setSteamBg(response.bg);
+							} else {
+								console.warn("[CSStats+] [Content] Steam profile background query returned no background URL.", response);
+							}
+						});
+					} catch (err) {
+						console.error("[CSStats+] [Content] Error sending message to background script:", err);
+					}
+				}
+				return true;
+			}
+			return false;
+		};
+
+		if (!checkAndFetch()) {
+			const interval = setInterval(() => {
+				attempts++;
+				if (checkAndFetch() || attempts > 20) {
+					clearInterval(interval);
+				}
+			}, 300);
+
+			return () => clearInterval(interval);
+		}
+	}, []);
+
 	const user = useMemo(() => {
 		if (!window.location.href.includes("/player/")) return undefined;
 
@@ -45,9 +112,36 @@ export function usePlayerData() {
 		const faceitAnchor = icons.find((i) => i.children[0]?.getAttribute("href")?.includes("faceit.com"))?.children[0] as HTMLAnchorElement | undefined;
 		const discordBooster = icons.find((i) => i.children[0]?.getAttribute("src")?.includes("discord-booster-1.png"))?.children[0] as HTMLImageElement | undefined;
 
+		const getSteamBg = (): string | undefined => {
+			const bgOuter = document.getElementById("page-bg-outer");
+			if (bgOuter) {
+				const img = bgOuter.querySelector("img");
+				if (img?.src) return img.src;
+				const styleBg = bgOuter.style.backgroundImage || window.getComputedStyle(bgOuter).backgroundImage;
+				if (styleBg && styleBg !== "none" && styleBg.includes("url")) {
+					const match = styleBg.match(/url\(["']?(.*?)["']?\)/);
+					if (match && match[1]) return match[1];
+				}
+			}
+
+			const bgInner = document.getElementById("page-bg");
+			if (bgInner) {
+				const img = bgInner.querySelector("img");
+				if (img?.src) return img.src;
+				const styleBg = bgInner.style.backgroundImage || window.getComputedStyle(bgInner).backgroundImage;
+				if (styleBg && styleBg !== "none" && styleBg.includes("url")) {
+					const match = styleBg.match(/url\(["']?(.*?)["']?\)/);
+					if (match && match[1]) return match[1];
+				}
+			}
+
+			return undefined;
+		};
+
 		return {
 			img: document.getElementById("player-avatar")?.children[0]?.getAttribute("src"),
 			name: document.getElementById("player-name")?.textContent?.trim(),
+			bg: steamBg ?? getSteamBg(),
 			tracked: hasTrackingEnabled,
 			banned: bannedBanner ? bannedBanner.innerText.trim() : undefined,
 			profiles: {
@@ -56,7 +150,7 @@ export function usePlayerData() {
 				discordBooster: discordBooster?.src,
 			},
 		};
-	}, [hasTrackingEnabled]);
+	}, [hasTrackingEnabled, steamBg]);
 
 	const ranks = useMemo(() => {
 		if (!window.location.href.includes("/player/")) return [];
