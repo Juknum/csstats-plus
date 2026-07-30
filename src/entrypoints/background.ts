@@ -16,21 +16,18 @@ export default defineBackground(() => {
 						const htmlText = await htmlRes.text();
 
 						const bgUrl = extractSteamProfileBg(htmlText);
-						if (bgUrl) {
-							console.log("[CSStats+] [Background] Found Steam profile background:", bgUrl);
-							sendResponse({ bg: bgUrl });
-							return;
-						}
-
-						console.warn("[CSStats+] [Background] No Steam background image found in profile HTML for:", steamUrl);
+						const frameUrl = extractSteamAvatarFrame(htmlText);
+						console.log("[CSStats+] [Background] Steam profile bg:", bgUrl, "frame:", frameUrl);
+						sendResponse({ bg: bgUrl, frame: frameUrl });
+						return;
 					} else {
 						console.error("[CSStats+] [Background] Steam fetch returned non-200 status:", htmlRes.status, htmlRes.statusText);
 					}
 
-					sendResponse({ bg: null });
+					sendResponse({ bg: null, frame: null });
 				} catch (err) {
-					console.error("[CSStats+] [Background] Error fetching Steam profile background:", err);
-					sendResponse({ bg: null, error: String(err) });
+					console.error("[CSStats+] [Background] Error fetching Steam profile media:", err);
+					sendResponse({ bg: null, frame: null, error: String(err) });
 				}
 			})();
 
@@ -117,6 +114,37 @@ export function extractSteamProfileBg(htmlText: string): string | null {
 			}
 		}
 		match = animatedBgRegex.exec(htmlText);
+	}
+
+	return null;
+}
+
+export function extractSteamAvatarFrame(htmlText: string): string | null {
+	if (!htmlText) return null;
+
+	const cleanUrl = (rawUrl: string): string => {
+		return rawUrl
+			.replace(/&quot;/g, "")
+			.replace(/&apos;/g, "")
+			.replace(/&#039;/g, "")
+			.replace(/&amp;/g, "&")
+			.trim();
+	};
+
+	// Isolate the main profile header block (playerAvatar profile_header_size)
+	const headerMatch =
+		htmlText.match(/class=["'][^"']*playerAvatar\s+profile_header_size[^"']*["'][\s\S]{1,1500}?<\/div>\s*<\/div>/i) ||
+		htmlText.match(/class=["'][^"']*profile_header[^"']*["'][\s\S]{1,3000}?class=["'](?:profile_leftcol|profile_customization)/i);
+
+	const searchScope = headerMatch ? headerMatch[0] : htmlText.slice(0, Math.min(htmlText.length, 15000));
+
+	const frameContainerRegex = /class=["'][^"']*profile_avatar_frame[^"']*["'][\s\S]{1,600}?(?:src|srcset)=["'](https:\/\/[^'"\s]+)["']/gi;
+	const match = frameContainerRegex.exec(searchScope);
+	if (match && match[1]) {
+		const url = cleanUrl(match[1]);
+		if (url.includes("/images/items/") || url.includes("/community_assets/images/items/")) {
+			return url;
+		}
 	}
 
 	return null;

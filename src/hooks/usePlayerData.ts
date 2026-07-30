@@ -31,6 +31,7 @@ export function usePlayerData() {
 	}, []);
 
 	const [steamBg, setSteamBg] = useState<string | null | undefined>(undefined);
+	const [steamFrame, setSteamFrame] = useState<string | null | undefined>(undefined);
 
 	useEffect(() => {
 		if (!window.location.href.includes("/player/")) return;
@@ -67,24 +68,25 @@ export function usePlayerData() {
 		const checkAndFetch = () => {
 			const steamUrl = getSteamUrl();
 			if (steamUrl) {
-				// Clear any legacy v1/v2 cache keys
+				// Clear any legacy v1/v2/v3 bg and frame cache keys
 				try {
 					for (let i = sessionStorage.length - 1; i >= 0; i--) {
 						const key = sessionStorage.key(i);
-						if (key?.startsWith("csstats_steam_bg") && !key.startsWith("csstats_steam_bg_v3_")) {
+						if (key?.startsWith("csstats_steam_") && !key.startsWith("csstats_steam_bg_v4_") && !key.startsWith("csstats_steam_frame_v2_")) {
 							sessionStorage.removeItem(key);
 						}
 					}
 				} catch (_) {}
 
-				const cacheKey = `csstats_steam_bg_v3_${steamUrl}`;
-				const cached = sessionStorage.getItem(cacheKey);
-				if (cached) {
-					if (cached === "NONE" || isBadBg(cached)) {
-						setSteamBg(null);
-					} else {
-						setSteamBg(cached);
-					}
+				const bgCacheKey = `csstats_steam_bg_v4_${steamUrl}`;
+				const frameCacheKey = `csstats_steam_frame_v2_${steamUrl}`;
+
+				const cachedBg = sessionStorage.getItem(bgCacheKey);
+				const cachedFrame = sessionStorage.getItem(frameCacheKey);
+
+				if (cachedBg !== null && cachedFrame !== null) {
+					setSteamBg(cachedBg === "NONE" || isBadBg(cachedBg) ? null : cachedBg);
+					setSteamFrame(cachedFrame === "NONE" ? null : cachedFrame);
 					return true;
 				}
 
@@ -92,7 +94,7 @@ export function usePlayerData() {
 				const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
 				if (runtime?.sendMessage) {
 					try {
-						console.log("[CSStats+] [Content] Requesting Steam background for URL:", steamUrl);
+						console.log("[CSStats+] [Content] Requesting Steam profile media for URL:", steamUrl);
 						runtime.sendMessage({ type: "FETCH_STEAM_BG", steamUrl }, (response: any) => {
 							if (runtime.lastError) {
 								console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
@@ -100,12 +102,21 @@ export function usePlayerData() {
 							}
 							if (response?.bg && !isBadBg(response.bg)) {
 								console.log("[CSStats+] [Content] Received Steam profile background URL:", response.bg);
-								sessionStorage.setItem(cacheKey, response.bg);
+								sessionStorage.setItem(bgCacheKey, response.bg);
 								setSteamBg(response.bg);
 							} else {
 								console.warn("[CSStats+] [Content] Steam profile background query returned no valid background URL.", response);
-								sessionStorage.setItem(cacheKey, "NONE");
+								sessionStorage.setItem(bgCacheKey, "NONE");
 								setSteamBg(null);
+							}
+
+							if (response?.frame) {
+								console.log("[CSStats+] [Content] Received Steam avatar frame URL:", response.frame);
+								sessionStorage.setItem(frameCacheKey, response.frame);
+								setSteamFrame(response.frame);
+							} else {
+								sessionStorage.setItem(frameCacheKey, "NONE");
+								setSteamFrame(null);
 							}
 						});
 					} catch (err) {
@@ -202,6 +213,11 @@ export function usePlayerData() {
 				);
 			};
 
+			if (avatarEl instanceof HTMLImageElement || avatarEl.tagName === "IMG") {
+				const src = avatarEl.getAttribute("src");
+				if (src && !isBadAvatar(src)) return src;
+			}
+
 			const imgs = Array.from(avatarEl.querySelectorAll("img"));
 			for (const img of imgs) {
 				const src = img.getAttribute("src");
@@ -210,13 +226,14 @@ export function usePlayerData() {
 				}
 			}
 
-			return avatarEl.children[0]?.getAttribute("src") || undefined;
+			return avatarEl.children[0]?.getAttribute("src") || avatarEl.getAttribute("src") || undefined;
 		};
 
 		return {
 			img: getPlayerAvatar(),
 			name: document.getElementById("player-name")?.textContent?.trim(),
 			bg: steamBg === null ? undefined : (steamBg ?? getSteamBg()),
+			frame: steamFrame === null ? undefined : steamFrame,
 			tracked: hasTrackingEnabled,
 			banned: bannedBanner ? bannedBanner.innerText.trim() : undefined,
 			profiles: {
@@ -225,7 +242,7 @@ export function usePlayerData() {
 				discordBooster: discordBooster?.src,
 			},
 		};
-	}, [hasTrackingEnabled, steamBg]);
+	}, [hasTrackingEnabled, steamBg, steamFrame]);
 
 	const ranks = useMemo(() => {
 		if (!window.location.href.includes("/player/")) return [];

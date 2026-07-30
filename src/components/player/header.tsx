@@ -187,7 +187,26 @@ export default function PlayerHeader() {
 				{/* Avatar & User Info Header Block */}
 				<div className="flex flex-row md:flex-col items-center justify-between md:justify-start w-full md:w-auto gap-4 shrink-0">
 					<div className="flex flex-row md:flex-col items-center md:items-center shrink-0 gap-[10px]">
-						<img className="rounded-[3px] w-[90px] h-[90px] md:w-[120px] md:h-[120px] object-cover shrink-0" src={user.img ?? ""} alt="avatar" />
+						<div className="relative shrink-0 flex items-center justify-center">
+							<img className="rounded-[3px] w-[90px] h-[90px] md:w-[120px] md:h-[120px] object-cover shrink-0" src={user.img ?? ""} alt="avatar" />
+							{user.frame && (
+								<img
+									src={user.frame}
+									alt="avatar frame"
+									style={{
+										position: "absolute",
+										top: "-9.5%",
+										left: "-9.5%",
+										width: "119%",
+										height: "119%",
+										maxWidth: "none",
+										maxHeight: "none",
+										pointerEvents: "none",
+										zIndex: 10,
+									}}
+								/>
+							)}
+						</div>
 
 						<div className="flex flex-col items-start md:items-center gap-[6px] md:gap-[10px]">
 							<span className="text-white text-[15px] md:text-[14px] leading-tight text-left md:text-center text-ellipsis max-w-[160px] md:w-[120px] break-all font-bold">
