@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { MapIcon } from "@/components/map-icon";
 import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank";
 import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
 import { PremierRankIcon } from "@/components/rank-icons/premier-rank";
 import { getMapName } from "@/utils/maps";
 import type { CSGameMode } from "@/utils/types";
-import { MapIcon } from "@/components/map-icon";
 
 export default function MatchPage() {
 	const hideHeaderRanks = useCallback(() => {

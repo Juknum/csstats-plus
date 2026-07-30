@@ -1,4 +1,4 @@
-import { useState, type ComponentPropsWithoutRef } from "react";
+import { type ComponentPropsWithoutRef, useState } from "react";
 
 const FALLBACKS = (src: string) => [
 	`https://raw.githubusercontent.com/Juknum/counter-strike-icons/main/cs2/panorama/images/map_icons/map_icon_${src}.svg`,

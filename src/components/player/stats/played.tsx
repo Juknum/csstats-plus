@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { MapIcon } from "@/components/map-icon";
 import Tile from "@/components/tile/tile";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import type { CS2Map } from "@/utils/constants";
 import { getMapName } from "@/utils/maps";
 import type { Stats } from "@/utils/types";
-import { MapIcon } from "@/components/map-icon";
 
 export default function MostPlayedStats() {
 	const {

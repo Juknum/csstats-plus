@@ -16,14 +16,7 @@ const TILE_BASE = "tile bg-[rgba(11,13,24,0.6)] backdrop-blur-md rounded-[3px] p
 export default function Tile({ content, className, isLoading = false, width, height, onClick, style }: TileProps) {
 	if (isLoading) {
 		if (onClick) {
-			return (
-				<button
-					type="button"
-					className={`${TILE_BASE} tile-loading cursor-pointer ${className ?? ""}`}
-					style={{ ...style, width, height }}
-					onClick={() => onClick?.()}
-				/>
-			);
+			return <button type="button" className={`${TILE_BASE} tile-loading cursor-pointer ${className ?? ""}`} style={{ ...style, width, height }} onClick={() => onClick?.()} />;
 		}
 
 		return <div className={`${TILE_BASE} tile-loading ${className ?? ""}`} style={{ ...style, width, height }} />;
@@ -31,12 +24,7 @@ export default function Tile({ content, className, isLoading = false, width, hei
 
 	if (onClick) {
 		return (
-			<button
-				type="button"
-				className={`${TILE_BASE} cursor-pointer ${className ?? ""}`}
-				style={{ ...style, width, height }}
-				onClick={() => onClick?.()}
-			>
+			<button type="button" className={`${TILE_BASE} cursor-pointer ${className ?? ""}`} style={{ ...style, width, height }} onClick={() => onClick?.()}>
 				{content}
 			</button>
 		);

@@ -3,8 +3,8 @@ import { usePlayerData } from "@/hooks/usePlayerData";
 import { CS2_MAPS, type CS2OfficialMap } from "@/utils/constants";
 import { getRankPicture } from "@/utils/ranks";
 import type { RankInfo } from "@/utils/types";
-import { PremierRankIcon } from "../rank-icons/premier-rank";
 import { MapIcon } from "../map-icon";
+import { PremierRankIcon } from "../rank-icons/premier-rank";
 import Tile from "../tile/tile";
 
 import "../common.css";

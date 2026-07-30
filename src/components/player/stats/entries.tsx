@@ -119,9 +119,7 @@ export default function EntriesStats() {
 						<div className="flex flex-col justify-center items-center relative border-t sm:border-t-0 sm:border-l border-[#4b505e]/50 pt-3 sm:pt-0 sm:pl-3 gap-1 w-full sm:w-[130px] shrink-0">
 							<div className="w-[100px] h-[100px] sm:w-[110px] sm:h-[110px] relative flex items-center justify-center">
 								{entryChart(avg, "avg")}
-								<span className="text-[20px] sm:text-[22px] text-white/90 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-									{avg}%
-								</span>
+								<span className="text-[20px] sm:text-[22px] text-white/90 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">{avg}%</span>
 							</div>
 							<span className="text-[11px] sm:text-[13px] text-white/75 font-normal">per Round</span>
 						</div>

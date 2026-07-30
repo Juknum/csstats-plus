@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { MapIcon } from "@/components/map-icon";
 import Tile from "@/components/tile/tile";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import type { Stats } from "@/utils/types";
-import { MapIcon } from "@/components/map-icon";
 
 export default function MatchesStats() {
 	const {

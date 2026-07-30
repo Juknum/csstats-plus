@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { MapIcon } from "@/components/map-icon";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import { getMapName } from "@/utils/maps";
-import { MapIcon } from "@/components/map-icon";
 
 export default function Maps() {
 	const { loading } = usePlayerData();

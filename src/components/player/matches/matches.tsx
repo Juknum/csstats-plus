@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
+import { MapIcon } from "@/components/map-icon";
 import CompetitiveOrWingmanRankIcon from "@/components/rank-icons/comp-win-rank";
 import FaceitRankIcon from "@/components/rank-icons/faceit-rank";
 import { usePlayerData } from "@/hooks/usePlayerData";
 import type { CS2Map } from "@/utils/constants";
 import { getMapName } from "@/utils/maps";
-import { MapIcon } from "@/components/map-icon";
 
 export default function Matches() {
 	const { loading } = usePlayerData();

@@ -299,13 +299,13 @@
 }
 
 .tracking-btn-action {
-	background: #4A7DFF;
+	background: #4a7dff;
 	text-transform: uppercase;
 	letter-spacing: 0.3px;
 }
 
 .tracking-btn-steam {
-	background: #2EA043;
+	background: #2ea043;
 }
 
 .tracking-btn {
@@ -320,7 +320,7 @@
 	font-size: 12px;
 	font-weight: 600;
 	white-space: nowrap;
-	transition: background .15s;
+	transition: background 0.15s;
 }
 
 .match-hoverable:hover::before {
