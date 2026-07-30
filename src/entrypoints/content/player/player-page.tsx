@@ -15,42 +15,52 @@ export default function PlayerPage() {
 	const bannerRef = useRef<HTMLDivElement>(null);
 
 	const {
-		user: { tracked },
+		user: { tracked, bg },
 		isLoginRequired,
 	} = usePlayerData();
 
-	// hide overridden elements on mount
+	// hide overridden elements on mount and handle page background
 	useEffect(() => {
-		Array.from(document.body.children).forEach((child) => {
-			if (!(child instanceof HTMLElement)) return;
+		const bgOuter = document.getElementById("page-bg-outer");
+		const bgInner = document.getElementById("page-bg");
 
-			const bgOuter = document.getElementById("page-bg-outer");
+		if (bg) {
+			if (bgOuter) {
+				bgOuter.style.display = "";
+				bgOuter.style.backgroundImage = `url('${bg}')`;
+			}
+			if (bgInner) {
+				bgInner.style.display = "";
+				bgInner.style.backgroundImage = `url('${bg}')`;
+			}
+		} else {
 			if (bgOuter) bgOuter.style.display = "none";
+			if (bgInner) bgInner.style.display = "none";
+		}
 
-			const player = document.getElementById("player");
-			if (player) player.style.justifyContent = "center";
+		const player = document.getElementById("player");
+		if (player) player.style.justifyContent = "center";
 
-			const profileInfo = document.getElementById("player-profile");
-			if (profileInfo) profileInfo.style.display = "none";
+		const profileInfo = document.getElementById("player-profile");
+		if (profileInfo) profileInfo.style.display = "none";
 
-			const filters = document.getElementById("player-filters");
-			if (filters) filters.style.display = "none";
+		const filters = document.getElementById("player-filters");
+		if (filters) filters.style.display = "none";
 
-			const loadingSection = document.getElementById("player-loading-section");
-			if (loadingSection) setHasLoadingSection(true);
+		const loadingSection = document.getElementById("player-loading-section");
+		if (loadingSection) setHasLoadingSection(true);
 
-			const statsSection = document.getElementById("player-outer-section");
-			if (statsSection) {
-				if (loadingSection && !isLoginRequired) statsSection.style.display = !fragment ? "none" : "";
-				if (isLoginRequired) statsSection.style.display = "";
-			}
+		const statsSection = document.getElementById("player-outer-section");
+		if (statsSection) {
+			if (loadingSection && !isLoginRequired) statsSection.style.display = !fragment ? "none" : "";
+			if (isLoginRequired) statsSection.style.display = "";
+		}
 
-			if (!tracked) {
-				const banner = document.getElementsByClassName("tracking-bar")?.[0] as HTMLElement | undefined;
-				if (banner) bannerRef.current?.appendChild(banner);
-			}
-		});
-	}, [fragment, tracked, isLoginRequired]);
+		if (!tracked) {
+			const banner = document.getElementsByClassName("tracking-bar")?.[0] as HTMLElement | undefined;
+			if (banner) bannerRef.current?.appendChild(banner);
+		}
+	}, [bg, fragment, tracked, isLoginRequired]);
 
 	// watch URL Hash Fragment changes
 	useEffect(() => {

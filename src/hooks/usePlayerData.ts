@@ -30,14 +30,14 @@ export function usePlayerData() {
 		});
 	}, []);
 
-	const [steamBg, setSteamBg] = useState<string | undefined>(undefined);
+	const [steamBg, setSteamBg] = useState<string | null | undefined>(undefined);
 
 	useEffect(() => {
 		if (!window.location.href.includes("/player/")) return;
 
 		const getSteamUrl = (): string | null => {
 			const steamPathMatch = window.location.pathname.match(/\/player\/(\d{17})/);
-			if (steamPathMatch && steamPathMatch[1]) {
+			if (steamPathMatch?.[1]) {
 				return `https://steamcommunity.com/profiles/${steamPathMatch[1]}`;
 			}
 
@@ -47,18 +47,48 @@ export function usePlayerData() {
 			return steamAnchor?.href ?? null;
 		};
 
+		const isBadBg = (url: string) => {
+			const lower = url.toLowerCase();
+			const isItemPng = (lower.includes("/images/items/") || lower.includes("/community_assets/images/items/")) && (lower.endsWith(".png") || lower.includes(".png?"));
+			return (
+				isItemPng ||
+				lower.includes("avatarframe") ||
+				lower.includes("avatar_frame") ||
+				lower.includes("profile_avatar") ||
+				lower.includes("avatar_animated") ||
+				lower.includes("animated_avatar") ||
+				lower.includes("miniprofile") ||
+				lower.includes("/frame.") ||
+				lower.includes("_frame.")
+			);
+		};
+
 		let attempts = 0;
 		const checkAndFetch = () => {
 			const steamUrl = getSteamUrl();
 			if (steamUrl) {
-				const cacheKey = `csstats_steam_bg_${steamUrl}`;
+				// Clear any legacy v1/v2 cache keys
+				try {
+					for (let i = sessionStorage.length - 1; i >= 0; i--) {
+						const key = sessionStorage.key(i);
+						if (key?.startsWith("csstats_steam_bg") && !key.startsWith("csstats_steam_bg_v3_")) {
+							sessionStorage.removeItem(key);
+						}
+					}
+				} catch (_) {}
+
+				const cacheKey = `csstats_steam_bg_v3_${steamUrl}`;
 				const cached = sessionStorage.getItem(cacheKey);
 				if (cached) {
-					setSteamBg(cached);
+					if (cached === "NONE" || isBadBg(cached)) {
+						setSteamBg(null);
+					} else {
+						setSteamBg(cached);
+					}
 					return true;
 				}
 
-				// @ts-ignore
+				// @ts-expect-error
 				const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
 				if (runtime?.sendMessage) {
 					try {
@@ -68,12 +98,14 @@ export function usePlayerData() {
 								console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
 								return;
 							}
-							if (response?.bg) {
+							if (response?.bg && !isBadBg(response.bg)) {
 								console.log("[CSStats+] [Content] Received Steam profile background URL:", response.bg);
 								sessionStorage.setItem(cacheKey, response.bg);
 								setSteamBg(response.bg);
 							} else {
-								console.warn("[CSStats+] [Content] Steam profile background query returned no background URL.", response);
+								console.warn("[CSStats+] [Content] Steam profile background query returned no valid background URL.", response);
+								sessionStorage.setItem(cacheKey, "NONE");
+								setSteamBg(null);
 							}
 						});
 					} catch (err) {
@@ -113,35 +145,78 @@ export function usePlayerData() {
 		const discordBooster = icons.find((i) => i.children[0]?.getAttribute("src")?.includes("discord-booster-1.png"))?.children[0] as HTMLImageElement | undefined;
 
 		const getSteamBg = (): string | undefined => {
+			const isBadBg = (url: string) => {
+				const lower = url.toLowerCase();
+				return (
+					lower.includes("avatarframe") ||
+					lower.includes("avatar_frame") ||
+					lower.includes("profile_avatar") ||
+					lower.includes("avatar_animated") ||
+					lower.includes("animated_avatar") ||
+					lower.includes("miniprofile") ||
+					lower.includes("/frame.") ||
+					lower.includes("_frame.") ||
+					lower.includes("/images/items/") ||
+					lower.includes("/community_assets/images/items/")
+				);
+			};
+
 			const bgOuter = document.getElementById("page-bg-outer");
 			if (bgOuter) {
 				const img = bgOuter.querySelector("img");
-				if (img?.src) return img.src;
+				if (img?.src && !isBadBg(img.src)) return img.src;
 				const styleBg = bgOuter.style.backgroundImage || window.getComputedStyle(bgOuter).backgroundImage;
 				if (styleBg && styleBg !== "none" && styleBg.includes("url")) {
 					const match = styleBg.match(/url\(["']?(.*?)["']?\)/);
-					if (match && match[1]) return match[1];
+					if (match?.[1] && !isBadBg(match[1])) return match[1];
 				}
 			}
 
 			const bgInner = document.getElementById("page-bg");
 			if (bgInner) {
 				const img = bgInner.querySelector("img");
-				if (img?.src) return img.src;
+				if (img?.src && !isBadBg(img.src)) return img.src;
 				const styleBg = bgInner.style.backgroundImage || window.getComputedStyle(bgInner).backgroundImage;
 				if (styleBg && styleBg !== "none" && styleBg.includes("url")) {
 					const match = styleBg.match(/url\(["']?(.*?)["']?\)/);
-					if (match && match[1]) return match[1];
+					if (match?.[1] && !isBadBg(match[1])) return match[1];
 				}
 			}
 
 			return undefined;
 		};
 
+		const getPlayerAvatar = (): string | undefined => {
+			const avatarEl = document.getElementById("player-avatar");
+			if (!avatarEl) return undefined;
+
+			const isBadAvatar = (url: string) => {
+				const lower = url.toLowerCase();
+				return (
+					lower.includes("avatarframe") ||
+					lower.includes("avatar_frame") ||
+					lower.includes("/frame.") ||
+					lower.includes("_frame.") ||
+					lower.includes("/images/items/") ||
+					lower.includes("/community_assets/images/items/")
+				);
+			};
+
+			const imgs = Array.from(avatarEl.querySelectorAll("img"));
+			for (const img of imgs) {
+				const src = img.getAttribute("src");
+				if (src && !isBadAvatar(src)) {
+					return src;
+				}
+			}
+
+			return avatarEl.children[0]?.getAttribute("src") || undefined;
+		};
+
 		return {
-			img: document.getElementById("player-avatar")?.children[0]?.getAttribute("src"),
+			img: getPlayerAvatar(),
 			name: document.getElementById("player-name")?.textContent?.trim(),
-			bg: steamBg ?? getSteamBg(),
+			bg: steamBg === null ? undefined : (steamBg ?? getSteamBg()),
 			tracked: hasTrackingEnabled,
 			banned: bannedBanner ? bannedBanner.innerText.trim() : undefined,
 			profiles: {

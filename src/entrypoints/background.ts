@@ -1,7 +1,7 @@
 import { defineBackground } from "wxt/utils/define-background";
 
 export default defineBackground(() => {
-	// @ts-ignore
+	// @ts-expect-error
 	const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
 	if (!runtime) return;
 
@@ -15,20 +15,10 @@ export default defineBackground(() => {
 					if (htmlRes.ok) {
 						const htmlText = await htmlRes.text();
 
-						// Match style="background-image: url( 'https://.../images/items/...' );"
-						const styleMatch = htmlText.match(/background-image:\s*url\(\s*['"]?(https:\/\/[^'"]+\/images\/items\/[^'"]+)['"]?\s*\)/i);
-						if (styleMatch && styleMatch[1]) {
-							const bgUrl = styleMatch[1].trim();
+						const bgUrl = extractSteamProfileBg(htmlText);
+						if (bgUrl) {
 							console.log("[CSStats+] [Background] Found Steam profile background:", bgUrl);
 							sendResponse({ bg: bgUrl });
-							return;
-						}
-
-						// Fallback match any Steam CDN items image URL
-						const cdnMatch = htmlText.match(/https:\/\/[^\s'"<>]+\/images\/items\/[^\s'"<>]+\.(?:jpg|png|jpeg|webp)/i);
-						if (cdnMatch && cdnMatch[0]) {
-							console.log("[CSStats+] [Background] Found Steam fallback background:", cdnMatch[0]);
-							sendResponse({ bg: cdnMatch[0] });
 							return;
 						}
 
@@ -48,3 +38,86 @@ export default defineBackground(() => {
 		}
 	});
 });
+
+export function extractSteamProfileBg(htmlText: string): string | null {
+	if (!htmlText) return null;
+
+	const cleanUrl = (rawUrl: string): string => {
+		return rawUrl
+			.replace(/&quot;/g, "")
+			.replace(/&apos;/g, "")
+			.replace(/&#039;/g, "")
+			.replace(/&amp;/g, "&")
+			.trim();
+	};
+
+	const isAvatarOrFrame = (url: string): boolean => {
+		const lower = url.toLowerCase();
+		return (
+			lower.includes("avatarframe") ||
+			lower.includes("avatar_frame") ||
+			lower.includes("profile_avatar") ||
+			lower.includes("avatar_animated") ||
+			lower.includes("animated_avatar") ||
+			lower.includes("miniprofile") ||
+			lower.includes("/frame.") ||
+			lower.includes("_frame.")
+		);
+	};
+
+	// 1. Check for background-image inside profile background container elements
+	const containerRegex =
+		/(?:profile_background_image_content|profile_background_holder|has_profile_background|profile_animated_background|profile_bg_item|profile_header_bg)[^>]*style=["'][^"']*background-image:\s*url\(\s*(?:&quot;|&#039;|['"])?([^'"\)\s]+)(?:&quot;|&#039;|['"])?\s*\)/gi;
+	let match: RegExpExecArray | null = containerRegex.exec(htmlText);
+	while (match !== null) {
+		if (match[1]) {
+			const url = cleanUrl(match[1]);
+			if ((url.includes("/images/items/") || url.includes("/community_assets/images/items/")) && !isAvatarOrFrame(url)) {
+				return url;
+			}
+		}
+		match = containerRegex.exec(htmlText);
+	}
+
+	// Reverse attribute order: style attribute before class attribute in container tag
+	const reverseContainerRegex =
+		/style=["'][^"']*background-image:\s*url\(\s*(?:&quot;|&#039;|['"])?([^'"\)\s]+)(?:&quot;|&#039;|['"])?\s*\)[^"']*["'][^>]*class=["'][^"']*(?:profile_background_image_content|profile_background_holder|has_profile_background|profile_animated_background|profile_bg_item|profile_header_bg)/gi;
+	match = reverseContainerRegex.exec(htmlText);
+	while (match !== null) {
+		if (match[1]) {
+			const url = cleanUrl(match[1]);
+			if ((url.includes("/images/items/") || url.includes("/community_assets/images/items/")) && !isAvatarOrFrame(url)) {
+				return url;
+			}
+		}
+		match = reverseContainerRegex.exec(htmlText);
+	}
+
+	// 2. Check for general background-image url pointing to /images/items/ or /community_assets/images/items/
+	const bgStyleRegex = /background-image:\s*url\(\s*(?:&quot;|&#039;|['"])?(https:\/\/[^'"&\s)]+\/(?:community_assets\/)?images\/items\/[^'"&\s)]+)(?:&quot;|&#039;|['"])?\s*\)/gi;
+	match = bgStyleRegex.exec(htmlText);
+	while (match !== null) {
+		if (match[1]) {
+			const url = cleanUrl(match[1]);
+			if (!isAvatarOrFrame(url)) {
+				return url;
+			}
+		}
+		match = bgStyleRegex.exec(htmlText);
+	}
+
+	// 3. Check for video poster or image src inside profile_animated_background container
+	const animatedBgRegex = /class=["'][^"']*profile_animated_background[^"']*["'][\s\S]{1,500}?(?:poster|src)=["'](https:\/\/[^'"\s]+\/(?:community_assets\/)?images\/items\/[^'"\s]+)["']/gi;
+	match = animatedBgRegex.exec(htmlText);
+	while (match !== null) {
+		if (match[1]) {
+			const url = cleanUrl(match[1]);
+			if (!isAvatarOrFrame(url)) {
+				return url;
+			}
+		}
+		match = animatedBgRegex.exec(htmlText);
+	}
+
+	return null;
+}
