@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Semantic version to release (for example: 2.3.0)"
+        description: "Semantic version to release (example: 2.3.0)"
         required: true
         type: string
 

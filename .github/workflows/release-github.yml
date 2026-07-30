@@ -1,0 +1,173 @@
+name: Release - GitHub
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Semantic version to release (example: 2.3.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+    name: Check version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      sha: ${{ steps.meta.outputs.sha }}
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Validate semantic version
+        run: |
+          version='${{ inputs.version }}'
+          if ! [[ "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid semver: $version"
+            exit 1
+          fi
+
+      - name: Configure git author
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Export release metadata
+        id: meta
+        run: |
+          echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  build-chrome:
+    name: Build - Chrome
+    runs-on: ubuntu-latest
+    needs: bump-version
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.bump-version.outputs.sha }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Zip extensions
+        run: pnpm zip
+
+      - name: Upload Chrome zip artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: chrome-zip
+          path: .output/*-chrome.zip
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+
+  build-firefox:
+    name: Build - Firefox
+    runs-on: ubuntu-latest
+    needs: bump-version
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.bump-version.outputs.sha }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Zip extensions
+        run: pnpm zip -b firefox
+
+      - name: Upload Firefox zip artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: firefox-zips
+          path: |
+            .output/*-firefox.zip
+            .output/*-sources.zip
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+
+  build-edge:
+    name: Build - Edge
+    runs-on: ubuntu-latest
+    needs: bump-version
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.bump-version.outputs.sha }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Zip extensions
+        run: pnpm zip -b edge
+
+      - name: Upload Edge zip artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: edge-zip
+          path: .output/*-edge.zip
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+
+  github-release:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+    needs: [bump-version, build-chrome, build-firefox, build-edge]
+
+    steps:
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+
+      - name: Create GitHub release and upload assets
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.bump-version.outputs.tag }}
+          name: ${{ needs.bump-version.outputs.tag }}
+          target_commitish: ${{ needs.bump-version.outputs.sha }}
+          generate_release_notes: true
+          prerelease: ${{ contains(needs.bump-version.outputs.version, '-') }}
+          files: |
+            artifacts/**/*.zip
+          fail_on_unmatched_files: true
