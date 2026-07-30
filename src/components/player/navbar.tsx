@@ -45,7 +45,9 @@ export default function PlayerNavbar() {
 
 		const tableNav = document.getElementById("tab-h-nav") as HTMLDivElement | null;
 		if (tableNav) {
-			tableNav.classList.add("max-w-full", "overflow-x-auto");
+			tableNav.classList.add("max-w-full");
+			tableNav.style.setProperty("overflow-x", "hidden", "important");
+			tableNav.style.setProperty("overflow-y", "hidden", "important");
 			navbarRef.current?.prepend(tableNav);
 		} else navbarRef.current?.classList.add("no-table-nav");
 

@@ -51,6 +51,7 @@
 	min-width: 0;
 	max-width: 100%;
 	overflow-x: auto;
+	overflow-y: hidden !important;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: none;
 }
@@ -72,7 +73,7 @@
 	margin-bottom: 0;
 	list-style: none;
 	white-space: nowrap;
-	min-width: min-content;
+	min-width: 0;
 }
 
 #tab-h-nav .nav > li,
@@ -124,7 +125,7 @@
 .navbar .nav > li:not(.nav-button):after {
 	content: "";
 	position: absolute;
-	bottom: -12px !important;
+	bottom: 0 !important;
 	left: 50%;
 	width: 0;
 	height: 3px;
