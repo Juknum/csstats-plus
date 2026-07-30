@@ -1,5 +1,16 @@
 import { defineBackground } from "wxt/utils/define-background";
 
+const BG_KEY_PREFIX = "csstats_steam_bg_";
+const FRAME_KEY_PREFIX = "csstats_steam_frame_";
+
+// @ts-expect-error
+const extStorage: typeof browser.storage.session | null =
+	// @ts-expect-error
+	typeof browser !== "undefined" ? browser.storage.session
+		// @ts-expect-error
+		: typeof chrome !== "undefined" ? chrome.storage.session
+		: null;
+
 export default defineBackground(() => {
 	// @ts-expect-error
 	const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
@@ -9,6 +20,37 @@ export default defineBackground(() => {
 		if (message?.type === "FETCH_STEAM_BG" && message.steamUrl) {
 			(async () => {
 				const steamUrl = message.steamUrl;
+				const bgCacheKey = `${BG_KEY_PREFIX}${steamUrl}`;
+				const frameCacheKey = `${FRAME_KEY_PREFIX}${steamUrl}`;
+
+				// 1. Check extension session storage cache first (shared across all tabs)
+				if (extStorage) {
+					try {
+						// Clear any legacy cache keys that don't match the current prefixes
+						const allItems = await extStorage.get(null);
+						const legacyKeys = Object.keys(allItems).filter(
+							(k) => k.startsWith("csstats_steam_") && !k.startsWith(BG_KEY_PREFIX) && !k.startsWith(FRAME_KEY_PREFIX),
+						);
+						if (legacyKeys.length > 0) await extStorage.remove(legacyKeys);
+
+						const cached = await extStorage.get([bgCacheKey, frameCacheKey]);
+						const cachedBg = cached[bgCacheKey] as string | undefined;
+						const cachedFrame = cached[frameCacheKey] as string | undefined;
+
+						if (cachedBg !== undefined && cachedFrame !== undefined) {
+							console.log("[CSStats+] [Background] Cache hit for:", steamUrl);
+							sendResponse({
+								bg: cachedBg === "NONE" ? null : cachedBg,
+								frame: cachedFrame === "NONE" ? null : cachedFrame,
+							});
+							return;
+						}
+					} catch (err) {
+						console.warn("[CSStats+] [Background] Storage read error, will fetch fresh:", err);
+					}
+				}
+
+				// 2. Cache miss — fetch from Steam
 				console.log("[CSStats+] [Background] Requesting Steam profile background for:", steamUrl);
 				try {
 					const htmlRes = await fetch(steamUrl);
@@ -18,6 +60,18 @@ export default defineBackground(() => {
 						const bgUrl = extractSteamProfileBg(htmlText);
 						const frameUrl = extractSteamAvatarFrame(htmlText);
 						console.log("[CSStats+] [Background] Steam profile bg:", bgUrl, "frame:", frameUrl);
+
+						if (extStorage) {
+							try {
+								await extStorage.set({
+									[bgCacheKey]: bgUrl ?? "NONE",
+									[frameCacheKey]: frameUrl ?? "NONE",
+								});
+							} catch (err) {
+								console.warn("[CSStats+] [Background] Storage write error:", err);
+							}
+						}
+
 						sendResponse({ bg: bgUrl, frame: frameUrl });
 						return;
 					} else {
@@ -35,6 +89,7 @@ export default defineBackground(() => {
 		}
 	});
 });
+
 
 export function extractSteamProfileBg(htmlText: string): string | null {
 	if (!htmlText) return null;

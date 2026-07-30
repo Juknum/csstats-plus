@@ -30,42 +30,9 @@ export function usePlayerData() {
 		});
 	}, []);
 
-	const BG_KEY_PREFIX = "csstats_steam_bg_";
-	const FRAME_KEY_PREFIX = "csstats_steam_frame_";
-
-	const getSteamUrlSync = (): string | null => {
-		const steamPathMatch = window.location.pathname.match(/\/player\/(\d{17})/);
-		if (steamPathMatch?.[1]) {
-			return `https://steamcommunity.com/profiles/${steamPathMatch[1]}`;
-		}
-		return null;
-	};
-
-	// Initialize synchronously from sessionStorage so data is available on the very first render
-	// (survives page reloads within the same tab — no flash of missing bg/frame)
-	const [steamBg, setSteamBg] = useState<string | null | undefined>(() => {
-		try {
-			const steamUrl = getSteamUrlSync();
-			if (!steamUrl) return undefined;
-			const cached = sessionStorage.getItem(`${BG_KEY_PREFIX}${steamUrl}`);
-			if (cached === null) return undefined;
-			return cached === "NONE" ? null : cached;
-		} catch {
-			return undefined;
-		}
-	});
-
-	const [steamFrame, setSteamFrame] = useState<string | null | undefined>(() => {
-		try {
-			const steamUrl = getSteamUrlSync();
-			if (!steamUrl) return undefined;
-			const cached = sessionStorage.getItem(`${FRAME_KEY_PREFIX}${steamUrl}`);
-			if (cached === null) return undefined;
-			return cached === "NONE" ? null : cached;
-		} catch {
-			return undefined;
-		}
-	});
+	// State is held in React — the background script owns the session cache
+	const [steamBg, setSteamBg] = useState<string | null | undefined>(undefined);
+	const [steamFrame, setSteamFrame] = useState<string | null | undefined>(undefined);
 
 	useEffect(() => {
 		if (!window.location.href.includes("/player/")) return;
@@ -85,70 +52,38 @@ export function usePlayerData() {
 		let attempts = 0;
 		const checkAndFetch = () => {
 			const steamUrl = getSteamUrl();
-			if (steamUrl) {
-				// Clear any legacy bg and frame cache keys
-				try {
-					for (let i = sessionStorage.length - 1; i >= 0; i--) {
-						const key = sessionStorage.key(i);
-						if (key?.startsWith("csstats_steam_") && !key.startsWith(BG_KEY_PREFIX) && !key.startsWith(FRAME_KEY_PREFIX)) {
-							sessionStorage.removeItem(key);
-						}
+			if (!steamUrl) return false;
+
+			// @ts-expect-error
+			const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
+			if (!runtime?.sendMessage) return false;
+
+			console.log("[CSStats+] [Content] Requesting Steam profile media for URL:", steamUrl);
+			try {
+				runtime.sendMessage({ type: "FETCH_STEAM_BG", steamUrl }, (response: any) => {
+					if (runtime.lastError) {
+						console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
+						return;
 					}
-				} catch (_) {}
-
-				const bgCacheKey = `${BG_KEY_PREFIX}${steamUrl}`;
-				const frameCacheKey = `${FRAME_KEY_PREFIX}${steamUrl}`;
-
-				const cachedBg = sessionStorage.getItem(bgCacheKey);
-				const cachedFrame = sessionStorage.getItem(frameCacheKey);
-
-				if (cachedBg !== null && cachedFrame !== null) {
-					setSteamBg(cachedBg === "NONE" ? null : cachedBg);
-					setSteamFrame(cachedFrame === "NONE" ? null : cachedFrame);
-					return true;
-				}
-
-				// @ts-expect-error
-				const runtime = typeof browser !== "undefined" ? browser.runtime : typeof chrome !== "undefined" ? chrome.runtime : null;
-				if (runtime?.sendMessage) {
-					try {
-						console.log("[CSStats+] [Content] Requesting Steam profile media for URL:", steamUrl);
-						runtime.sendMessage({ type: "FETCH_STEAM_BG", steamUrl }, (response: any) => {
-							if (runtime.lastError) {
-								console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
-								return;
-							}
-							if (response?.bg) {
-								console.log("[CSStats+] [Content] Received Steam profile background URL:", response.bg);
-								sessionStorage.setItem(bgCacheKey, response.bg);
-								setSteamBg(response.bg);
-							} else {
-								console.warn("[CSStats+] [Content] Steam profile background query returned no valid background URL.", response);
-								sessionStorage.setItem(bgCacheKey, "NONE");
-								setSteamBg(null);
-							}
-
-							if (response?.frame) {
-								console.log("[CSStats+] [Content] Received Steam avatar frame URL:", response.frame);
-								sessionStorage.setItem(frameCacheKey, response.frame);
-								setSteamFrame(response.frame);
-							} else {
-								sessionStorage.setItem(frameCacheKey, "NONE");
-								setSteamFrame(null);
-							}
-						});
-					} catch (err) {
-						console.error("[CSStats+] [Content] Error sending message to background script:", err);
+					if (response?.bg) {
+						console.log("[CSStats+] [Content] Received Steam profile background URL:", response.bg);
+						setSteamBg(response.bg);
+					} else {
+						console.warn("[CSStats+] [Content] Steam profile background query returned no valid background URL.", response);
+						setSteamBg(null);
 					}
-				}
-				return true;
+					if (response?.frame) {
+						console.log("[CSStats+] [Content] Received Steam avatar frame URL:", response.frame);
+						setSteamFrame(response.frame);
+					} else {
+						setSteamFrame(null);
+					}
+				});
+			} catch (err) {
+				console.error("[CSStats+] [Content] Error sending message to background script:", err);
 			}
-			return false;
+			return true;
 		};
-
-		// If state was already hydrated from sessionStorage, still check if a fetch is needed
-		// (both must be non-undefined, meaning cache was fully populated)
-		if (steamBg !== undefined && steamFrame !== undefined) return;
 
 		if (!checkAndFetch()) {
 			const interval = setInterval(() => {
@@ -161,6 +96,7 @@ export function usePlayerData() {
 			return () => clearInterval(interval);
 		}
 	}, []);
+
 
 	const user = useMemo(() => {
 		if (!window.location.href.includes("/player/")) return undefined;

@@ -34,6 +34,7 @@ export default defineConfig({
 	},
 	manifest: {
 		name: "CSStats+",
+		permissions: ["storage"],
 		host_permissions: ["https://steamcommunity.com/*", "https://*.steamstatic.com/*"],
 		browser_specific_settings: {
 			gecko: {
