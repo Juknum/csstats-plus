@@ -30,8 +30,42 @@ export function usePlayerData() {
 		});
 	}, []);
 
-	const [steamBg, setSteamBg] = useState<string | null | undefined>(undefined);
-	const [steamFrame, setSteamFrame] = useState<string | null | undefined>(undefined);
+	const BG_KEY_PREFIX = "csstats_steam_bg_";
+	const FRAME_KEY_PREFIX = "csstats_steam_frame_";
+
+	const getSteamUrlSync = (): string | null => {
+		const steamPathMatch = window.location.pathname.match(/\/player\/(\d{17})/);
+		if (steamPathMatch?.[1]) {
+			return `https://steamcommunity.com/profiles/${steamPathMatch[1]}`;
+		}
+		return null;
+	};
+
+	// Initialize synchronously from sessionStorage so data is available on the very first render
+	// (survives page reloads within the same tab — no flash of missing bg/frame)
+	const [steamBg, setSteamBg] = useState<string | null | undefined>(() => {
+		try {
+			const steamUrl = getSteamUrlSync();
+			if (!steamUrl) return undefined;
+			const cached = sessionStorage.getItem(`${BG_KEY_PREFIX}${steamUrl}`);
+			if (cached === null) return undefined;
+			return cached === "NONE" ? null : cached;
+		} catch {
+			return undefined;
+		}
+	});
+
+	const [steamFrame, setSteamFrame] = useState<string | null | undefined>(() => {
+		try {
+			const steamUrl = getSteamUrlSync();
+			if (!steamUrl) return undefined;
+			const cached = sessionStorage.getItem(`${FRAME_KEY_PREFIX}${steamUrl}`);
+			if (cached === null) return undefined;
+			return cached === "NONE" ? null : cached;
+		} catch {
+			return undefined;
+		}
+	});
 
 	useEffect(() => {
 		if (!window.location.href.includes("/player/")) return;
@@ -48,44 +82,28 @@ export function usePlayerData() {
 			return steamAnchor?.href ?? null;
 		};
 
-		const isBadBg = (url: string) => {
-			const lower = url.toLowerCase();
-			const isItemPng = (lower.includes("/images/items/") || lower.includes("/community_assets/images/items/")) && (lower.endsWith(".png") || lower.includes(".png?"));
-			return (
-				isItemPng ||
-				lower.includes("avatarframe") ||
-				lower.includes("avatar_frame") ||
-				lower.includes("profile_avatar") ||
-				lower.includes("avatar_animated") ||
-				lower.includes("animated_avatar") ||
-				lower.includes("miniprofile") ||
-				lower.includes("/frame.") ||
-				lower.includes("_frame.")
-			);
-		};
-
 		let attempts = 0;
 		const checkAndFetch = () => {
 			const steamUrl = getSteamUrl();
 			if (steamUrl) {
-				// Clear any legacy v1/v2/v3 bg and frame cache keys
+				// Clear any legacy bg and frame cache keys
 				try {
 					for (let i = sessionStorage.length - 1; i >= 0; i--) {
 						const key = sessionStorage.key(i);
-						if (key?.startsWith("csstats_steam_") && !key.startsWith("csstats_steam_bg_v4_") && !key.startsWith("csstats_steam_frame_v2_")) {
+						if (key?.startsWith("csstats_steam_") && !key.startsWith(BG_KEY_PREFIX) && !key.startsWith(FRAME_KEY_PREFIX)) {
 							sessionStorage.removeItem(key);
 						}
 					}
 				} catch (_) {}
 
-				const bgCacheKey = `csstats_steam_bg_v4_${steamUrl}`;
-				const frameCacheKey = `csstats_steam_frame_v2_${steamUrl}`;
+				const bgCacheKey = `${BG_KEY_PREFIX}${steamUrl}`;
+				const frameCacheKey = `${FRAME_KEY_PREFIX}${steamUrl}`;
 
 				const cachedBg = sessionStorage.getItem(bgCacheKey);
 				const cachedFrame = sessionStorage.getItem(frameCacheKey);
 
 				if (cachedBg !== null && cachedFrame !== null) {
-					setSteamBg(cachedBg === "NONE" || isBadBg(cachedBg) ? null : cachedBg);
+					setSteamBg(cachedBg === "NONE" ? null : cachedBg);
 					setSteamFrame(cachedFrame === "NONE" ? null : cachedFrame);
 					return true;
 				}
@@ -100,7 +118,7 @@ export function usePlayerData() {
 								console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
 								return;
 							}
-							if (response?.bg && !isBadBg(response.bg)) {
+							if (response?.bg) {
 								console.log("[CSStats+] [Content] Received Steam profile background URL:", response.bg);
 								sessionStorage.setItem(bgCacheKey, response.bg);
 								setSteamBg(response.bg);
@@ -127,6 +145,10 @@ export function usePlayerData() {
 			}
 			return false;
 		};
+
+		// If state was already hydrated from sessionStorage, still check if a fetch is needed
+		// (both must be non-undefined, meaning cache was fully populated)
+		if (steamBg !== undefined && steamFrame !== undefined) return;
 
 		if (!checkAndFetch()) {
 			const interval = setInterval(() => {

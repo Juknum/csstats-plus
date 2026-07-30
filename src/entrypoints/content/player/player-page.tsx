@@ -25,13 +25,18 @@ export default function PlayerPage() {
 		const bgInner = document.getElementById("page-bg");
 
 		if (bg) {
+			const isVideo = bg.endsWith(".mp4") || bg.endsWith(".webm");
 			if (bgOuter) {
 				bgOuter.style.display = "";
-				bgOuter.style.backgroundImage = `url('${bg}')`;
+				if (!isVideo) {
+					bgOuter.style.backgroundImage = `url('${bg}')`;
+				}
 			}
 			if (bgInner) {
 				bgInner.style.display = "";
-				bgInner.style.backgroundImage = `url('${bg}')`;
+				if (!isVideo) {
+					bgInner.style.backgroundImage = `url('${bg}')`;
+				}
 			}
 		} else {
 			if (bgOuter) bgOuter.style.display = "none";
