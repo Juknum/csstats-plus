@@ -81,6 +81,13 @@ jobs:
       ref: ${{ needs.bump-version.outputs.sha }}
     secrets: inherit
 
+  opera:
+    needs: bump-version
+    uses: ./.github/workflows/opera-release.yml
+    with:
+      ref: ${{ needs.bump-version.outputs.sha }}
+    secrets: inherit
+
   github-release:
     name: Create GitHub release
     runs-on: ubuntu-latest
