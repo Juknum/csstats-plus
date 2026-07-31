@@ -1,0 +1,117 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 9b2c8c403b6a5dcf28ef118cddac08e65340ef70..a35824411fc454dd2864035100a19920c1eaf097 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -20,6 +20,21 @@ interface SafariXcodeOptions {
+      * If not provided, the generated Xcode project will need to have the development team set manually
+      */
+     developmentTeam?: string;
++    /**
++     * Output path for the Xcode project
++     * Defaults to '.output/{projectName}/' directory
++     */
++    outputPath?: string;
++    /**
++     * Project type
++     * Defaults to "both" (MacOS and iOS)
++     */
++    projectType?: 'macos' | 'ios' | 'both';
++    /**
++     * Open the Xcode project after creation
++     * Defaults to false
++     */
++    openProject?: boolean;
+ }
+ declare const _default: wxt.WxtModule<SafariXcodeOptions>;
+ 
+diff --git a/dist/index.js b/dist/index.js
+index 22b72c5c99e6b72c77b7487e4b82127395f44c4b..6a63265b861c5a5f234a776ceb6b3b3abb519186 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1,5 +1,6 @@
+ // src/index.ts
+ import "wxt";
++import fs2 from "fs/promises";
+ import { defineWxtModule } from "wxt/modules";
+ import { $ } from "zx";
+ 
+@@ -10,7 +11,7 @@ import fs from "fs/promises";
+ async function updateProjectConfig(options) {
+   const projectConfigPath = path.resolve(
+     options.rootPath,
+-    `.output/${options.projectName}/${options.projectName}.xcodeproj/project.pbxproj`
++    `${options.outputPath}/${options.projectName}.xcodeproj/project.pbxproj`
+   );
+   const packageJsonModule = await import(path.resolve(options.rootPath, "package.json"), {
+     with: { type: "json" }
+@@ -49,7 +50,7 @@ async function updateProjectConfig(options) {
+   await fs.writeFile(projectConfigPath, newContent);
+ }
+ async function updateInfoPlist(options) {
+-  const projectPath = path.resolve(options.rootPath, ".output", options.projectName);
++  const projectPath = path.resolve(options.rootPath, options.outputPath);
+   const files = await globby("**/*.plist", {
+     cwd: projectPath
+   });
+@@ -78,28 +79,45 @@ var index_default = defineWxtModule({
+       return;
+     }
+     const { appCategory, bundleIdentifier, developmentTeam } = options ?? {};
+-    const projectName = options?.projectName ?? wxt.config.manifest.name;
++    const projectName = options?.projectName ?? wxt.config.manifest.name ?? await fs2.readFile(`${wxt.config.root}/package.json`, "utf-8").then((data) => JSON.parse(data).name);
+     if (!projectName || !appCategory || !bundleIdentifier) {
+       wxt.logger.warn(
+         "Safari Xcode module is not configured properly. Please provide projectName, appCategory and bundleIdentifier."
+       );
+       return;
+     }
++    const outputPath = options?.outputPath ?? `.output/${projectName}`;
++    const projectType = options?.projectType ?? "both";
++    const openProject = options?.openProject ?? true;
+     wxt.hook("build:done", async (wxt2) => {
+-      wxt2.logger.info("Converting Safari extension to Xcode project...");
++      wxt2.logger.info(`Converting ${highlight("Safari extension")} to ${highlight("Xcode project")}...`);
++      if (process.platform !== "darwin") {
++        const error = new Error("Safari Xcode conversion requires macOS.");
++        wxt2.logger.error("Safari Xcode conversion is only supported on macOS.", error);
++        throw error;
++      }
+       try {
+-        wxt2.logger.info("Running safari-web-extension-converter...");
+-        await $`xcrun safari-web-extension-converter --bundle-identifier ${bundleIdentifier} --force --project-location .output .output/safari-mv3`;
+-        wxt2.logger.info("Updating Xcode project config...");
++        wxt2.logger.info(`Running ${highlight("safari-web-extension-converter")}...`);
++        const flags = ["--force", "--no-prompt"];
++        if (projectType === "ios") flags.push("--ios-only");
++        if (projectType === "macos") flags.push("--macos-only");
++        if (!openProject) flags.push("--no-open");
++        await $`xcrun safari-web-extension-converter --bundle-identifier ${bundleIdentifier} --project-location .output ${flags} .output/safari-mv${wxt2.config.manifestVersion}`;
++        if (outputPath !== `.output/${projectName}`) {
++          await $`mv .output/${projectName} ${outputPath}`;
++        }
++        wxt2.logger.info(`Updating ${highlight("Xcode project config")}...`);
+         await updateProjectConfig({
+           projectName,
++          outputPath,
+           appCategory,
+           developmentTeam,
+           rootPath: wxt2.config.root
+         });
+-        wxt2.logger.info("Updating Info.plist files...");
++        wxt2.logger.info(`Updating ${highlight("Info.plist files")}...`);
+         await updateInfoPlist({
+           projectName,
++          outputPath,
+           appCategory,
+           developmentTeam,
+           rootPath: wxt2.config.root
+@@ -112,6 +130,9 @@ var index_default = defineWxtModule({
+     });
+   }
+ });
++function highlight(text) {
++  return `\x1B[36m${text}\x1B[0m`;
++}
+ export {
+   index_default as default
+ };
