@@ -9,10 +9,12 @@ import { MapIcon } from "@/components/map-icon";
 // @ts-expect-error
 const extStorage: typeof browser.storage.local | null =
 	// @ts-expect-error
-	typeof browser !== "undefined" ? browser.storage.local
-		// @ts-expect-error
-		: typeof chrome !== "undefined" ? chrome.storage.local
-		: null;
+	typeof browser !== "undefined"
+		? browser.storage.local
+		: // @ts-expect-error
+			typeof chrome !== "undefined"
+			? chrome.storage.local
+			: null;
 
 const WINGMAN_RANK_CACHE_KEY = "wingmanRankCache";
 
@@ -56,9 +58,7 @@ export default function AllMatchesPage() {
 			if (!rootsRef.has(cell) && child && !(child instanceof HTMLImageElement)) return;
 
 			const isFaceit = (!isWingman && child?.src.includes("faceit")) ?? false;
-			const rankNumber = isWingman
-				? wingManRankNumber
-				: parseInt(child?.src.match(/ranks\/(\d+)\.png/)?.[1] || "0", 10);
+			const rankNumber = isWingman ? wingManRankNumber : parseInt(child?.src.match(/ranks\/(\d+)\.png/)?.[1] || "0", 10);
 
 			if (!rootsRef.has(cell)) {
 				rootsRef.set(cell, createRoot(cell));

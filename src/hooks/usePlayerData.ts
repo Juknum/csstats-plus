@@ -60,7 +60,7 @@ export function usePlayerData() {
 
 			console.log("[CSStats+] [Content] Requesting Steam profile media for URL:", steamUrl);
 			try {
-				runtime.sendMessage({ type: "FETCH_STEAM_BG", steamUrl }, (response: any) => {
+				runtime.sendMessage({ type: "FETCH_STEAM_BG", steamUrl }, (response: { bg?: string; frame?: string } | undefined) => {
 					if (runtime.lastError) {
 						console.warn("[CSStats+] [Content] Runtime lastError:", runtime.lastError.message);
 						return;
@@ -96,7 +96,6 @@ export function usePlayerData() {
 			return () => clearInterval(interval);
 		}
 	}, []);
-
 
 	const user = useMemo(() => {
 		if (!window.location.href.includes("/player/")) return undefined;

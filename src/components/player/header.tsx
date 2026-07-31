@@ -23,7 +23,6 @@ export default function PlayerHeader() {
 	const RANK_WIDTH_MEDIUM_HANDLE = 30;
 	const RANK_WIDTH_MEDIUM_CONTENT = 290;
 
-	const RANK_WIDTH_MEDIUM = RANK_WIDTH_MEDIUM_CONTENT + RANK_WIDTH_MEDIUM_HANDLE + GRID_GAP;
 	const RANK_HEIGHT_MEDIUM = 63;
 
 	const premierRanks = useMemo(() => {
@@ -184,16 +183,7 @@ export default function PlayerHeader() {
 
 	return (
 		<div className="relative flex flex-row justify-center p-3 sm:p-5 bg-cover bg-center w-full gap-[10px] overflow-hidden" style={{ backgroundImage: headerBg }}>
-			{isVideoBg && (
-				<video
-					src={user.bg}
-					autoPlay
-					loop
-					muted
-					playsInline
-					className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-80"
-				/>
-			)}
+			{isVideoBg && <video src={user.bg} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0 opacity-80" />}
 			<div className="relative z-10 flex flex-col md:flex-row w-full max-w-[1680px] items-center md:items-start" style={{ gap: `${GRID_GAP * 2}px` }}>
 				{/* Avatar & User Info Header Block */}
 				<div className="flex flex-row md:flex-col items-center justify-between md:justify-start w-full md:w-auto gap-4 shrink-0">
@@ -359,7 +349,7 @@ export default function PlayerHeader() {
 															<input type="checkbox" className="sr-only peer" checked={showCommunityMaps} onChange={(e) => setShowCommunityMaps(e.target.checked)} />
 															<div className="w-3.5 h-3.5 rounded-[3px] border border-white/40 bg-black/30 peer-checked:bg-[#3872fc] peer-checked:border-[#3872fc] peer-focus-visible:ring-1 peer-focus-visible:ring-white flex items-center justify-center transition-colors group-hover:border-white/70">
 																{showCommunityMaps && (
-																	<svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+																	<svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5} aria-label="Checked" role="img">
 																		<path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
 																	</svg>
 																)}
