@@ -1,0 +1,53 @@
+name: Release - Opera Addons
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref (branch, tag, or SHA) to build
+        required: false
+        type: string
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Zip extensions
+        run: pnpm zip -b opera
+
+      - name: Upload Firefox zip artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: opera-zip
+          path: .output/*-opera.zip
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+
+      - name: Submit
+        run: pnpm wxt submit --opera-zip .output/*-opera.zip
+        env:
+          OPERA_SESSION_ID: ${{ secrets.OPERA_SESSION_ID }}
+          OPERA_PACKAGE_ID: ${{ secrets.OPERA_PACKAGE_ID }}
+          
